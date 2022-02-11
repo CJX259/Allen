@@ -4,12 +4,18 @@ import {
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration
+  ScrollRestoration,
+  LinksFunction,
 } from "remix";
 import type { MetaFunction } from "remix";
+import antdStyle from 'antd/dist/antd.css';
 
 export const meta: MetaFunction = () => {
   return { title: "New Remix App" };
+};
+
+export const links: LinksFunction = () => {
+  return [{ rel: "stylesheet", href: antdStyle }];
 };
 
 export default function App() {

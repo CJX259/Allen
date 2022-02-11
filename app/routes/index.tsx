@@ -1,12 +1,9 @@
 import { LoaderFunction, useLoaderData } from "remix";
 import type { User } from "@prisma/client";
 import { db } from "~/utils/db.server";
-import { sendVerCode } from '../utils/sendMessage';
 
 type LoaderData = { users: Array<User> };
 export let loader: LoaderFunction = async () => {
-  const res = await sendVerCode(["+8619927574193"],  ["123456"]);
-  console.log('res', res);
   const data: LoaderData = {
     users: await db.user.findMany()
   };
