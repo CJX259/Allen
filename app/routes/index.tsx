@@ -1,4 +1,20 @@
+import { LoaderFunction, useLoaderData } from "remix";
+import type { User } from "@prisma/client";
+import { db } from "~/utils/db.server";
+import { sendVerCode } from '../utils/sendMessage';
+
+type LoaderData = { users: Array<User> };
+export let loader: LoaderFunction = async () => {
+  const res = await sendVerCode(["+8619927574193"],  ["123456"]);
+  console.log('res', res);
+  const data: LoaderData = {
+    users: await db.user.findMany()
+  };
+  return data;
+};
+
 export default function Index() {
+  const data = useLoaderData();
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
       <h1>Welcome to Remix</h1>

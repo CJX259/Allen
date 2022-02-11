@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+const db = new PrismaClient()
 
 async function main() {
-  const alice = await prisma.user.create({
+  const alice = await db.user.create({
     data: {
       name: 'jessy1',
       email: '1049602251',
@@ -18,5 +18,5 @@ main()
     process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect()
+    await db.$disconnect()
   })
