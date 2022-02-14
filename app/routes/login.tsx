@@ -1,6 +1,5 @@
 import { Form } from 'remix';
-import { Button } from 'antd';
-;
+import { Button, Input } from 'antd';
 
 
 export default function Login() {
