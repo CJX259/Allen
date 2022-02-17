@@ -10,22 +10,18 @@
   <script src="./TcPlayerLite.js" charset="utf-8"></script>
   <div id="id_test_video" style="width:100%; height:auto;"></div>
   <script>
+    // 地址加密后放在cookie中存储、读取
     function initTCPlayer() {
       var player =  new TcPlayer('id_test_video', {
           "m3u8": "http://webtrc.jessyblog.cn/live/1.m3u8",
-          "flv": "http://webtrc.jessyblog.cn/live/1.flvv", //增加了一个 flv 的播放地址，用于PC平台的播放 请替换成实际可用的播放地址
-          "autoplay" : true,      //iOS 下 safari 浏览器，以及大部分移动端浏览器是不开放视频自动播放这个能力的
+          "flv": "http://webtrc.jessyblog.cn/live/1.flvv",
+          "autoplay" : true,
           "poster" : "http://www.test.com/myimage.jpg",
           "width" :  '480',//视频的显示宽度，请尽量使用视频分辨率宽度
           "height" : '320'//视频的显示高度，请尽量使用视频分辨率高度
       });
     }
-
-    function pullLive() {
-
-    }
     initTCPlayer();
-    pullLive();
   </script>
 </body>
 </html>

@@ -6,18 +6,25 @@ import {
   Scripts,
   ScrollRestoration,
   LinksFunction,
-} from "remix";
-import type { MetaFunction } from "remix";
+} from 'remix';
+import React from 'react';
+import type { MetaFunction } from 'remix';
 import antdStyle from 'antd/dist/antd.css';
 
 export const meta: MetaFunction = () => {
-  return { title: "New Remix App" };
+  return { title: 'New Remix App' };
 };
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: antdStyle }];
+  return [{ rel: 'stylesheet', href: antdStyle }];
 };
 
+/**
+ * 根组件
+ *
+ * @export
+ * @return {*}
+ */
 export default function App() {
   return (
     <html lang="en">
@@ -31,7 +38,7 @@ export default function App() {
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        {process.env.NODE_ENV === "development" && <LiveReload />}
+        {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
   );
