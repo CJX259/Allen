@@ -10,36 +10,143 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  PENDING
+  RESOLVE
+  REJECT
+}
+
+enum OrderStatus {
+  CONTRACTING
+  CHECKING
+  CONTRACTED
+  DONE
+  REJECTING
+  REJECTED
+}
+
+enum Role {
+  ADMIN
+  ANCHOR
+  COMPANY
+}
+
+model Tag {
+  id          Int @id @default(autoincrement())
+  name        String
+  goods       Goods?
+  user        User?
+  ctime       DateTime @default(now())
+  utime       DateTime @updatedAt
+}
+
 model User {
-  id       Int      @id @default(autoincrement())
-  name     String
-  jobTitle String
-  posts    Post[]
-  profile  Profile?
-  email    String
+  id           Int   @id @default(autoincrement())
+  phone        String @db.VarChar(13)
+  password     String?  @db.VarChar(16)
+  name         String   @default(cuid()) @unique
+  experience   Int      @default(0)
+  introduce    String?
+  realName     String
+  idCard       String
+  address      String
+  mail         String
+  liveData     String
+  liveMaxAge   DateTime
+  ctime        DateTime @default(now())
+  utime        DateTime @updatedAt
+  role         Role
+  tag          Int?
+  tagModel     Tag?      @relation(fields: [tag], references: [id])
+  goods        Goods?
+  audit        Audit?
+  order        Order?
+  userComment  UserComment?
 }
 
-model Profile {
-  id       Int    @id @default(autoincrement())
-  biograpy String // Intentional typo!
-  userId   Int
-  user     User   @relation(fields: [userId], references: [id])
+model Goods {
+  id          Int   @id @default(autoincrement())
+  name        String
+  info        String
+  price       Int
+  companyId   Int
+  company     User @relation(fields: [companyId], references: [id])
+  order       Order?
+  tagId       Int
+  tag         Tag @relation(fields: [tagId], references: [id])
+  ctime       DateTime @default(now())
+  utime       DateTime @updatedAt
 }
 
-model Post {
-  id         Int        @id @default(autoincrement())
-  title      String
-  published  Boolean    @default(true)
-  content    String     @db.VarChar(500)
-  authorId   Int
-  author     User       @relation(fields: [authorId], references: [id])
-  categories Category[]
+model Audit {
+  id          Int  @id @default(autoincrement())
+  status      Status
+  reason      String
+  userId      Int
+  user        User @relation(fields: [userId], references: [id])
+  ctime       DateTime @default(now())
+  utime       DateTime @updatedAt
 }
 
-model Category {
-  id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(50)
-  posts Post[]
-
-  @@unique([name])
+model Order {
+  id          Int @id @default(autoincrement())
+  status      OrderStatus
+  goodsId     Int
+  goods       Goods @relation(fields: [goodsId], references: [id])
+  anchorId    Int
+  anchor      User  @relation(fields: [anchorId], references: [id])
+  ctime       DateTime @default(now())
+  utime       DateTime @updatedAt
 }
+
+model UserComment {
+  id          Int @id @default(autoincrement())
+  comment     String
+  rating      Int
+  userId      Int
+  user        User  @relation(fields: [userId], references: [id])
+  ctime       DateTime @default(now())
+  utime       DateTime @updatedAt
+}
+
+model GoodsComment {
+  id          Int @id @default(autoincrement())
+  comment     String
+  rating      Int
+  ctime       DateTime @default(now())
+  utime       DateTime @updatedAt
+}
+
+// model User {
+//   id       Int      @id @default(autoincrement())
+//   name     String
+//   jobTitle String
+//   posts    Post[]
+//   profile  Profile?
+//   email    String
+// }
+
+// model Profile {
+//   id       Int    @id @default(autoincrement())
+//   biograpy String // Intentional typo!
+//   userId   Int
+//   user     User   @relation(fields: [userId], references: [id])
+// }
+
+// model Post {
+//   id         Int        @id @default(autoincrement())
+//   title      String
+//   published  Boolean    @default(true)
+//   content    String     @db.VarChar(500)
+//   authorId   Int
+//   author     User       @relation(fields: [authorId], references: [id])
+//   categories Category[]
+// }
+
+// model Category {
+//   id    Int    @id @default(autoincrement())
+//   name  String @db.VarChar(50)
+//   posts Post[]
+
+//   @@unique([name])
+// }
