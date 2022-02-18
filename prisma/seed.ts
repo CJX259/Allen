@@ -18,6 +18,7 @@ async function main() {
       liveMaxAge: new Date(),
       role: 'ADMIN',
       phone: '19927574193',
+      password: '123123',
     },
   });
   console.log({ alice });

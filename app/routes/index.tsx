@@ -2,9 +2,14 @@ import { LoaderFunction, useLoaderData } from 'remix';
 import React from 'react';
 import type { User } from '@prisma/client';
 import { db } from '~/utils/db.server';
+import { getSession } from '~/sessions';
 
 type LoaderData = { users: Array<User> };
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(
+      request.headers.get('Cookie'),
+  );
+  console.log('session', session.data);
   const data: LoaderData = {
     users: await db.user.findMany(),
   };
