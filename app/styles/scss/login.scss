@@ -1,12 +1,24 @@
 .login-wrapper {
-  width: 600px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 20px;
+  width: 400px;
   margin: 0 auto;
+  .header{
+    text-align: center;
+  }
+  .ant-row{
+    margin-bottom: 20px;
+  }
   .label{
     float: right;
     line-height: 32px;
   }
   .psw-input{
     display: flex;
+    .code-btn {
+      color: gray;
+    }
   }
 }
 

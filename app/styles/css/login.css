@@ -1,6 +1,15 @@
 .login-wrapper {
-  width: 600px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 20px;
+  width: 400px;
   margin: 0 auto;
+}
+.login-wrapper .header {
+  text-align: center;
+}
+.login-wrapper .ant-row {
+  margin-bottom: 20px;
 }
 .login-wrapper .label {
   float: right;
@@ -8,6 +17,9 @@
 }
 .login-wrapper .psw-input {
   display: flex;
+}
+.login-wrapper .psw-input .code-btn {
+  color: gray;
 }
 
 /*# sourceMappingURL=login.css.map */
