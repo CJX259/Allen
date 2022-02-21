@@ -70,38 +70,66 @@ export default function Login() {
   const errorData: ERROR | undefined = useActionData();
   const transition = useTransition();
   const [loginMethod, setLoginMethod] = useState(LOGIN_METHOD.CODE);
-
-  function renderCodeOrPassword() {
-    if (loginMethod === LOGIN_METHOD.CODE) {
-      return <>
-        验证码：<Input name='code' />
-        <Button>发送验证码</Button>
-      </>;
-    }
-    return <>
-      密码：<Input type="password" name='password' />
-    </>;
+  const formSpan = {
+    label: 4,
+    input: 12,
   };
 
   useEffect(() => {
     errorData?.msg ? message.error(errorData.msg) : '';
   }, [errorData]);
 
+  function renderCodeOrPassword() {
+    let needSend = true;
+    let name = 'code';
+    let wording = '验证码';
+    if (loginMethod === LOGIN_METHOD.PASSWORD) {
+      needSend = false;
+      name = 'password';
+      wording = '密码';
+    }
+    return <>
+      <Row>
+        <Col span={formSpan.label}><label className='label' htmlFor={name}>{wording}：</label></Col>
+        <Col span={formSpan.input}>
+          <div className='psw-input'>
+            {needSend ?
+              <>
+                <Input name={name} />
+                <Button>发送验证码</Button>
+              </> :
+              <Input.Password name={name}/>
+            }
+          </div>
+        </Col>
+      </Row>
+    </>;
+  };
+
   return (
     <div className='login-wrapper'>
+      <h1>登录</h1>
       <Form method='post'>
         <Row>
-          <Col span={4}><label htmlFor="phone">账号：</label></Col>
-          <Col span={12}><Input name='phone'/></Col>
+          <Col span={formSpan.label}><label className='label' htmlFor="phone">账号：</label></Col>
+          <Col span={formSpan.input}><Input name='phone'/></Col>
         </Row>
         {renderCodeOrPassword()}
-        <Button type="link" onClick={() => changeLoginMethod(loginMethod, setLoginMethod)}>
-          {loginMethod === LOGIN_METHOD.CODE ? '密码登录' : '验证码登录'}
-        </Button>
-        <Button
-          htmlType='submit'
-          loading={transition.state === 'submitting'}
-        >jessy按钮</Button>
+        <Row>
+          <Col span={formSpan.label} />
+          <Col span={formSpan.input}>
+            <Button type="link" onClick={() => changeLoginMethod(loginMethod, setLoginMethod)}>
+              {loginMethod === LOGIN_METHOD.CODE ? '密码登录' : '验证码登录'}
+            </Button>
+            <Button
+              style={{
+                float: 'right',
+              }}
+              htmlType='submit'
+              loading={transition.state === 'submitting'}
+            >登录</Button>
+          </Col>
+        </Row>
       </Form>
     </div>
   );

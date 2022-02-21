@@ -1,7 +1,13 @@
 .login-wrapper {
-  width: 400px;
+  width: 600px;
   margin: 0 auto;
-  color: beige;
+}
+.login-wrapper .label {
+  float: right;
+  line-height: 32px;
+}
+.login-wrapper .psw-input {
+  display: flex;
 }
 
 /*# sourceMappingURL=login.css.map */
