@@ -1,4 +1,4 @@
-import { getSession, commitSession } from '../sessions';
+import { getSession } from '../sessions';
 import { LoginKey } from '../const';
 
 
