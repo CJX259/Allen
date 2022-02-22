@@ -70,7 +70,7 @@ export const action: ActionFunction = async ({ request }) => {
         sendTime: curTime,
       });
       // 调用api发送短信
-      // sendVerCode([phone as string], [random]);
+      sendVerCode([phone as string], [random]);
       return new Response('发送成功', {
         headers: {
           'Set-Cookie': await commitSession(session),
@@ -91,7 +91,7 @@ export default function Login() {
  * @param {Session} session
  * @param {string} phone
  * @param {string} password
- * @return {*} redirect
+ * @return {*} Response
  */
 async function verifyPsw(session: Session, phone: string, password: string) {
   const user = await db.user.findFirst({
@@ -119,20 +119,50 @@ async function verifyPsw(session: Session, phone: string, password: string) {
   });
 };
 
+
+/**
+ * 校验验证码，处理跳转页面逻辑
+ *
+ * @param {Session} session
+ * @param {string} phone
+ * @param {string} code
+ * @return {*} redirect
+ */
 async function verifyCode(session: Session, phone: string, code: string) {
   // 拿session中的phone数据，与code参数比较，若一致，则通过
   const codeData: CodeData = await session.get(`${CodeKey}_${phone}`);
-  console.log('codeData', codeData);
   if (!codeData) {
     return json(PARAMS_ERROR);
   }
   if (codeData.code !== code) {
     return json(VERIFY_ERROR);
   }
-  return json({
-    msg: '登录成功',
-  });
   // 通过后，若数据库中有该账号，则直接登录
-  // 若没有，则直接注册
-  // 跳转首页
+  const user = await db.user.findFirst({
+    where: {
+      phone,
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+  // 清除session
+  session.set(`${CodeKey}_${phone}`, null);
+  let to = '/';
+  if (!user) {
+    // 没创建，进入注册页
+    to = '/register';
+  } else {
+    // 如果已有账号，则设置cookie
+    session.set(LoginKey, {
+      id: user.id,
+      name: user.name,
+    });
+  }
+  return redirect(to, {
+    headers: {
+      'Set-Cookie': await commitSession(session),
+    },
+  });
 };
