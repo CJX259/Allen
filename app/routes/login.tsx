@@ -4,7 +4,7 @@ import React from 'react';
 import type { LoaderFunction, ActionFunction, LinksFunction } from 'remix';
 import { db } from '~/utils/db.server';
 import { hadLogin } from '~/utils/loginUtils';
-import { LoginKey } from '~/const';
+import { LoginKey, REQ_METHOD } from '~/const';
 import { NOT_FOUND, PARAMS_ERROR } from '~/error';
 import LoginCmp from '../components/login';
 
@@ -29,35 +29,51 @@ export const action: ActionFunction = async ({ request }) => {
   );
   const form = await request.formData();
   const phone = form.get('phone');
-  const password = form.get('password');
-  const code = form.get('code');
-  if (!phone || (!password || !code)) {
-    return json(PARAMS_ERROR);
+  const method = request.method;
+  switch (method) {
+    case REQ_METHOD.POST: {
+      const password = form.get('password');
+      const code = form.get('code');
+      if (!phone || (!password || !code)) {
+        return json(PARAMS_ERROR);
+      }
+      const user = await db.user.findFirst({
+        where: {
+          phone: phone as string,
+          password: password as string,
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      });
+      if (user == null) {
+        return json(NOT_FOUND);
+      }
+      session.set(LoginKey, {
+        id: user.id,
+        name: user.name,
+      });
+      // Login succeeded, send them to the home page.
+      return redirect('/', {
+        headers: {
+          'Set-Cookie': await commitSession(session),
+        },
+      });
+    }
+    case REQ_METHOD.PUT: {
+      console.log('body', phone);
+      // 延迟3秒
+      await new Promise((res) => {
+        setTimeout(() => {
+          res(1);
+        }, 3000);
+      });
+      return null;
+    }
+    default:
+      break;
   }
-  const user = await db.user.findFirst({
-    where: {
-      phone: phone as string,
-      password: password as string,
-    },
-    select: {
-      id: true,
-      name: true,
-    },
-  });
-
-  if (user == null) {
-    return json(NOT_FOUND);
-  }
-  session.set(LoginKey, {
-    id: user.id,
-    name: user.name,
-  });
-  // Login succeeded, send them to the home page.
-  return redirect('/', {
-    headers: {
-      'Set-Cookie': await commitSession(session),
-    },
-  });
 };
 
 export default function Login() {

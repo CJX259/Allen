@@ -2,7 +2,7 @@ import { Form, useActionData, useTransition } from 'remix';
 import React, { useEffect, useState } from 'react';
 import { Button, Input, message, Row, Col } from 'antd';
 import { ERROR, LOGIN_METHOD } from '../../types';
-import { LoginFormSpan } from '~/const';
+import { LOAD_STATE, LoginFormSpan } from '~/const';
 import renderCodeOrPassword from './pswOrCode';
 
 /**
@@ -26,7 +26,9 @@ export default function Login() {
       <Form method='post'>
         <Row>
           <Col span={LoginFormSpan.label}><label className='label' htmlFor="phone">账号：</label></Col>
-          <Col span={LoginFormSpan.input}><Input value={phone} onChange={(e) => setPhone(e.target.value)} name='phone'/></Col>
+          <Col span={LoginFormSpan.input}>
+            <Input placeholder='请输入手机号码' value={phone} onChange={(e) => setPhone(e.target.value)} name='phone'/>
+          </Col>
         </Row>
         {renderCodeOrPassword(loginMethod, phone)}
         <Row>
@@ -41,7 +43,7 @@ export default function Login() {
                 float: 'right',
               }}
               htmlType='submit'
-              loading={transition.state === 'submitting'}
+              loading={transition.state === LOAD_STATE.submitting}
             >登录</Button>
           </Col>
         </Row>
