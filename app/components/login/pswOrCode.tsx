@@ -42,27 +42,24 @@ export default function renderCodeOrPassword(loginMethod: LOGIN_METHOD, phone: s
       clearInterval(timer);
     };
   }, []);
+
+  // 根据fetcher处理前端逻辑
   useEffect(() => {
     if (fetcher.type === LOAD_TYPE.actionSubmission) {
       // 提交中
       setLoading(true);
     } else if (fetcher.type === LOAD_TYPE.done) {
-      // 当发送完后，开启倒计时
-      message.success('发送成功');
-      // 实现点击就直接开始倒计时的效果，不然要等1秒后视图才开始倒计时
-      setSecond(1);
-      latestSecond.current = 1;
-      timer = setInterval(() => {
-        if (latestSecond.current === CODE_WAITING) { // 此处判断latestCount.current，而不是second
-          clearInterval(timer);
-          setSecond(0);
-          return;
-        }
-        setSecond(++latestSecond.current);
-      }, 1000);
+      // 没错误则开始倒计时
+      if (!fetcher.data?.msg) {
+        // 当发送完后，开启倒计时
+        startTime(latestSecond, setSecond, timer);
+      } else {
+        // 有错误则打印错误信息
+        message.error(fetcher.data.msg);
+      }
     }
     if (fetcher.state === LOAD_STATE.idle) {
-      // 无论成功与否，都取消加载状态
+      // 无论成功与否，请求完都取消加载状态
       setLoading(false);
     }
   }, [fetcher]);
@@ -83,3 +80,25 @@ export default function renderCodeOrPassword(loginMethod: LOGIN_METHOD, phone: s
     </Row>
   );
 };
+
+/**
+ * 前端开启倒计时
+ *
+ * @param {React.MutableRefObject<number>} refSecond
+ * @param {Function} setSecond
+ * @param {NodeJS.Timeout} timer
+ */
+function startTime(refSecond: React.MutableRefObject<number>, setSecond: Function, timer: NodeJS.Timeout) {
+  message.success('发送成功');
+  // 实现点击就直接开始倒计时的效果，不然要等1秒后视图才开始倒计时
+  setSecond(1);
+  refSecond.current = 1;
+  timer = setInterval(() => {
+    if (refSecond.current === CODE_WAITING) { // 此处判断latestCount.current，而不是second
+      clearInterval(timer);
+      setSecond(0);
+      return;
+    }
+    setSecond(++refSecond.current);
+  }, 1000);
+}

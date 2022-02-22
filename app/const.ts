@@ -1,5 +1,6 @@
 
 export const LoginKey = 'USER';
+export const CodeKey = 'VER_CODE';
 
 // 发送验证码倒计时变量
 export const CODE_WAITING = 3;
