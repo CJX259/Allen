@@ -37,11 +37,6 @@ export default function renderCodeOrPassword(loginMethod: LOGIN_METHOD, phone: s
       method: 'put',
     });
   }
-  useEffect(() => {
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
 
   // 根据fetcher处理前端逻辑
   useEffect(() => {
@@ -62,6 +57,10 @@ export default function renderCodeOrPassword(loginMethod: LOGIN_METHOD, phone: s
       // 无论成功与否，请求完都取消加载状态
       setLoading(false);
     }
+    return () => {
+      // 防止异步的回调中调用了setState，导致内存溢出
+      clearInterval(timer);
+    };
   }, [fetcher]);
   return (
     <Row>

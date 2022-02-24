@@ -1,0 +1,21 @@
+.page-wrapper {
+  width: 100vw;
+}
+.page-header {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 20px;
+  border-bottom: 1px solid gray;
+  box-shadow: gray 2px 2px 5px;
+}
+.page-header .logo {
+  height: 90px;
+  width: 90px;
+  background-image: url("/assets/images/logo.svg");
+  background-size: 200%;
+  background-position: center;
+}
+
+/*# sourceMappingURL=indexPage.css.map */

@@ -3,13 +3,13 @@ import { getSession, commitSession } from '../sessions';
 import React from 'react';
 import type { LoaderFunction, ActionFunction, LinksFunction, Session } from 'remix';
 import { db } from '~/utils/db.server';
-import { hadLogin, needLogined } from '~/utils/loginUtils';
-import { CodeKey, LoginKey, RegisterKey, REQ_METHOD } from '~/const';
+import { needLogined } from '~/utils/loginUtils';
+import { CodeKey, CODE_WAITING, LoginKey, RegisterKey, REQ_METHOD } from '~/const';
 import { NOT_FOUND, PARAMS_ERROR, TIME_OUT, VERIFY_ERROR } from '~/error';
 import LoginCmp from '../components/login';
 
 import loginStyle from '../styles/css/login.css';
-import { sendVerCode } from '~/utils/sendMessage';
+// import { sendVerCode } from '~/utils/sendMessage';
 import { SessionCodeData, SessionRegisterData, SessionUserData } from '~/types';
 
 
@@ -70,7 +70,7 @@ async function handleCodeSend(session: Session, phone: string) {
   const curTime = new Date().valueOf();
   // 判断session，如果该电话数据的还未过期，则不允许发送
   const codeData: SessionCodeData = session.get(`${CodeKey}_${phone}`);
-  if (curTime - codeData?.sendTime <= 60000) {
+  if (curTime - codeData?.sendTime <= CODE_WAITING * 1000) {
     // session里有该手机的数据，且未过60秒
     return json(TIME_OUT);
   }

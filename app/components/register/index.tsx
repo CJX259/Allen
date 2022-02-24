@@ -9,7 +9,6 @@ export default function RegisterCmp() {
     <div className='register-page'>
       <div className="register-wrapper">
         <h1 className='title'>欢迎入驻Allen电商直播平台</h1>
-        <img src="/assets/images/logo.svg" alt="" />
         <Form>
         </Form>
       </div>
