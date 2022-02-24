@@ -4,7 +4,7 @@ export enum LOGIN_METHOD {
   PASSWORD,
 };
 
-export interface CodeData {
+export interface SessionCodeData {
   phone: string;
   code: string;
   sendTime: number;

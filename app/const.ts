@@ -1,6 +1,8 @@
 
 export const LoginKey = 'USER';
 export const CodeKey = 'VER_CODE';
+export const RegisterKey = 'REGISTER_USER';
+
 
 // 发送验证码倒计时变量
 export const CODE_WAITING = 60;
@@ -34,4 +36,3 @@ export const LOAD_TYPE = {
   actionReload: 'actionReload',
   load: 'load',
 };
-

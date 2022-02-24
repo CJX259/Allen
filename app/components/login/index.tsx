@@ -44,7 +44,7 @@ export default function Login() {
               }}
               htmlType='submit'
               loading={transition.state === LOAD_STATE.submitting}
-            >登录</Button>
+            >登录 / 注册</Button>
           </Col>
         </Row>
       </Form>
