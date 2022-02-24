@@ -7,7 +7,8 @@ import useValuesRef from './useValueRef';
 import { CODE_WAITING, LOAD_STATE, LOAD_TYPE, LoginFormSpan } from '../../const';
 
 // 实现渲染密码还是验证码的逻辑,处理倒计时逻辑
-export default function renderCodeOrPassword(loginMethod: LOGIN_METHOD, phone: string) {
+export default function RenderCodeOrPassword(props: {loginMethod: LOGIN_METHOD, phone: string}) {
+  const { loginMethod, phone } = props;
   const fetcher = useFetcher();
   const [second, setSecond] = useState(0);
   const [loading, setLoading] = useState(false);

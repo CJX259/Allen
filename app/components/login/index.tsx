@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Input, message, Row, Col } from 'antd';
 import { ERROR, LOGIN_METHOD } from '../../types';
 import { LOAD_STATE, LoginFormSpan } from '~/const';
-import renderCodeOrPassword from './pswOrCode';
+import RenderCodeOrPassword from './pswOrCode';
 
 /**
  * 登录页表单
@@ -19,7 +19,6 @@ export default function Login() {
   useEffect(() => {
     errorData?.msg ? message.error(errorData.msg) : '';
   }, [errorData]);
-
   return (
     <div className='login-wrapper'>
       <h1 className='header'>登录</h1>
@@ -30,7 +29,7 @@ export default function Login() {
             <Input placeholder='请输入手机号码' value={phone} onChange={(e) => setPhone(e.target.value)} name='phone'/>
           </Col>
         </Row>
-        {renderCodeOrPassword(loginMethod, phone)}
+        <RenderCodeOrPassword loginMethod={loginMethod} phone={phone} />
         <Row>
           <Col span={LoginFormSpan.label} />
           <Col span={LoginFormSpan.input}>
