@@ -2,5 +2,9 @@
   width: 800px;
   margin: 0 auto;
 }
+.register-page .register-wrapper .title {
+  text-align: center;
+  padding-top: 20px;
+}
 
 /*# sourceMappingURL=register.css.map */

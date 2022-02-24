@@ -3,7 +3,7 @@ import { getSession, commitSession } from '../sessions';
 import React from 'react';
 import type { LoaderFunction, ActionFunction, LinksFunction, Session } from 'remix';
 import { db } from '~/utils/db.server';
-import { hadLogin } from '~/utils/loginUtils';
+import { hadLogin, needLogined } from '~/utils/loginUtils';
 import { CodeKey, LoginKey, RegisterKey, REQ_METHOD } from '~/const';
 import { NOT_FOUND, PARAMS_ERROR, TIME_OUT, VERIFY_ERROR } from '~/error';
 import LoginCmp from '../components/login';
@@ -18,11 +18,7 @@ export const links: LinksFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const cookie = request.headers.get('Cookie');
-  if (await hadLogin(cookie)) {
-    return redirect('/');
-  }
-  return null;
+  return needLogined(request);
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -49,33 +45,7 @@ export const action: ActionFunction = async ({ request }) => {
       break;
     }
     case REQ_METHOD.PUT: {
-      // 判断有无电话数据
-      if (!phone) {
-        return json(PARAMS_ERROR);
-      }
-      const curTime = new Date().valueOf();
-      // 判断session，如果该电话数据的还未过期，则不允许发送
-      const codeData: SessionCodeData = session.get(`${CodeKey}_${phone}`);
-      if (curTime - codeData?.sendTime <= 60000) {
-        // session里有该手机的数据，且未过60秒
-        return json(TIME_OUT);
-      }
-      // 生成随机数
-      const random = `${Math.floor(Math.random() * 1000000)}`;
-      console.log('random', random);
-      // 设置手机号与随机数到session中，用于post登录时判断（过期时间60秒）
-      session.set(`${CodeKey}_${phone}`, {
-        phone,
-        code: random,
-        sendTime: curTime,
-      });
-      // 调用api发送短信，先注释掉，短信有次数
-      // sendVerCode([phone as string], [random]);
-      return new Response('发送成功', {
-        headers: {
-          'Set-Cookie': await commitSession(session),
-        },
-      });
+      return handleCodeSend(session, phone as string);
     }
   }
 };
@@ -84,6 +54,43 @@ export default function Login() {
   return <LoginCmp />;
 };
 
+
+/**
+ * action处理发送验证码逻辑
+ *
+ * @param {Session} session
+ * @param {string} phone
+ * @return {*} Response
+ */
+async function handleCodeSend(session: Session, phone: string) {
+  // 判断有无电话数据
+  if (!phone) {
+    return json(PARAMS_ERROR);
+  }
+  const curTime = new Date().valueOf();
+  // 判断session，如果该电话数据的还未过期，则不允许发送
+  const codeData: SessionCodeData = session.get(`${CodeKey}_${phone}`);
+  if (curTime - codeData?.sendTime <= 60000) {
+    // session里有该手机的数据，且未过60秒
+    return json(TIME_OUT);
+  }
+  // 生成随机数
+  const random = `${Math.floor(Math.random() * 1000000)}`;
+  console.log('random', random);
+  // 设置手机号与随机数到session中，用于post登录时判断（过期时间60秒）
+  session.set(`${CodeKey}_${phone}`, {
+    phone,
+    code: random,
+    sendTime: curTime,
+  });
+  // 调用api发送短信，先注释掉，短信有次数
+  // sendVerCode([phone as string], [random]);
+  return new Response('发送成功', {
+    headers: {
+      'Set-Cookie': await commitSession(session),
+    },
+  });
+}
 
 /**
  * 校验用户输入的账号密码是否正确
@@ -149,7 +156,7 @@ async function verifyCode(session: Session, phone: string, code: string) {
   let to = '/';
   if (!user) {
     // 没创建，进入注册页，设置session
-    to = `/register/${phone}`;
+    to = '/register';
     session.set(RegisterKey, {
       phone,
     } as SessionRegisterData);

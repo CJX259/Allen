@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="svg_canvas" data-noselect="" viewBox="0 0 800 600" width="800"
+  height="600" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs></defs>
+  <g id="background" data-noselect="">
+    <rect fill="#ffffff" width="800" height="600" data-noselect=""></rect>
+    <!---->
+  </g>
+  <g id="shape_zyUYZ7nv5X"
+    transform="translate(251.21358684964997,223.89532418557) rotate(0,100.31019076096,76.104675814431) scale(1,1)"
+    filter="" style="cursor: move; opacity: 1;">
+    <g>
+      <rect fill="rgba(0,0,0,0)" width="220.62038152193" height="172.20935162886" x="-10" y="-10"></rect><svg
+        version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+        y="0px" viewBox="0 0 189.8 144" style="enable-background:new 0 0 189.8 144;" xml:space="preserve"
+        width="200.62038152193" height="152.20935162886" class="style-removed" preserveAspectRatio="none"
+        data-parent="shape_zyUYZ7nv5X">
+
+        <g>
+          <path d="M150.4,9.7l1,6.6c-16.4-3.6-35.2-4.1-54.6-0.8C41.3,25,1.4,62.5,7.8,99.1c3.4,19.6,19.3,35,41.8,43.6
+      c-25.8-8.3-44.3-24.3-48.6-45.6C-7,57.9,36.3,16,97.8,3.5c18.8-3.8,37.1-4.5,53.6-2.4l-1,6.5l-6.8,1L150.4,9.7z"
+            fill="#437de0" stroke-width="0"></path>
+          <path d="M152.5,9.7l6.8-1l-6.8-1l-1-6.5c8.4,1.1,16.3,2.8,23.6,5.2l-0.7,5l-11.9,1.8l11.9,1.8l1.5,9.9
+      c-7.3-3.7-15.5-6.6-24.3-8.5L152.5,9.7z" fill="#437de0" stroke-width="0"></path>
+          <path d="M177.9,14.9l10.9-1.6c-1.3,1.3-2.6,2.6-4,3.9c-2.8,2.7-5.6,5.3-8.4,7.9c0,0,0,0,0,0L177.9,14.9z"
+            fill="#437de0" stroke-width="0"></path>
+          <path d="M189.8,12.3c-0.2,0.2-0.5,0.5-0.7,0.7l-11.2-1.7l-0.6-4.3C181.7,8.6,185.9,10.4,189.8,12.3z"
+            fill="#437de0" stroke-width="0"></path>
+          <path d="M161,34.2l-10.1,1.5l10.1,1.5l1,6.6C143.9,32.1,116.9,27.1,88.3,32c-42.8,7.4-74.7,34.5-76.5,63
+      c0-0.2-0.1-0.4-0.1-0.6C6.1,62.7,42.7,29.9,93.3,21.2c25.8-4.4,50.2-1.8,68.7,6.1L161,34.2z" fill="#014ebd"
+            stroke-width="0"></path>
+          <path d="M186.7,45.1c-4.2,2.8-8.3,5.7-12.9,7.9c-0.2,0.1-0.4,0.2-0.5,0.2c-3-3.3-6.5-6.2-10.4-8.9l1.1-7.2l10.1-1.5
+      L164,34.2l-1-6.5C173,32.1,181.1,38,186.7,45.1z" fill="#014ebd" stroke-width="0"></path>
+          <path d="M82.7,143.9c-1.1,0.1-2.2,0.1-3.3,0.1c-35.1,0.6-63.9-20.2-64.4-46.4C14.8,81.5,25.4,67,41.9,58.1
+      C29.7,67.5,22.3,80.6,22.5,95C23,121.8,49.6,143.2,82.7,143.9z" fill="#B0B0B1" stroke-width="0"></path>
+        </g>
+      </svg>
+    </g>
+  </g>
+  <g id="shape_8Dxp2Ogn8T"
+    transform="translate(229.58641315034998,54.91492439826999) rotate(0,248.07002787146,263.1) scale(1,1)" filter=""
+    style="cursor: move; opacity: 1;">
+    <g><svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="538.8"
+        height="526.2" viewBox="0 0 538.8 526.2" data-parent="shape_8Dxp2Ogn8T">
+        <rect fill="rgba(0,0,0,0)" width="246" height="87" x="73.2" y="219.60000000000002"></rect>
+        <g data-width="245.0004" transform="translate(73.2, 0)">
+          <path
+            d="M35.94 11.13L31.92-12.37L23.13-12.37L19.03 11.13L3.37 11.13L17.57-55.85L37.41-55.85L51.61 11.13L35.94 11.13ZM23.94-17.13L31.04-17.13L27.52-37.70L23.94-17.13Z"
+            transform="translate(0 288.6) " fill="#014ebd" stroke="#014ebd" stroke-width="0.122" data-glyph-w="54.9732"
+            data-glyph-h="74.664" data-glyph-ascender="62.952" data-glyph-descender="-11.712"></path>
+          <path d="M40.04 11.13L3.37 11.13L3.37-55.78L19.76-55.78L19.76 6.51L40.04 6.51L40.04 11.13Z"
+            transform="translate(54.9732 288.6) " fill="#014ebd" stroke="#014ebd" stroke-width="0.122"
+            data-glyph-w="43.4076" data-glyph-h="74.664" data-glyph-ascender="62.952" data-glyph-descender="-11.712">
+          </path>
+          <path d="M40.04 11.13L3.37 11.13L3.37-55.78L19.76-55.78L19.76 6.51L40.04 6.51L40.04 11.13Z"
+            transform="translate(98.3808 288.6) " fill="#014ebd" stroke="#014ebd" stroke-width="0.122"
+            data-glyph-w="43.4076" data-glyph-h="74.664" data-glyph-ascender="62.952" data-glyph-descender="-11.712">
+          </path>
+          <path
+            d="M7.98-55.78L45.53-55.78L45.53-50.95L21.67-50.95Q20.13-50.95 20.13-49.41L20.13-49.41L20.13-26.79L45.09-26.79L45.09-21.96L20.13-21.96L20.13 6.37L45.53 6.37L45.53 11.13L3.37 11.13L3.37-51.17Q3.37-53.07 4.72-54.42Q6.08-55.78 7.98-55.78L7.98-55.78Z"
+            transform="translate(141.7884 288.6) " fill="#014ebd" stroke="#014ebd" stroke-width="0.122"
+            data-glyph-w="48.897600000000004" data-glyph-h="74.664" data-glyph-ascender="62.952"
+            data-glyph-descender="-11.712"></path>
+          <path
+            d="M18.52-29.28L18.52 11.13L3.37 11.13L3.37-55.78L22.03-55.78L36.45-13.69L36.45-55.78L50.95-55.78L50.95 11.13L32.43 11.13L18.52-29.28Z"
+            transform="translate(190.686 288.6) " fill="#014ebd" stroke="#014ebd" stroke-width="0.122"
+            data-glyph-w="54.3144" data-glyph-h="74.664" data-glyph-ascender="62.952" data-glyph-descender="-11.712">
+          </path>
+        </g>
+      </svg></g>
+  </g>
+  <!---->
+  <defs>
+    <pattern id="wm_tile" x="0" y="0" width="20%" height="27%" patternunits="objectBoundingBox">
+      <g id="wm_lm" transform="translate(-188.000000, -323.000000)" fill="#cccccc"><text font-size="15"
+          transform="translate(270.490979, 373.245789) rotate(-390.000000) translate(-270.490979, -373.245789)">
+        </text></g>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="100%" height="100%" style="fill: url(#wm_tile);"></rect>
+</svg>
