@@ -7,7 +7,7 @@ import {
   LinksFunction,
 } from 'remix';
 import React from 'react';
-import type { MetaFunction, ActionFunction } from 'remix';
+import type { MetaFunction } from 'remix';
 import antdStyle from 'antd/dist/antd.css';
 import indexStyles from './styles/css/indexPage.css';
 import IndexPage from './components/index';

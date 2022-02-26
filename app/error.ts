@@ -19,3 +19,8 @@ export const VERIFY_ERROR: ERROR = {
   retcode: 10004,
   msg: '校验错误',
 };
+
+export const DB_ERROR: ERROR = {
+  retcode: 10005,
+  msg: '数据库操作错误',
+};

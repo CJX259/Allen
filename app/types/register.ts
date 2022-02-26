@@ -10,8 +10,8 @@ export interface Laebl{
 }
 export interface FormRenderInfo {
   name: string;
-  required: boolean;
   label: Laebl;
   render: () => JSX.Element;
   rules?: Rule[];
+  initialValue?: any;
 };

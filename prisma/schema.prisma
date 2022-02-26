@@ -51,8 +51,8 @@ model User {
   idCard       String
   address      String
   mail         String
-  liveData     String
-  liveMaxAge   DateTime
+  liveData     String?
+  liveMaxAge   DateTime?
   ctime        DateTime @default(now())
   utime        DateTime @updatedAt
   role         Role
