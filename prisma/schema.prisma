@@ -42,13 +42,13 @@ model Tag {
 
 model User {
   id           Int   @id @default(autoincrement())
-  phone        String @db.VarChar(13)
+  phone        String @db.VarChar(13) @unique
   password     String?  @db.VarChar(16)
   name         String   @default(cuid()) @unique
   experience   Int      @default(0)
   introduce    String?
   realName     String
-  idCard       String
+  idCard       String   @unique
   address      String
   mail         String
   liveData     String?

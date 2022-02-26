@@ -24,3 +24,8 @@ export const DB_ERROR: ERROR = {
   retcode: 10005,
   msg: '数据库操作错误',
 };
+
+export const DB_ROW_REPEAT: ERROR = {
+  retcode: 10006,
+  msg: '表中存在数据重复',
+};

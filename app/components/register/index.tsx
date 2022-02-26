@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLoaderData, useActionData, useSubmit } from 'remix';
-import { Form, Input, Button, Radio } from 'antd';
+import { Form, Input, Button, Radio, message } from 'antd';
 import type { FormInstance } from 'antd';
 import type { SubmitFunction } from 'remix';
 import BaseFormItem from './BaseFormItem';
@@ -12,10 +12,14 @@ import { formatFormData } from '~/utils/client.index';
 
 export default function RegisterCmp() {
   const phone = useLoaderData();
+  const errorData = useActionData();
   const [form] = Form.useForm();
   const submit = useSubmit();
   // 是否为主播，用于表单label判断
   const [isAnchor, setIsAnchor] = useState(true);
+  useEffect(() => {
+    errorData?.msg ? message.error(errorData.msg) : '';
+  }, [errorData]);
   const UserRenderInfos: FormRenderInfo[] = [
     {
       name: 'phone',
@@ -54,6 +58,21 @@ export default function RegisterCmp() {
         {
           max: 12,
           message: '长度不能超过12',
+        },
+        {
+          validator: async (rule, value) => {
+            if (!value) {
+              return Promise.resolve();
+            }
+            // 调接口，查下数据库有无重复数据
+            const res = await (await fetch(`/queryUser?_data=routes/queryUser&key=name&value=${value}`, {
+              method: 'GET',
+            })).json();
+            if (res) {
+              throw new Error('昵称重复，请修改');
+            }
+            return Promise.resolve();
+          },
         },
       ],
     },
