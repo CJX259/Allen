@@ -10,6 +10,7 @@
     padding: 0px 20px;
     border-bottom: 1px solid gray;
     box-shadow: gray 2px 2px 5px;
+    margin-bottom: 20px;
     .logo{
       height: 90px;
       width: 90px;
@@ -18,5 +19,7 @@
       background-position: center;
 
     }
+  }
+  &-content{
   }
 }

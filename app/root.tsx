@@ -7,13 +7,10 @@ import {
   LinksFunction,
 } from 'remix';
 import React from 'react';
-import type { MetaFunction, LoaderFunction } from 'remix';
+import type { MetaFunction, ActionFunction } from 'remix';
 import antdStyle from 'antd/dist/antd.css';
 import indexStyles from './styles/css/indexPage.css';
 import IndexPage from './components/index';
-import { hadLogin } from './utils/loginUtils';
-import { getSession } from './sessions';
-import { LoginKey } from './const';
 
 export const meta: MetaFunction = () => {
   return { title: 'ALLEN 电商直播配对平台' };
@@ -26,24 +23,24 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
-  if (!await hadLogin(request.headers.get('Cookie'))) {
-    // 没登录返回null
-    return null;
-  }
-  // 已登录则返回session内容
-  const session = await getSession(
-      request.headers.get('Cookie'),
-  );
-  const sessionUser = session.get(LoginKey);
-  // const data: User | null = await db.user.findUnique({
-  //   where: {
-  //     id: sessionUser.id,
-  //   },
-  // });
-  // 不返回null，后续要用null判断有无登录态
-  return sessionUser || {};
-};
+// export const loader: LoaderFunction = async ({ request }) => {
+//   if (!await hadLogin(request.headers.get('Cookie'))) {
+//     // 没登录返回null
+//     return null;
+//   }
+//   // 已登录则返回session内容
+//   const session = await getSession(
+//       request.headers.get('Cookie'),
+//   );
+//   const sessionUser = session.get(LoginKey);
+//   // const data: User | null = await db.user.findUnique({
+//   //   where: {
+//   //     id: sessionUser.id,
+//   //   },
+//   // });
+//   // 不返回null，后续要用null判断有无登录态
+//   return sessionUser || {};
+// };
 
 /**
  * 根组件

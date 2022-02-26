@@ -1,10 +1,20 @@
 .register-page .register-wrapper {
   width: 800px;
   margin: 0 auto;
+  border: 1px solid gray;
 }
 .register-page .register-wrapper .title {
   text-align: center;
   padding-top: 20px;
+}
+.register-page .register-wrapper .title-sub {
+  text-align: center;
+  font-style: italic;
+  color: gray;
+}
+.register-page .register-wrapper .form-wrapper .form-content {
+  padding-top: 10px;
+  align-items: center;
 }
 
 /*# sourceMappingURL=register.css.map */

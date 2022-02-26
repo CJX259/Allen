@@ -3,9 +3,21 @@
   .register-wrapper{
     width: 800px;
     margin: 0 auto;
+    border: 1px solid gray;
     .title{
       text-align: center;
       padding-top: 20px;
+      &-sub{
+        text-align: center;
+        font-style: italic;
+        color: gray;
+      }
+    }
+    .form-wrapper{
+      .form-content{
+        padding-top: 10px;
+        align-items: center;
+      }
     }
   }
 }

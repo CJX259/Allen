@@ -5,8 +5,8 @@ import { RegisterKey } from '~/const';
 import { getSession } from '~/sessions';
 import { SessionRegisterData } from '~/types';
 
-import RegisterCmp from '../../components/register';
-import registerCss from '../../styles/css/register.css';
+import RegisterCmp from '../components/register';
+import registerCss from '../styles/css/register.css';
 
 export const links: LinksFunction = () => {
   return [

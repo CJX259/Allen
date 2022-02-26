@@ -24,7 +24,9 @@ export default function Index() {
         {/* 右侧操作区 */}
         {renderRightContent(data)}
       </header>
-      <Outlet />
+      <div className='page-content'>
+        <Outlet />
+      </div>
     </div>
   );
 }
