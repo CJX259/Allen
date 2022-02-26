@@ -1,18 +1,31 @@
+.register-page {
+  padding-bottom: 20px;
+}
 .register-page .register-wrapper {
-  width: 800px;
+  width: 1300px;
+  box-shadow: gray 2px 2px 10px;
   margin: 0 auto;
-  border: 1px solid gray;
+  border-radius: 10px;
+  padding: 20px;
 }
 .register-page .register-wrapper .title {
   text-align: center;
-  padding-top: 20px;
 }
 .register-page .register-wrapper .title-sub {
   text-align: center;
   font-style: italic;
   color: gray;
 }
+.register-page .register-wrapper .form-wrapper {
+  display: flex;
+}
+.register-page .register-wrapper .form-wrapper .form-left {
+  flex: 0.8 1;
+  height: 550px;
+  border: 1px solid #000;
+}
 .register-page .register-wrapper .form-wrapper .form-content {
+  flex: 1;
   padding-top: 10px;
   align-items: center;
 }
