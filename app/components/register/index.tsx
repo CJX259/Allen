@@ -129,6 +129,13 @@ export default function RegisterCmp() {
       render: () => <Input.TextArea placeholder='请填写地址（精确到街道）'/>,
     },
     {
+      name: 'password',
+      label: {
+        all: '登录密码',
+      },
+      render: () => <Input.Password placeholder='(选填，不填仅能用验证码登录)'/>,
+    },
+    {
       name: 'introduce',
       label: {
         all: '简介',

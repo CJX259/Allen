@@ -1,8 +1,9 @@
 import React from 'react';
 import { ActionFunction, LoaderFunction, LinksFunction, json } from 'remix';
 import { redirect } from 'remix';
+import md5 from 'md5';
 import { LoginKey, RegisterKey } from '~/const';
-import { DB_ERROR, DB_ROW_REPEAT, PARAMS_ERROR } from '~/error';
+import { DB_ERROR, PARAMS_ERROR } from '~/error';
 import { commitSession, getSession } from '~/sessions';
 import { SessionRegisterData, SessionUserData } from '~/types';
 import { getFromDatas, validateFormDatas } from '~/utils/server.index';
@@ -28,31 +29,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const rawFormData = await request.formData();
-  const keys = ['phone', 'name', 'address', 'mail', 'role', 'idCard', 'realName', 'introduce'];
-  const requiredKeys = keys.filter((key) => key !== 'introduce');
+  const keys = ['phone', 'name', 'address', 'mail', 'role', 'idCard', 'realName', 'introduce', 'password'];
+  const requiredKeys = keys.filter((key) => (key !== 'introduce') && (key !== 'password'));
   const formatData = getFromDatas(keys, rawFormData);
+  // 是否传了必传的参数
   if (!validateFormDatas(requiredKeys, formatData)) {
     return json(PARAMS_ERROR);
   }
+  // 如果传了密码，则进行md5加密
+  if (formatData.password) {
+    formatData.password = md5(formatData.password);
+  }
   try {
-    // 尝试输入的时候就进行校验提示
-    // // 插入数据库前先看下有无重复的数据
-    // const proms: Promise<any>[] = [];
-    // const uniqueKeys = ['name', 'phone', 'idCard'];
-    // uniqueKeys.forEach((key: string) => {
-    //   proms.push(db.user.findUnique({
-    //     where: {
-    //       [key]: formatData[key],
-    //     },
-    //     select: {
-    //       id: true,
-    //     },
-    //   }));
-    // });
-    // const resUser = await Promise.all(proms);
-    // if (resUser.length) {
-    //   return json(DB_ROW_REPEAT);
-    // }
     // 插入新数据
     const newUser = await db.user.create({
       data: {...formatData},
@@ -64,7 +52,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
     session.set(LoginKey, {
       id: newUser.id,
-      name: newUser.name,
+      role: newUser.role,
     } as SessionUserData);
     return redirect('/', {
       headers: {
@@ -80,3 +68,4 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function Register() {
   return <RegisterCmp />;
 };
+

@@ -17,7 +17,7 @@ export const TIME_OUT: ERROR = {
 
 export const VERIFY_ERROR: ERROR = {
   retcode: 10004,
-  msg: '校验错误',
+  msg: '参数校验错误',
 };
 
 export const DB_ERROR: ERROR = {
@@ -28,4 +28,9 @@ export const DB_ERROR: ERROR = {
 export const DB_ROW_REPEAT: ERROR = {
   retcode: 10006,
   msg: '表中存在数据重复',
+};
+
+export const USER_ERROR: ERROR = {
+  retcode: 10007,
+  msg: '账号或密码错误',
 };

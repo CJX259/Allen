@@ -43,7 +43,7 @@ model Tag {
 model User {
   id           Int   @id @default(autoincrement())
   phone        String @db.VarChar(13) @unique
-  password     String?  @db.VarChar(16)
+  password     String?  @db.VarChar(32)
   name         String   @default(cuid()) @unique
   experience   Int      @default(0)
   introduce    String?

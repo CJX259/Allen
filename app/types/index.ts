@@ -1,3 +1,5 @@
+import { Role } from '@prisma/client';
+
 export * from './login';
 export * from './register';
 export interface ERROR {
@@ -7,5 +9,5 @@ export interface ERROR {
 
 export interface SessionUserData {
   id: number;
-  name: string;
+  role: Role;
 };

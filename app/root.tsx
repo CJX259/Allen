@@ -37,6 +37,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       request.headers.get('Cookie'),
   );
   const sessionUser = session.get(LoginKey);
+  console.log('sessionUser', sessionUser);
   // 不返回null，后续要用null判断有无登录态
   return sessionUser || {};
 };
