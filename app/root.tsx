@@ -6,6 +6,7 @@ import {
   ScrollRestoration,
   LinksFunction,
   LoaderFunction,
+  ActionFunction,
 } from 'remix';
 import React from 'react';
 import type { MetaFunction } from 'remix';
@@ -13,8 +14,9 @@ import antdStyle from 'antd/dist/antd.css';
 import indexStyles from './styles/css/indexPage.css';
 import IndexPage from './components/index';
 import { hadLogin } from './utils/loginUtils';
-import { getSession } from './sessions';
+import { destroySession, getSession } from './sessions';
 import { LoginKey } from './const';
+import { ses } from 'tencentcloud-sdk-nodejs';
 
 export const meta: MetaFunction = () => {
   return { title: 'ALLEN 电商直播配对平台' };
@@ -28,20 +30,33 @@ export const links: LinksFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  if (!await hadLogin(request.headers.get('Cookie'))) {
+  const session = await getSession(
+      request.headers.get('Cookie'),
+  );
+  if (!await hadLogin(session)) {
     // 没登录返回null
     return null;
   }
   // 已登录则返回session内容
-  const session = await getSession(
-      request.headers.get('Cookie'),
-  );
+
   const sessionUser = session.get(LoginKey);
   console.log('sessionUser', sessionUser);
   // 不返回null，后续要用null判断有无登录态
   return sessionUser || {};
 };
-
+export const action: ActionFunction = async ({ request }) => {
+  // 处理登出逻辑
+  const session = await getSession(request.headers.get('Cookie'));
+  if (!await hadLogin(session)) {
+    return null;
+  }
+  // 已登录则注销session
+  return new Response('登出成功', {
+    headers: {
+      'Set-Cookie': await destroySession(session),
+    },
+  });
+};
 /**
  * 根组件
  *

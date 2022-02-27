@@ -1,6 +1,6 @@
-import { useLoaderData, Link, Outlet } from 'remix';
-import React from 'react';
-import { Button } from 'antd';
+import { useLoaderData, Link, Outlet, useSubmit, SubmitFunction, useActionData } from 'remix';
+import React, { useEffect } from 'react';
+import { Popconfirm, Button, message } from 'antd';
 
 // import type { User } from '@prisma/client';
 // import { db } from '~/utils/db.server';
@@ -14,6 +14,11 @@ import { SessionUserData } from '~/types';
  */
 export default function Index() {
   const data = useLoaderData();
+  const submit = useSubmit();
+  const actionData = useActionData();
+  useEffect(() => {
+    actionData && message.success(actionData);
+  }, [actionData]);
   return (
     <div className='page-wrapper'>
       {/* 顶部导航栏 */}
@@ -22,7 +27,7 @@ export default function Index() {
           <div className='logo'></div>
         </Link>
         {/* 右侧操作区 */}
-        {renderRightContent(data)}
+        {renderRightContent(data, submit)}
       </header>
       <div className='page-content'>
         <Outlet />
@@ -36,7 +41,7 @@ interface InfoData {
   wording: string;
 }
 
-function renderRightContent(data: SessionUserData) {
+function renderRightContent(data: SessionUserData, submit: SubmitFunction) {
   const noUserLink: InfoData = {
     to: '/login',
     wording: '登录/注册',
@@ -57,6 +62,21 @@ function renderRightContent(data: SessionUserData) {
       <Link prefetch='intent' to={renderLink.to}>
         <Button type='primary'>{renderLink.wording}</Button>
       </Link>
+      {data &&
+        <Popconfirm
+          title="确认登出吗?"
+          okText="确认"
+          cancelText="取消"
+          onConfirm={() => handleLogout(submit)}
+        ><Button style={{ marginLeft: 10 }}>退出登录</Button>
+        </Popconfirm>
+      }
     </div>
   );
 };
+
+async function handleLogout(submit: SubmitFunction) {
+  return submit({}, {
+    method: 'post',
+  });
+}

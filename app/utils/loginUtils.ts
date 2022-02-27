@@ -1,5 +1,5 @@
-import { redirect } from 'remix';
-import { getSession } from '../sessions';
+import { redirect, Session } from 'remix';
+import { getSession } from '~/sessions';
 import { LoginKey } from '../const';
 
 
@@ -7,11 +7,10 @@ import { LoginKey } from '../const';
  * 判断session，是否已经登录
  *
  * @export
- * @param {(string | null)} cookie
+ * @param {Session} session
  * @return {*} boolean
  */
-export async function hadLogin(cookie: string | null) {
-  const session = await getSession(cookie);
+export async function hadLogin(session: Session) {
   return session.has(LoginKey);
 }
 
@@ -25,5 +24,6 @@ export async function hadLogin(cookie: string | null) {
  */
 export async function needLogined(request: Request) {
   const cookie = request.headers.get('Cookie');
-  return await hadLogin(cookie) ? redirect('/') : null;
+  const session = await getSession(cookie);
+  return await hadLogin(session) ? redirect('/') : null;
 };

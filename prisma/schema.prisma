@@ -53,13 +53,15 @@ model User {
   mail         String
   liveData     String?
   liveMaxAge   DateTime?
+  staus        Status   @default(PENDING)
+  reason       String?
   ctime        DateTime @default(now())
   utime        DateTime @updatedAt
   role         Role
   tag          Int?
   tagModel     Tag?      @relation(fields: [tag], references: [id])
   goods        Goods?
-  audit        Audit?
+  // audit        Audit?
   order        Order?
   userComment  UserComment?
 }
@@ -78,15 +80,15 @@ model Goods {
   utime       DateTime @updatedAt
 }
 
-model Audit {
-  id          Int  @id @default(autoincrement())
-  status      Status
-  reason      String
-  userId      Int
-  user        User @relation(fields: [userId], references: [id])
-  ctime       DateTime @default(now())
-  utime       DateTime @updatedAt
-}
+// model Audit {
+//   id          Int  @id @default(autoincrement())
+//   status      Status
+//   reason      String
+//   userId      Int
+//   user        User @relation(fields: [userId], references: [id])
+//   ctime       DateTime @default(now())
+//   utime       DateTime @updatedAt
+// }
 
 model Order {
   id          Int @id @default(autoincrement())
