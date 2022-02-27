@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLoaderData, useActionData, useSubmit } from 'remix';
+import { useLoaderData, useActionData, useSubmit, useTransition } from 'remix';
 import { Form, Input, Button, Radio, message } from 'antd';
 import type { FormInstance } from 'antd';
 import type { SubmitFunction } from 'remix';
@@ -9,12 +9,14 @@ import { FORM_COL, RULE_REQUIRED } from './const';
 import { Role } from '@prisma/client';
 import { FormRenderInfo } from '~/types';
 import { formatFormData } from '~/utils/client.index';
+import { LOAD_STATE } from '~/const';
 
 export default function RegisterCmp() {
   const phone = useLoaderData();
   const errorData = useActionData();
   const [form] = Form.useForm();
   const submit = useSubmit();
+  const transition = useTransition();
   // 是否为主播，用于表单label判断
   const [isAnchor, setIsAnchor] = useState(true);
   useEffect(() => {
@@ -61,17 +63,7 @@ export default function RegisterCmp() {
         },
         {
           validator: async (rule, value) => {
-            if (!value) {
-              return Promise.resolve();
-            }
-            // 调接口，查下数据库有无重复数据
-            const res = await (await fetch(`/queryUser?_data=routes/queryUser&key=name&value=${value}`, {
-              method: 'GET',
-            })).json();
-            if (res) {
-              throw new Error('昵称重复，请修改');
-            }
-            return Promise.resolve();
+            return validateRepeat('name', value, '昵称已存在');
           },
         },
       ],
@@ -91,7 +83,14 @@ export default function RegisterCmp() {
         anchor: '身份证号码',
         company: '公司法人身份证号码',
       },
-      rules: [RULE_REQUIRED],
+      rules: [
+        RULE_REQUIRED,
+        {
+          validator: async (rule, value) => {
+            return validateRepeat('idCard', value, '身份证号已存在');
+          },
+        },
+      ],
       render: () => <Input placeholder='请填写身份证号码' />,
     },
     {
@@ -153,7 +152,7 @@ export default function RegisterCmp() {
           >
             <BaseFormItem infos={UserRenderInfos} isAnchor={isAnchor} />
             <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
-              <Button type='primary' style={{ marginRight: 20 }} htmlType='submit'>提交</Button>
+              <Button loading={transition.state === LOAD_STATE.submitting} type='primary' style={{ marginRight: 20 }} htmlType='submit'>提交</Button>
               <Button htmlType='reset'>重置</Button>
             </Form.Item>
           </Form>
@@ -170,10 +169,32 @@ function changeRole(form: FormInstance, setIsAnchor: Function) {
 }
 
 function onFinish(values: any, form: FormInstance, submit: SubmitFunction) {
-  console.log('value', values);
   const formatValues = formatFormData(values);
   submit(formatValues, {
     action: '/register',
     method: 'post',
   });
+};
+
+
+/**
+ * 校验user中是否已存在重复值
+ *
+ * @param {string} key
+ * @param {*} value
+ * @param {string} msg
+ * @return {*} Promise<any>
+ */
+async function validateRepeat(key: string, value: any, msg: string) {
+  if (!value) {
+    return Promise.resolve();
+  }
+  // 调接口，查下数据库有无重复数据
+  const res = await (await fetch(`/queryUser?_data=routes/queryUser&key=${key}&value=${value}`, {
+    method: 'GET',
+  })).json();
+  if (res) {
+    throw new Error(msg);
+  }
+  return Promise.resolve();
 };
