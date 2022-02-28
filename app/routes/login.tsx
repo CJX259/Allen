@@ -1,5 +1,5 @@
 import { redirect, json } from 'remix';
-import { getSession, commitSession } from '../sessions';
+import { getSession, commitSession, destroySession } from '../sessions';
 import React from 'react';
 import type { LoaderFunction, ActionFunction, LinksFunction, Session } from 'remix';
 import { db } from '~/utils/db.server';
@@ -28,17 +28,12 @@ export const action: ActionFunction = async ({ request }) => {
   );
   const form = await request.formData();
   const phone = form.get('phone');
-  // 判断有无电话数据
-  if (!phone) {
-    return json(PARAMS_ERROR);
-  }
-  const phoneReg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
-  if (!phoneReg.test(phone as string)) {
-    return json(VERIFY_ERROR);
-  }
+
   const method = request.method;
+  console.log('method', method);
   switch (method) {
     case REQ_METHOD.POST: {
+      validatePhone(phone as string);
       const password = form.get('password');
       const code = form.get('code');
       if (!password && !code) {
@@ -54,7 +49,11 @@ export const action: ActionFunction = async ({ request }) => {
       break;
     }
     case REQ_METHOD.PUT: {
+      validatePhone(phone as string);
       return handleCodeSend(session, phone as string);
+    }
+    case REQ_METHOD.DEL: {
+      return handleLogout(session);
     }
   }
 };
@@ -63,7 +62,38 @@ export default function Login() {
   return <LoginCmp />;
 };
 
+/**
+ * 校验phone参数
+ *
+ * @param {string} phone
+ * @return {*} Response
+ */
+function validatePhone(phone: string) {
+  // 判断有无电话数据
+  if (!phone) {
+    return json(PARAMS_ERROR);
+  }
+  const phoneReg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+  if (!phoneReg.test(phone as string)) {
+    return json(VERIFY_ERROR);
+  }
+}
 
+/**
+ * 登出逻辑
+ *
+ * @param {Session} session
+ * @return {*} Response
+ */
+async function handleLogout(session: Session) {
+  console.log('进入logout逻辑');
+  // 已登录则注销session
+  return new Response('登出成功', {
+    headers: {
+      'Set-Cookie': await destroySession(session),
+    },
+  });
+}
 /**
  * action处理发送验证码逻辑
  *
@@ -144,7 +174,6 @@ async function verifyCode(session: Session, phone: string, code: string) {
   if (!codeData) {
     return json(PARAMS_ERROR);
   }
-  console.log('codeData', codeData.code, code);
   if (codeData.code !== code || codeData.phone !== phone) {
     return json(VERIFY_ERROR);
   }
@@ -160,7 +189,7 @@ async function verifyCode(session: Session, phone: string, code: string) {
   });
   // 清除session
   session.set(CodeKey, null);
-  let to = '/';
+  let to = '/home';
   if (!user) {
     // 没创建，进入注册页，设置session
     to = '/register';

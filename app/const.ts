@@ -21,6 +21,7 @@ export const REQ_METHOD = {
   POST: 'POST',
   GET: 'GET',
   PUT: 'PUT',
+  DEL: 'DELETE',
 };
 
 // remix提供的加载状态(action与loader)

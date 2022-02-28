@@ -44,17 +44,18 @@ export const loader: LoaderFunction = async ({ request }) => {
   return sessionUser || {};
 };
 export const action: ActionFunction = async ({ request }) => {
-  // 处理登出逻辑
-  const session = await getSession(request.headers.get('Cookie'));
-  if (!await hadLogin(session)) {
-    return null;
-  }
-  // 已登录则注销session
-  return new Response('登出成功', {
-    headers: {
-      'Set-Cookie': await destroySession(session),
-    },
-  });
+  // // 处理登出逻辑
+  // const session = await getSession(request.headers.get('Cookie'));
+  // if (!await hadLogin(session)) {
+  //   return null;
+  // }
+  // // 已登录则注销session
+  // return new Response('登出成功', {
+  //   headers: {
+  //     'Set-Cookie': await destroySession(session),
+  //   },
+  // });
+  return null;
 };
 /**
  * 根组件

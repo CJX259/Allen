@@ -15,6 +15,7 @@ export default function RootComp() {
   const data = useLoaderData();
   const submit = useSubmit();
   const actionData = useActionData();
+  console.log('actionData', actionData);
   useEffect(() => {
     actionData && message.success(actionData);
   }, [actionData]);
@@ -54,7 +55,7 @@ function renderRightContent(data: SessionUserData, submit: SubmitFunction) {
     wording: '登录/注册',
   };
   const userLink: InfoData = {
-    to: '/home/info',
+    to: '/home',
     wording: '我的信息',
   };
   let renderLink = noUserLink;
@@ -84,6 +85,7 @@ function renderRightContent(data: SessionUserData, submit: SubmitFunction) {
 
 async function handleLogout(submit: SubmitFunction) {
   return submit({}, {
-    method: 'post',
+    method: 'delete',
+    action: '/login',
   });
 }

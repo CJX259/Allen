@@ -1,0 +1,6 @@
+$menuWidth: 275px;
+
+.home-wrapper{
+  margin-left: $menuWidth;
+  width: calc(100% - 275px);
+}
