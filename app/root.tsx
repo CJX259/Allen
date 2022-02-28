@@ -39,24 +39,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   // 已登录则返回session内容
 
   const sessionUser = session.get(LoginKey);
-  console.log('sessionUser', sessionUser);
   // 不返回null，后续要用null判断有无登录态
   return sessionUser || {};
 };
-export const action: ActionFunction = async ({ request }) => {
-  // // 处理登出逻辑
-  // const session = await getSession(request.headers.get('Cookie'));
-  // if (!await hadLogin(session)) {
-  //   return null;
-  // }
-  // // 已登录则注销session
-  // return new Response('登出成功', {
-  //   headers: {
-  //     'Set-Cookie': await destroySession(session),
-  //   },
-  // });
-  return null;
-};
+
 /**
  * 根组件
  *

@@ -30,7 +30,6 @@ export const action: ActionFunction = async ({ request }) => {
   const phone = form.get('phone');
 
   const method = request.method;
-  console.log('method', method);
   switch (method) {
     case REQ_METHOD.POST: {
       validatePhone(phone as string);
@@ -86,7 +85,6 @@ function validatePhone(phone: string) {
  * @return {*} Response
  */
 async function handleLogout(session: Session) {
-  console.log('进入logout逻辑');
   // 已登录则注销session
   return new Response('登出成功', {
     headers: {
@@ -152,7 +150,7 @@ async function verifyPsw(session: Session, phone: string, password: string) {
   }
   session.set(LoginKey, user as SessionUserData);
   // Login succeeded, send them to the home page.
-  return redirect('/', {
+  return redirect('/home', {
     headers: {
       'Set-Cookie': await commitSession(session),
     },

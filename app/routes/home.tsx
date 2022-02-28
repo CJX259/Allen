@@ -14,10 +14,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function IndexPage() {
-  return (
-    <>
-      <Outlet/>
-    </>
-  );
+  return <Outlet/>;
 }
 

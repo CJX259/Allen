@@ -25,5 +25,5 @@ export async function hadLogin(session: Session) {
 export async function needLogined(request: Request) {
   const cookie = request.headers.get('Cookie');
   const session = await getSession(cookie);
-  return await hadLogin(session) ? redirect('/') : null;
+  return await hadLogin(session) ? redirect('/home') : null;
 };

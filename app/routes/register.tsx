@@ -54,7 +54,7 @@ export const action: ActionFunction = async ({ request, params }) => {
       id: newUser.id,
       role: newUser.role,
     } as SessionUserData);
-    return redirect('/', {
+    return redirect('/home', {
       headers: {
         'Set-Cookie': await commitSession(session),
       },
