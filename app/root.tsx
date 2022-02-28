@@ -11,12 +11,11 @@ import {
 import React from 'react';
 import type { MetaFunction } from 'remix';
 import antdStyle from 'antd/dist/antd.css';
-import indexStyles from './styles/css/indexPage.css';
-import IndexPage from './components/index';
+import rootStyles from './styles/css/rootPage.css';
+import RootPage from './components/root/index';
 import { hadLogin } from './utils/loginUtils';
 import { destroySession, getSession } from './sessions';
 import { LoginKey } from './const';
-import { ses } from 'tencentcloud-sdk-nodejs';
 
 export const meta: MetaFunction = () => {
   return { title: 'ALLEN 电商直播配对平台' };
@@ -25,7 +24,7 @@ export const meta: MetaFunction = () => {
 export const links: LinksFunction = () => {
   return [
     { rel: 'stylesheet', href: antdStyle },
-    { rel: 'stylesheet', href: indexStyles },
+    { rel: 'stylesheet', href: rootStyles },
   ];
 };
 
@@ -73,7 +72,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <IndexPage />
+        <RootPage />
         {/* <Outlet /> */}
         <ScrollRestoration />
         <Scripts />

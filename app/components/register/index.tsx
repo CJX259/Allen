@@ -33,6 +33,15 @@ export default function RegisterCmp() {
       render: () => <Input disabled/>,
     },
     {
+      name: 'vx',
+      label: {
+        all: '微信号',
+      },
+      initialValue: phone,
+      rules: [RULE_REQUIRED],
+      render: () => <Input />,
+    },
+    {
       name: 'role',
       label: {
         all: '您的身份是：',

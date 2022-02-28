@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const rawFormData = await request.formData();
-  const keys = ['phone', 'name', 'address', 'mail', 'role', 'idCard', 'realName', 'introduce', 'password'];
+  const keys = ['phone', 'name', 'address', 'mail', 'role', 'idCard', 'realName', 'introduce', 'password', 'vx'];
   const requiredKeys = keys.filter((key) => (key !== 'introduce') && (key !== 'password'));
   const formatData = getFromDatas(keys, rawFormData);
   // 是否传了必传的参数

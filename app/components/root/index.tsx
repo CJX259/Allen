@@ -1,18 +1,17 @@
 import { useLoaderData, Link, Outlet, useSubmit, SubmitFunction, useActionData } from 'remix';
 import React, { useEffect } from 'react';
 import { Popconfirm, Button, message } from 'antd';
-
 // import type { User } from '@prisma/client';
 // import { db } from '~/utils/db.server';
 import { SessionUserData } from '~/types';
-
+import MenuComp from '../Menu';
 /**
  * 默认主页
  *
  * @export
  * @return {*}
  */
-export default function Index() {
+export default function RootComp() {
   const data = useLoaderData();
   const submit = useSubmit();
   const actionData = useActionData();
@@ -30,8 +29,16 @@ export default function Index() {
         {renderRightContent(data, submit)}
       </header>
       <div className='page-content'>
-        <Outlet />
+        <div className="page-content-menu">
+          <MenuComp />
+        </div>
+        <div className="page-content-main">
+          <Outlet />
+        </div>
       </div>
+      <footer className='page-footer'>
+        <a target="_blank" rel="noreferrer" href="https://beian.miit.gov.cn/">粤ICP备20041191号</a>
+      </footer>
     </div>
   );
 }

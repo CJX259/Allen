@@ -1,17 +1,12 @@
 import {
-  LoaderFunction, Outlet,
+  LoaderFunction, redirect,
 } from 'remix';
-import React from 'react';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  return null;
+  // 引流到home
+  return redirect('/home');
 };
 
 export default function IndexPage() {
-  return (
-    <>
-      <Outlet/>
-    </>
-  );
+  return null;
 }
-

@@ -18,8 +18,8 @@ enum Status {
 
 enum OrderStatus {
   CONTRACTING
-  CHECKING
   CONTRACTED
+  DOING
   DONE
   REJECTING
   REJECTED
@@ -51,8 +51,11 @@ model User {
   idCard       String   @unique
   address      String
   mail         String
-  liveData     String?
-  liveMaxAge   DateTime?
+  vx           String
+  // liveData     String?
+  // liveMaxAge   DateTime?
+  // 合同图片
+  contract     String?
   staus        Status   @default(PENDING)
   reason       String?
   ctime        DateTime @default(now())
@@ -93,6 +96,9 @@ model Goods {
 model Order {
   id          Int @id @default(autoincrement())
   status      OrderStatus
+  liveUrl     String
+  time        String
+  times       Int
   goodsId     Int
   goods       Goods @relation(fields: [goodsId], references: [id])
   anchorId    Int
