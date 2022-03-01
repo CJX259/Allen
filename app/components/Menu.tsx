@@ -47,6 +47,10 @@ function calcMenuList(role: Role | undefined): MenuData[] {
           title: '供应商查询',
           to: '/search/company',
         },
+        {
+          title: '分类查看',
+          to: '/classify',
+        },
       ],
     },
   ];

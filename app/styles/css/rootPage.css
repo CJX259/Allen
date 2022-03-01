@@ -21,20 +21,15 @@
 }
 .page-content {
   min-height: 500px;
-  position: relative;
+  display: flex;
 }
 .page-content-menu {
-  left: 0px;
-  position: absolute;
   width: 275px;
-  z-index: 1;
   height: 100px;
 }
 .page-content-main {
+  flex: 1;
   padding: 20px;
-  position: relative;
-  box-sizing: border-box;
-  width: 100vw;
 }
 .page-footer {
   position: absolute;

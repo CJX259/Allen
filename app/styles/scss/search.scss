@@ -1,4 +1,6 @@
-$menuWidth: 275px;
 .search-wrapper{
-  margin-left: $menuWidth;
+  .search-input{
+    width: 400px;
+    display: flex;
+  }
 }

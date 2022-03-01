@@ -1,5 +1,5 @@
 import React from 'react';
-import type { LoaderFunction, ActionFunction, LinksFunction } from 'remix';
+import { LoaderFunction, ActionFunction, LinksFunction, Outlet } from 'remix';
 
 import searchStyle from '~/styles/css/search.css';
 
@@ -16,7 +16,5 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function SearchPage() {
-  return <div className='search-wrapper'>
-    <h1>searchs</h1>
-  </div>;
+  return <Outlet />;
 };

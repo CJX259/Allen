@@ -24,22 +24,14 @@ $menuWidth: 275px;
   }
   &-content{
     min-height: 500px;
-    // display: flex;
-    position: relative;
-    // height: calc(100vh - 120px);
+    display: flex;
     &-menu{
-      left: 0px;
-      position: absolute;
       width: $menuWidth;
-      z-index: 1;
       height: 100px;
     }
     &-main{
+      flex: 1;
       padding: 20px;
-      position: relative;
-      box-sizing: border-box;
-      // width: calc(100% - 275px);
-      width: 100vw;
     }
   }
   &-footer{
