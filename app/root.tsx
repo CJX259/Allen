@@ -6,16 +6,18 @@ import {
   ScrollRestoration,
   LinksFunction,
   LoaderFunction,
-  ActionFunction,
 } from 'remix';
 import React from 'react';
 import type { MetaFunction } from 'remix';
 import antdStyle from 'antd/dist/antd.css';
 import rootStyles from './styles/css/rootPage.css';
 import RootPage from './components/root/index';
-import { hadLogin } from './utils/loginUtils';
-import { destroySession, getSession } from './sessions';
+import { getSession } from './sessions';
 import { LoginKey } from './const';
+import { SessionUserData } from './types';
+import { Role } from '@prisma/client';
+import { MenuData } from './types/menu';
+import { RootLoaderData } from './types/loaderData';
 
 export const meta: MetaFunction = () => {
   return { title: 'ALLEN 电商直播配对平台' };
@@ -29,18 +31,33 @@ export const links: LinksFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const pathname = new URL(request.url).pathname;
+  console.log('pathname', pathname);
   const session = await getSession(
       request.headers.get('Cookie'),
   );
-  if (!await hadLogin(session)) {
-    // 没登录返回null
-    return null;
-  }
-  // 已登录则返回session内容
+  const menuList: MenuData[] = [];
+  const sessionUser = session.get(LoginKey) as SessionUserData;
+  // 页面通过user是否为null，判断用户是否登录
+  const res: RootLoaderData = {
+    user: sessionUser,
+    menuList,
+    pathname,
+  };
 
-  const sessionUser = session.get(LoginKey);
-  // 不返回null，后续要用null判断有无登录态
-  return sessionUser || {};
+  // 根据角色类型，返回不同的菜单列表
+  const role = sessionUser?.role;
+  switch (role) {
+    case Role.ADMIN: {
+      break;
+    }
+    case Role.ANCHOR:
+      // anchor与company相同
+    case Role.COMPANY: {
+      break;
+    }
+  }
+  return res;
 };
 
 /**

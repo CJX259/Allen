@@ -1,41 +1,91 @@
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+// import { MailOutlined, SearchOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
+import { Link } from 'remix';
 import React from 'react';
+import { MenuData, MenuItem } from '~/types/menu';
 
-export default function MenuCmp() {
+export default function MenuCmp(props: { menuList: MenuData[], pathname: string }) {
+  const { menuList = [], pathname = '' } = props;
+  const renderMenuList: MenuData[] = [
+    {
+      subTitle: '查询系统',
+      children: [
+        {
+          title: '主播查询',
+          to: '/search/anchor',
+        },
+        {
+          title: '供应商查询',
+          to: '/search/company',
+        },
+        {
+          title: '商品查询',
+          to: '/search/goods',
+        },
+        {
+          title: '登录',
+          to: '/login',
+        },
+      ],
+    },
+  ];
+  const openKey = findOpenKey(pathname, renderMenuList);
+  // 混合loader与base的menu
+  menuList.forEach((menu) => {
+    renderMenuList.push(menu);
+  });
+  console.log('paht', pathname);
   // 需要对不同类型的用户展示不同的菜单列表
   return (
     <Menu
       style={{ width: 256 }}
-      defaultSelectedKeys={['1']}
-      defaultOpenKeys={['sub1']}
+      defaultSelectedKeys={[pathname]}
+      defaultOpenKeys={[openKey?.subTitle || '']}
       mode="inline"
     >
-      <SubMenu key="qqq" icon={<MailOutlined />} title="Navigation One">
-        <Menu.ItemGroup key="q1" title="Item 1">
-          <Menu.Item key="qq1">Option 1</Menu.Item>
-          <Menu.Item key="qq2">Option 2</Menu.Item>
-        </Menu.ItemGroup>
-        <Menu.ItemGroup key="q2" title="Item 2">
-          <Menu.Item key="qq3">Option 3</Menu.Item>
-          <Menu.Item key="qq4">Option 4</Menu.Item>
-        </Menu.ItemGroup>
-      </SubMenu>
-      {/* <SubMenu key="q3" icon={<AppstoreOutlined />} title="Navigation Two">
-        <Menu.Item key="qq5">Option 5</Menu.Item>
-        <Menu.Item key="qq6">Option 6</Menu.Item>
-        <SubMenu key="q4" title="Submenu">
-          <Menu.Item key="qq7">Option 7</Menu.Item>
-          <Menu.Item key="qq8">Option 8</Menu.Item>
-        </SubMenu>
-      </SubMenu>
-      <SubMenu key="qqqq" icon={<SettingOutlined />} title="Navigation Three">
-        <Menu.Item key="qq9">Option 9</Menu.Item>
-        <Menu.Item key="qq10">Option 10</Menu.Item>
-        <Menu.Item key="qq11">Option 11</Menu.Item>
-        <Menu.Item key="qq12">Option 12</Menu.Item>
-      </SubMenu> */}
+      <Menu.Item key='/home'>
+        <Link
+          to='/home'
+          prefetch='intent'
+        >主页</Link>
+      </Menu.Item>
+      {renderMenu(renderMenuList)}
     </Menu>
   );
+};
+
+function renderMenu(menuList: MenuData[]) {
+  const subMenus = menuList.map((menu: MenuData, index: number) => {
+    const menuItem = menu.children;
+    return (
+      <SubMenu key={menu.subTitle || index} title={menu.subTitle}>
+        {menuItem.map((item: MenuItem) => {
+          return <Menu.Item key={item.to}>
+            <Link
+              to={item.to}
+              prefetch='intent'
+            >{item.title}
+            </Link>
+          </Menu.Item>;
+        })}
+      </SubMenu>
+    );
+  });
+  return <>{subMenus}</>;
+};
+
+
+/**
+ * 遍历找出目前menu的父级submenu
+ *
+ * @param {string} to
+ * @param {MenuData[]} menuList
+ * @return {*} string
+ */
+function findOpenKey(to: string, menuList: MenuData[]) {
+  const openmenu = menuList.find((menu) => {
+    return menu.children.some((childMenu) => childMenu.to === to);
+  });
+  return openmenu;
 };
