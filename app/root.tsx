@@ -30,7 +30,6 @@ export const links: LinksFunction = () => {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const pathname = new URL(request.url).pathname;
-  console.log('root loader', pathname);
   const session = await getSession(
       request.headers.get('Cookie'),
   );

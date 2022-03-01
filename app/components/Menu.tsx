@@ -36,16 +36,12 @@ function calcMenuList(role: Role | undefined): MenuData[] {
       subTitle: '查询系统',
       children: [
         {
-          title: '主播查询',
-          to: '/search/anchor',
-        },
-        {
           title: '商品查询',
           to: '/search/goods',
         },
         {
-          title: '供应商查询',
-          to: '/search/company',
+          title: '用户查询',
+          to: '/search/user',
         },
         {
           title: '分类查看',
