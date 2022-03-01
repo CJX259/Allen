@@ -1,41 +1,15 @@
-// import { MailOutlined, SearchOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import { Link } from 'remix';
 import React from 'react';
 import { MenuData, MenuItem } from '~/types/menu';
+import { Role } from '@prisma/client';
+import { RootLoaderData } from '~/types/loaderData';
 
-export default function MenuCmp(props: { menuList: MenuData[], pathname: string }) {
-  const { menuList = [], pathname = '' } = props;
-  const renderMenuList: MenuData[] = [
-    {
-      subTitle: '查询系统',
-      children: [
-        {
-          title: '主播查询',
-          to: '/search/anchor',
-        },
-        {
-          title: '供应商查询',
-          to: '/search/company',
-        },
-        {
-          title: '商品查询',
-          to: '/search/goods',
-        },
-        {
-          title: '登录',
-          to: '/login',
-        },
-      ],
-    },
-  ];
+export default function MenuCmp(props: { data: RootLoaderData }) {
+  const { data: { user, pathname = '' } } = props;
+  const renderMenuList: MenuData[] = calcMenuList(user?.role);
   const openKey = findOpenKey(pathname, renderMenuList);
-  // 混合loader与base的menu
-  menuList.forEach((menu) => {
-    renderMenuList.push(menu);
-  });
-  console.log('paht', pathname);
   // 需要对不同类型的用户展示不同的菜单列表
   return (
     <Menu
@@ -55,6 +29,64 @@ export default function MenuCmp(props: { menuList: MenuData[], pathname: string 
   );
 };
 
+function calcMenuList(role: Role | undefined): MenuData[] {
+  // 根据角色类型，返回不同的菜单列表
+  const base = [
+    {
+      subTitle: '查询系统',
+      children: [
+        {
+          title: '主播查询',
+          to: '/search/anchor',
+        },
+        {
+          title: '商品查询',
+          to: '/search/goods',
+        },
+        {
+          title: '供应商查询',
+          to: '/search/company',
+        },
+      ],
+    },
+  ];
+  switch (role) {
+    case Role.ADMIN: {
+      base.push({
+        subTitle: '审核系统',
+        children: [
+          {
+            title: '主播审核',
+            to: '/audit/anchor',
+          },
+          {
+            title: '商品审核',
+            to: '/audit/goods',
+          },
+          {
+            title: '供应商审核',
+            to: '/audit/compayn',
+          },
+        ],
+      });
+      break;
+    }
+    case Role.ANCHOR:
+      // anchor与company相同
+    case Role.COMPANY: {
+      break;
+    }
+  }
+  return base;
+}
+
+
+/**
+ * 渲染menu
+ *
+ * @param {MenuData[]} menuList
+ * @return {*} JSX.Element
+ */
 function renderMenu(menuList: MenuData[]) {
   const subMenus = menuList.map((menu: MenuData, index: number) => {
     const menuItem = menu.children;

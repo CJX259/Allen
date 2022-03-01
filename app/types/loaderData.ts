@@ -1,8 +1,8 @@
 import { SessionUserData } from '.';
-import { MenuData } from './menu';
+// import { MenuData } from './menu';
 
 export interface RootLoaderData {
   user: SessionUserData | null;
-  menuList: MenuData[];
+  // menuList: MenuData[];
   pathname: string;
 };

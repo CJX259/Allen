@@ -31,7 +31,7 @@ export default function RootComp() {
       </header>
       <div className='page-content'>
         <div className="page-content-menu">
-          <MenuComp menuList={data?.menuList || []} pathname={data.pathname}/>
+          <MenuComp data={data}/>
         </div>
         <div className="page-content-main">
           <Outlet />

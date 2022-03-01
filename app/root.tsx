@@ -15,8 +15,6 @@ import RootPage from './components/root/index';
 import { getSession } from './sessions';
 import { LoginKey } from './const';
 import { SessionUserData } from './types';
-import { Role } from '@prisma/client';
-import { MenuData } from './types/menu';
 import { RootLoaderData } from './types/loaderData';
 
 export const meta: MetaFunction = () => {
@@ -32,31 +30,16 @@ export const links: LinksFunction = () => {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const pathname = new URL(request.url).pathname;
-  console.log('pathname', pathname);
+  console.log('root loader', pathname);
   const session = await getSession(
       request.headers.get('Cookie'),
   );
-  const menuList: MenuData[] = [];
   const sessionUser = session.get(LoginKey) as SessionUserData;
   // 页面通过user是否为null，判断用户是否登录
   const res: RootLoaderData = {
     user: sessionUser,
-    menuList,
     pathname,
   };
-
-  // 根据角色类型，返回不同的菜单列表
-  const role = sessionUser?.role;
-  switch (role) {
-    case Role.ADMIN: {
-      break;
-    }
-    case Role.ANCHOR:
-      // anchor与company相同
-    case Role.COMPANY: {
-      break;
-    }
-  }
   return res;
 };
 
