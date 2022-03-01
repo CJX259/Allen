@@ -1,23 +1,41 @@
 import React, { useState } from 'react';
 import { Input, Button } from 'antd';
-import { useLoaderData, useSubmit } from 'remix';
+import { SubmitFunction, useLoaderData, useSubmit } from 'remix';
 import { SearchOutlined } from '@ant-design/icons';
+import { SearchLoaderData } from '~/types';
 
 export default function SearchInput(props: any) {
-  const [searchKey, setSearchKey] = useState('');
+  const loaderData: SearchLoaderData = useLoaderData();
+  const [searchKey, setSearchKey] = useState(loaderData?.searchKey || '');
   const submit = useSubmit();
-  const searchData = useLoaderData();
-  console.log('actionData', searchData);
+  console.log('loaderData', loaderData);
+
   return (
     <div className='search-input'>
-      <Input value={searchKey} onChange={(e) => setSearchKey(e.target.value)}/>
+      <Input
+        value={searchKey}
+        placeholder='可通过id与昵称搜索'
+        onKeyPress={(e) => e.key === 'Enter' && sendSearch(searchKey, submit) }
+        onChange={(e) => setSearchKey(e.target.value)}
+      />
       <Button
         type='primary'
-        onClick={() => submit({ key: searchKey }, {
-          method: 'get',
-        })}
+        onClick={() => sendSearch(searchKey, submit)}
         icon={<SearchOutlined />}
       >搜索</Button>
     </div>
   );
+};
+
+
+/**
+ * 发起搜索请求
+ *
+ * @param {string} searchKey
+ * @param {SubmitFunction} submit
+ */
+function sendSearch(searchKey: string, submit: SubmitFunction) {
+  submit({ searchKey }, {
+    method: 'get',
+  });
 };
