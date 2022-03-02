@@ -35,7 +35,7 @@ async function main() {
         goods: {
           create: {
             name: '旺仔牛奶',
-            info: '一瓶旺仔牛奶',
+            introduce: '一瓶旺仔牛奶',
             price: 4,
             tag: {
               connectOrCreate: {

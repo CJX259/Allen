@@ -46,7 +46,7 @@ model User {
   password     String?  @db.VarChar(32)
   name         String   @default(cuid()) @unique
   experience   Int      @default(0)
-  introduce    String?
+  introduce    String?  @default("此用户暂无简介")
   realName     String
   idCard       String   @unique
   address      String
@@ -61,8 +61,8 @@ model User {
   ctime        DateTime @default(now())
   utime        DateTime @updatedAt
   role         Role
-  tag          Int?
-  tagModel     Tag?      @relation(fields: [tag], references: [id])
+  tagId        Int?
+  tag          Tag?      @relation(fields: [tagId], references: [id])
   goods        Goods?
   // audit        Audit?
   order        Order?
@@ -72,7 +72,7 @@ model User {
 model Goods {
   id          Int   @id @default(autoincrement())
   name        String
-  info        String
+  introduce        String
   price       Int
   companyId   Int
   company     User @relation(fields: [companyId], references: [id])

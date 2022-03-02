@@ -1,35 +1,40 @@
 import React, { useState } from 'react';
-import { Input, Button } from 'antd';
-import { SubmitFunction, useLoaderData, useSubmit } from 'remix';
+import { Input, Button, Spin } from 'antd';
+import { SubmitFunction, useLoaderData, useSubmit, useTransition } from 'remix';
 import { SearchOutlined } from '@ant-design/icons';
 import { SearchLoaderData } from '~/types';
-import ContentComp from './Content';
+import CardItem from './CardItem';
+import { RenderType } from '~/types/search';
 
 export default function SearchComp() {
   const loaderData: SearchLoaderData = useLoaderData();
-  const [searchKey, setSearchKey] = useState(loaderData?.searchKey || '');
+  const { searchKey, data } = loaderData;
+  const [key, setSearchKey] = useState(searchKey || '');
   const submit = useSubmit();
+  const transition = useTransition();
   console.log('loaderData', loaderData);
   return (
     <div className='search-wrapper'>
-      {/* 搜索框区域 */}
-      <div className='search-input'>
-        <Input
-          value={searchKey}
-          placeholder='可通过id与昵称搜索'
-          onKeyPress={(e) => e.key === 'Enter' && sendSearch(searchKey, submit) }
-          onChange={(e) => setSearchKey(e.target.value)}
-        />
-        <Button
-          type='primary'
-          onClick={() => sendSearch(searchKey, submit)}
-          icon={<SearchOutlined />}
-        >搜索</Button>
-      </div>
-      {/* 搜索结果展示区 */}
-      <div className="search-content">
-        <ContentComp />
-      </div>
+      <Spin spinning={transition.state !== 'idle'}>
+        {/* 搜索框区域 */}
+        <div className='search-input'>
+          <Input
+            value={key}
+            placeholder='可通过id与昵称搜索'
+            onKeyPress={(e) => e.key === 'Enter' && sendSearch(key, submit) }
+            onChange={(e) => setSearchKey(e.target.value)}
+          />
+          <Button
+            type='primary'
+            onClick={() => sendSearch(key, submit)}
+            icon={<SearchOutlined />}
+          >搜索</Button>
+        </div>
+        {/* 搜索结果展示区 */}
+        <div className="search-content">
+          {data?.map((user) => <CardItem key={user.id} data={user} type={RenderType.USER}/>)}
+        </div>
+      </Spin>
     </div>
   );
 };
