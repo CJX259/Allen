@@ -33,7 +33,7 @@ enum Role {
 
 model Tag {
   id          Int @id @default(autoincrement())
-  name        String
+  name        String @unique
   goods       Goods?
   user        User?
   ctime       DateTime @default(now())
