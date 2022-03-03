@@ -3,7 +3,7 @@ import { ActionFunction } from 'remix';
 import SearchComp from '~/components/search';
 import { USER_PAGESIZE } from '~/const';
 import { searchGoods } from '~/server/goods';
-import { getUserCount, searchUser } from '~/server/user';
+import { searchUser } from '~/server/user';
 import { SearchLoaderData, SearchType } from '~/types';
 
 // 处理查询页的搜索请求，返回数据列表
@@ -24,8 +24,9 @@ export const loader: ActionFunction = async ({ request, params }) => {
   };
   switch (type) {
     case SearchType.user: {
-      res.data = await searchUser(searchKey, page, pageSize);
-      res.total = await getUserCount(searchKey);
+      const { data, total } = await searchUser(searchKey, page, pageSize);
+      res.data = data;
+      res.total = total;
       break;
     }
     case SearchType.goods: {

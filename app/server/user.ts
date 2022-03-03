@@ -1,3 +1,4 @@
+import { User } from '@prisma/client';
 import { db } from '~/utils/db.server';
 
 /**
@@ -10,10 +11,14 @@ import { db } from '~/utils/db.server';
  * @return {*} user
  */
 export async function searchUser(searchKey: any, page: number, limit: number) {
+  const res = {
+    data: [] as User[],
+    total: 0,
+  };
   // 后续需要外接订单表
   if (!searchKey) {
     // 无key搜索,只看页码
-    return db.user.findMany({
+    res.data = await db.user.findMany({
       where: {
         role: {
           not: 'ADMIN',
@@ -22,11 +27,19 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
       take: limit,
       skip: (page - 1) * limit,
     });
+    res.total = await db.user.count({
+      where: {
+        role: {
+          not: 'ADMIN',
+        },
+      },
+    });
+    return res;
   }
-  let resUser;
   const numberReg = /^\d+$/;
+  // 如果传的key全为number，则先试下id精确匹配
   if (numberReg.test(searchKey)) {
-    resUser = await db.user.findFirst({
+    const temp = await db.user.findFirst({
       where: {
         id: +searchKey,
         role: {
@@ -34,11 +47,14 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
         },
       },
     });
-    if (resUser) {
-      return [resUser];
+    if (temp) {
+      res.data = [temp];
+      res.total = 1;
+      return res;
     }
   }
-  return db.user.findMany({
+  // 根据昵称模糊匹配
+  res.data = await db.user.findMany({
     where: {
       name: {
         contains: searchKey,
@@ -50,41 +66,7 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
     take: limit,
     skip: (page - 1) * limit,
   });
-};
-
-/**
- * 得到符合筛选条件的总数
- *
- * @export
- * @param {*} searchKey
- * @return {*} number
- */
-export async function getUserCount(searchKey: any) {
-  if (!searchKey) {
-    return db.user.count({
-      where: {
-        role: {
-          not: 'ADMIN',
-        },
-      },
-    });
-  }
-  let res;
-  const numberReg = /^\d+$/;
-  if (numberReg.test(searchKey)) {
-    res = await db.user.count({
-      where: {
-        id: +searchKey,
-        role: {
-          not: 'ADMIN',
-        },
-      },
-    });
-    if (res) {
-      return res;
-    }
-  }
-  return db.user.count({
+  res.total = await db.user.count({
     where: {
       name: {
         contains: searchKey,
@@ -94,4 +76,5 @@ export async function getUserCount(searchKey: any) {
       },
     },
   });
+  return res;
 };
