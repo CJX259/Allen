@@ -11,9 +11,13 @@ export interface RootLoaderData {
 
 export interface SearchLoaderData{
   searchKey: string | null;
-  data: User[] | Goods[] | null;
+  data: UserJoinTag[] | Goods[] | null;
   searchType: SearchType;
   total: number;
   page: number;
   pageSize: number;
 };
+
+export type UserJoinTag = {
+  tags: Array<{userId: number; tagId: number; tag: { name: string }}>
+} & User;

@@ -1,9 +1,10 @@
-import { Role, User } from '@prisma/client';
+import { Role } from '@prisma/client';
 import { Tag } from 'antd';
 import React from 'react';
 import { LEVEL_VAR } from '~/const';
+import { UserJoinTag } from '~/types';
 
-export default function UserCardItem(props: {data: User}) {
+export default function UserCardItem(props: { data: UserJoinTag}) {
   const { data } = props;
   const roleText = data.role === Role.COMPANY ? <Tag color="red">供应商</Tag> : <Tag color="green">主播</Tag>;
   return (
@@ -16,8 +17,7 @@ export default function UserCardItem(props: {data: User}) {
         </div>
         {/* 标签最多显示2个 */}
         <div className="item-tag">
-          <span>{'默认标签sdasdas'}</span>
-          <span>{'默认标签sdasdas'}</span>
+          {data.tags.slice(0, 2)?.map((item) => <Tag color='blue' key={item.tagId}>{item.tag.name}</Tag>)}
         </div>
       </div>
       <div className='item-info'>{data.introduce || '暂无简介'}</div>

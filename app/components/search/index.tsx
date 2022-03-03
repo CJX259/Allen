@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Input, Button, Spin, Pagination } from 'antd';
 import { SubmitFunction, useLoaderData, useSubmit, useTransition } from 'remix';
 import { SearchOutlined } from '@ant-design/icons';
-import { SearchLoaderData, SearchType } from '~/types';
+import { SearchLoaderData, SearchType, UserJoinTag } from '~/types';
 import GoodsCardItem from './GoodsCardItem';
-import { Goods, User } from '@prisma/client';
+import { Goods } from '@prisma/client';
 import UserCardItem from './UserCardItem';
 import { USER_PAGESIZE } from '~/const';
 
@@ -36,7 +36,7 @@ export default function SearchComp() {
         <div className="search-content">
           {data?.map((item) => loaderData.searchType === SearchType.goods ?
           <GoodsCardItem key={item.id} data={item as Goods} /> :
-          <UserCardItem key={item.id} data={item as User} />)}
+          <UserCardItem key={item.id} data={item as UserJoinTag} />)}
         </div>
         <div className="search-pager">
           <Pagination

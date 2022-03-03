@@ -32,7 +32,7 @@
   border-radius: 50%;
 }
 .search-wrapper .search-content-item-user .item-name {
-  flex: 2;
+  flex: 1;
   margin-left: 20px;
   height: 60px;
   line-height: 60px;
@@ -49,20 +49,15 @@
   font-weight: 200;
 }
 .search-wrapper .search-content-item-user .item-tag {
-  flex: 1;
+  width: 150px;
   font-size: 8px;
   color: gray;
-  margin: auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .search-wrapper .search-content-item-user .item-tag span {
-  display: inline-block;
-  width: calc(50% - 5px);
-  box-sizing: border-box;
-  border: 1px solid gray;
-  border-radius: 2px;
-  margin-right: 5px;
-  padding: 1px 3px;
-  height: 24px;
+  max-width: 75px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

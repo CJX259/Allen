@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { UserJoinTag } from '~/types';
 import { db } from '~/utils/db.server';
 
 /**
@@ -11,8 +11,20 @@ import { db } from '~/utils/db.server';
  * @return {*} user
  */
 export async function searchUser(searchKey: any, page: number, limit: number) {
+  // 连接外表（user -> tagOnUser -> tag -> tag.name）
+  const includeConfig = {
+    tags: {
+      include: {
+        tag: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    },
+  };
   const res = {
-    data: [] as User[],
+    data: [] as UserJoinTag[],
     total: 0,
   };
   // 后续需要外接订单表
@@ -24,6 +36,7 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
           not: 'ADMIN',
         },
       },
+      include: includeConfig,
       take: limit,
       skip: (page - 1) * limit,
     });
@@ -40,6 +53,7 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
   // 如果传的key全为number，则先试下id精确匹配
   if (numberReg.test(searchKey)) {
     const temp = await db.user.findFirst({
+      include: includeConfig,
       where: {
         id: +searchKey,
         role: {
@@ -55,6 +69,7 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
   }
   // 根据昵称模糊匹配
   res.data = await db.user.findMany({
+    include: includeConfig,
     where: {
       name: {
         contains: searchKey,

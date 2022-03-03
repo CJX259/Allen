@@ -33,8 +33,7 @@
           }
         }
         &-name{
-          // float: left;
-          flex: 2;
+          flex: 1;
           margin-left: 20px;
           height: 60px;
           line-height: 60px;
@@ -51,26 +50,19 @@
           font-weight: 200;
         }
         &-tag{
-          flex: 1;
+          // flex: 1;
+          width: 150px;
           font-size: 8px;
           color: gray;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           span{
-            display: inline-block;
-            width: calc(50% - 5px);
-            box-sizing: border-box;
-            border: 1px solid gray;
-            border-radius: 2px;
-            margin-right: 5px;
-            padding: 1px 3px;
-            height: 24px;
-            // width: 56px;
+            max-width: 75px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
           }
-          margin: auto 0;
-          // float: right;
-
         }
         &-info{
           margin-top: 10px;
