@@ -2,31 +2,32 @@ import React from 'react';
 import { ActionFunction } from 'remix';
 import SearchComp from '~/components/search';
 import { searchUser } from '~/server/user';
-import { SearchLoaderData } from '~/types';
+import { SearchLoaderData, SearchType } from '~/types';
 
 // 处理查询页的搜索请求，返回数据列表
 export const loader: ActionFunction = async ({ request, params }) => {
-  const role = params.role;
+  const type = params.type as SearchType;
   const searchParams = new URL(request.url).searchParams;
   const searchKey = searchParams.get('searchKey');
   const page = +(searchParams.get('page') || 1);
-  const limit = +(searchParams.get('limit') || 1);
+  const limit = +(searchParams.get('limit') || 3);
   const res: SearchLoaderData = {
     searchKey,
     data: null,
+    searchType: type,
   };
-  switch (role) {
-    case 'user': {
+  switch (type) {
+    case SearchType.user: {
       res.data = await searchUser(searchKey, page, limit);
       break;
     }
-    case 'goods': {
+    case SearchType.goods: {
       break;
     }
   }
   return res;
 };
 
-export default function SearchType() {
+export default function Search() {
   return <SearchComp />;
 };

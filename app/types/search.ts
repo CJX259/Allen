@@ -5,7 +5,7 @@ export interface SearchCardItem {
 };
 
 // CardItem展示的类型
-export enum RenderType{
-  USER = 1,
-  GOODS
+export enum SearchType {
+  user = 'user',
+  goods = 'goods',
 };

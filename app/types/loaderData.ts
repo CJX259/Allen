@@ -1,5 +1,5 @@
-import { User } from '@prisma/client';
-import { SessionUserData } from '.';
+import { Goods, User } from '@prisma/client';
+import { SearchType, SessionUserData } from '.';
 // import { MenuData } from './menu';
 
 export interface RootLoaderData {
@@ -11,5 +11,6 @@ export interface RootLoaderData {
 
 export interface SearchLoaderData{
   searchKey: string | null;
-  data: User[] | null;
+  data: User[] | Goods[] | null;
+  searchType: SearchType;
 };

@@ -4,6 +4,7 @@ export * from './login';
 export * from './register';
 export * from './menu';
 export * from './loaderData';
+export * from './search';
 export interface ERROR {
   msg: string;
   retcode: number;

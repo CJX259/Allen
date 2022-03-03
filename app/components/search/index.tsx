@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Input, Button, Spin } from 'antd';
 import { SubmitFunction, useLoaderData, useSubmit, useTransition } from 'remix';
 import { SearchOutlined } from '@ant-design/icons';
-import { SearchLoaderData } from '~/types';
-import CardItem from './CardItem';
-import { RenderType } from '~/types/search';
+import { SearchLoaderData, SearchType } from '~/types';
+import GoodsCardItem from './GoodsCardItem';
+import { Goods, User } from '@prisma/client';
+import UserCardItem from './UserCardItem';
 
 export default function SearchComp() {
   const loaderData: SearchLoaderData = useLoaderData();
@@ -32,7 +33,9 @@ export default function SearchComp() {
         </div>
         {/* 搜索结果展示区 */}
         <div className="search-content">
-          {data?.map((user) => <CardItem key={user.id} data={user} type={RenderType.USER}/>)}
+          {data?.map((item) => loaderData.searchType === SearchType.goods ?
+          <GoodsCardItem key={item.id} data={item as Goods} /> :
+          <UserCardItem key={item.id} data={item as User} />)}
         </div>
       </Spin>
     </div>

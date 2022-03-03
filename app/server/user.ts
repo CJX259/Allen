@@ -37,7 +37,8 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
       },
     },
     orderBy: {
-      name: 'asc',
+      role: 'asc',
+      name: 'desc',
     },
     take: limit,
     skip: (page - 1) * limit,

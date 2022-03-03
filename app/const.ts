@@ -40,3 +40,6 @@ export const LOAD_TYPE = {
   actionReload: 'actionReload',
   load: 'load',
 };
+
+// 升级所需经验值
+export const LEVEL_VAR = 2;
