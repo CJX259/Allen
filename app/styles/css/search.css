@@ -22,22 +22,25 @@
 .search-wrapper .search-content-item-user:hover {
   transform: scale(1.05);
 }
-.search-wrapper .search-content-item-user img {
-  float: left;
+.search-wrapper .search-content-item-user .item-header {
+  overflow: hidden;
+  display: flex;
+}
+.search-wrapper .search-content-item-user .item-header img {
   height: 60px;
   width: 60px;
   border-radius: 50%;
 }
-.search-wrapper .search-content-item-user .item-header {
-  overflow: hidden;
-}
 .search-wrapper .search-content-item-user .item-name {
-  float: left;
+  flex: 2;
   margin-left: 20px;
   height: 60px;
   line-height: 60px;
   font-weight: bold;
   position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .search-wrapper .search-content-item-user .item-experience {
   position: absolute;
@@ -45,26 +48,30 @@
   font-size: 6px;
   font-weight: 200;
 }
+.search-wrapper .search-content-item-user .item-tag {
+  flex: 1;
+  font-size: 8px;
+  color: gray;
+  margin: auto 0;
+}
+.search-wrapper .search-content-item-user .item-tag span {
+  display: inline-block;
+  width: calc(50% - 5px);
+  box-sizing: border-box;
+  border: 1px solid gray;
+  border-radius: 2px;
+  margin-right: 5px;
+  padding: 1px 3px;
+  height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .search-wrapper .search-content-item-user .item-info {
   margin-top: 10px;
   height: 30px;
   line-height: 15px;
   width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.search-wrapper .search-content-item-user .item-tag {
-  font-size: 8px;
-  color: gray;
-  border: 1px solid gray;
-  border-radius: 2px;
-  margin-right: 5px;
-  padding: 1px 3px;
-  float: right;
-  transform: translateY(50%);
-  height: 24px;
-  width: 56px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
