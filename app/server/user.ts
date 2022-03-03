@@ -26,9 +26,12 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
   let resUser;
   const numberReg = /^\d+$/;
   if (numberReg.test(searchKey)) {
-    resUser = await db.user.findUnique({
+    resUser = await db.user.findFirst({
       where: {
         id: +searchKey,
+        role: {
+          not: 'ADMIN',
+        },
       },
     });
     if (resUser) {
@@ -72,6 +75,9 @@ export async function getUserCount(searchKey: any) {
     res = await db.user.count({
       where: {
         id: +searchKey,
+        role: {
+          not: 'ADMIN',
+        },
       },
     });
     if (res) {
