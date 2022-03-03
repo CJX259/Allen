@@ -37,7 +37,6 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
       },
     },
     orderBy: {
-      role: 'asc',
       name: 'desc',
     },
     take: limit,

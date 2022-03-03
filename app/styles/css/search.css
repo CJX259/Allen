@@ -46,7 +46,8 @@
   font-weight: 200;
 }
 .search-wrapper .search-content-item-user .item-info {
-  height: 15px;
+  margin-top: 10px;
+  height: 30px;
   line-height: 15px;
   width: 100%;
   white-space: nowrap;
@@ -58,7 +59,15 @@
   color: gray;
   border: 1px solid gray;
   border-radius: 2px;
+  margin-right: 5px;
   padding: 1px 3px;
+  float: right;
+  transform: translateY(50%);
+  height: 24px;
+  width: 56px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .search-wrapper .search-content-item-goods {
   width: 200px;
