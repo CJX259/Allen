@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Input, Button, Spin } from 'antd';
+import { Input, Button, Spin, Pagination } from 'antd';
 import { SubmitFunction, useLoaderData, useSubmit, useTransition } from 'remix';
 import { SearchOutlined } from '@ant-design/icons';
 import { SearchLoaderData, SearchType } from '~/types';
 import GoodsCardItem from './GoodsCardItem';
 import { Goods, User } from '@prisma/client';
 import UserCardItem from './UserCardItem';
+import { USER_PAGESIZE } from '~/const';
 
 export default function SearchComp() {
   const loaderData: SearchLoaderData = useLoaderData();
@@ -37,6 +38,14 @@ export default function SearchComp() {
           <GoodsCardItem key={item.id} data={item as Goods} /> :
           <UserCardItem key={item.id} data={item as User} />)}
         </div>
+        <div className="search-pager">
+          <Pagination
+            current={loaderData.page}
+            total={loaderData.total || 0}
+            onChange={(page) => sendSearch(searchKey || '', submit, page)}
+            pageSize={USER_PAGESIZE}
+          />
+        </div>
       </Spin>
     </div>
   );
@@ -47,9 +56,21 @@ export default function SearchComp() {
  *
  * @param {string} searchKey
  * @param {SubmitFunction} submit
+ * @param {number} [page]
+ * @param {number} [pageSize]
  */
-function sendSearch(searchKey: string, submit: SubmitFunction) {
-  submit({ searchKey }, {
+function sendSearch(searchKey: string, submit: SubmitFunction, page?: number, pageSize?: number) {
+  // 重置分页器
+  const params = {
+    searchKey,
+  } as any;
+  if (page) {
+    params.page = page;
+  };
+  if (pageSize) {
+    params.pageSize = pageSize;
+  };
+  submit(params, {
     method: 'get',
   });
 };

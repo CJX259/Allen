@@ -13,4 +13,7 @@ export interface SearchLoaderData{
   searchKey: string | null;
   data: User[] | Goods[] | null;
   searchType: SearchType;
+  total: number;
+  page: number;
+  pageSize: number;
 };

@@ -48,3 +48,44 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
     skip: (page - 1) * limit,
   });
 };
+
+/**
+ * 得到符合筛选条件的总数
+ *
+ * @export
+ * @param {*} searchKey
+ * @return {*} number
+ */
+export async function getUserCount(searchKey: any) {
+  if (!searchKey) {
+    return db.user.count({
+      where: {
+        role: {
+          not: 'ADMIN',
+        },
+      },
+    });
+  }
+  let res;
+  const numberReg = /^\d+$/;
+  if (numberReg.test(searchKey)) {
+    res = await db.user.count({
+      where: {
+        id: +searchKey,
+      },
+    });
+    if (res) {
+      return res;
+    }
+  }
+  return db.user.count({
+    where: {
+      name: {
+        contains: searchKey,
+      },
+      role: {
+        not: 'ADMIN',
+      },
+    },
+  });
+};

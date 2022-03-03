@@ -1,7 +1,9 @@
 import React from 'react';
 import { ActionFunction } from 'remix';
 import SearchComp from '~/components/search';
-import { searchUser } from '~/server/user';
+import { USER_PAGESIZE } from '~/const';
+import { searchGoods } from '~/server/goods';
+import { getUserCount, searchUser } from '~/server/user';
 import { SearchLoaderData, SearchType } from '~/types';
 
 // 处理查询页的搜索请求，返回数据列表
@@ -10,18 +12,24 @@ export const loader: ActionFunction = async ({ request, params }) => {
   const searchParams = new URL(request.url).searchParams;
   const searchKey = searchParams.get('searchKey');
   const page = +(searchParams.get('page') || 1);
-  const limit = +(searchParams.get('limit') || 3);
+  const pageSize = +(searchParams.get('pageSize') || USER_PAGESIZE);
+  console.log('params', page, pageSize);
   const res: SearchLoaderData = {
     searchKey,
     data: null,
     searchType: type,
+    total: 0,
+    page,
+    pageSize: USER_PAGESIZE,
   };
   switch (type) {
     case SearchType.user: {
-      res.data = await searchUser(searchKey, page, limit);
+      res.data = await searchUser(searchKey, page, pageSize);
+      res.total = await getUserCount(searchKey);
       break;
     }
     case SearchType.goods: {
+      res.data = await searchGoods(searchKey, page, pageSize);
       break;
     }
   }
