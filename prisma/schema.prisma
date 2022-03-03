@@ -34,10 +34,12 @@ enum Role {
 model Tag {
   id          Int @id @default(autoincrement())
   name        String @unique
-  goods       Goods?
-  user        User?
+  // goods       Goods?
+  // user        User?
   ctime       DateTime @default(now())
   utime       DateTime @updatedAt
+  users       TagsOnUsers[]
+  goods       TagsOnGoods[]
 }
 
 model User {
@@ -52,8 +54,6 @@ model User {
   address      String
   mail         String
   vx           String
-  // liveData     String?
-  // liveMaxAge   DateTime?
   // 合同图片
   contract     String?
   staus        Status   @default(PENDING)
@@ -61,8 +61,7 @@ model User {
   ctime        DateTime @default(now())
   utime        DateTime @updatedAt
   role         Role
-  tagId        Int?
-  tag          Tag?      @relation(fields: [tagId], references: [id])
+  tags          TagsOnUsers[]
   goods        Goods?
   // audit        Audit?
   order        Order?
@@ -77,12 +76,29 @@ model Goods {
   companyId   Int
   company     User @relation(fields: [companyId], references: [id])
   order       Order?
-  tagId       Int
-  tag         Tag @relation(fields: [tagId], references: [id])
+  tags        TagsOnGoods[]
+  // tag         Tag @relation(fields: [tagId], references: [id])
   ctime       DateTime @default(now())
   utime       DateTime @updatedAt
 }
 
+model TagsOnUsers {
+  user        User @relation(fields: [userId], references: [id])
+  userId      Int
+  tag         Tag @relation(fields: [tagId], references: [id])
+  tagId       Int
+
+  @@id([tagId, userId])
+}
+
+model TagsOnGoods {
+  goods       Goods @relation(fields: [goodsId], references: [id])
+  goodsId     Int
+  tag         Tag @relation(fields: [tagId], references: [id])
+  tagId       Int
+
+  @@id([tagId, goodsId])
+}
 // model Audit {
 //   id          Int  @id @default(autoincrement())
 //   status      Status

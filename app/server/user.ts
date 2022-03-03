@@ -14,6 +14,11 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
   if (!searchKey) {
     // 无key搜索,只看页码
     return db.user.findMany({
+      where: {
+        role: {
+          not: 'ADMIN',
+        },
+      },
       take: limit,
       skip: (page - 1) * limit,
     });
@@ -35,9 +40,9 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
       name: {
         contains: searchKey,
       },
-    },
-    orderBy: {
-      name: 'desc',
+      role: {
+        not: 'ADMIN',
+      },
     },
     take: limit,
     skip: (page - 1) * limit,

@@ -14,8 +14,8 @@ export default function UserCardItem(props: {data: User}) {
           {data.name}【{roleText}】
         </div>
         {/* 标签最多显示2个 */}
-        <span className='item-tag'>{data.tagId || '默认标签sdasdas'}</span>
-        <span className='item-tag'>{data.tagId || '默认标签sdasdas'}</span>
+        <span className='item-tag'>{'默认标签sdasdas'}</span>
+        <span className='item-tag'>{'默认标签sdasdas'}</span>
       </div>
       <div className='item-info'>{data.introduce || '暂无简介'}</div>
     </div>
