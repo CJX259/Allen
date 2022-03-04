@@ -21,3 +21,11 @@ export interface SearchLoaderData{
 export type UserJoinTag = {
   tags: Array<{userId: number; tagId: number; tag: { name: string }}>
 } & User;
+
+export interface ClassifyLoaderData{
+  tagId: number | null;
+  data: Goods[] | null;
+  total: number;
+  page: number;
+  pageSize: number;
+};

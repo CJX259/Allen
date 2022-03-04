@@ -7,7 +7,7 @@
   display: flex;
   flex-wrap: wrap;
 }
-.search-wrapper .search-content-item-user {
+.search-wrapper .search-content .item-user {
   width: 45%;
   padding: 30px;
   box-sizing: border-box;
@@ -19,19 +19,19 @@
   border-radius: 5px;
   height: 160px;
 }
-.search-wrapper .search-content-item-user:hover {
+.search-wrapper .search-content .item-user:hover {
   transform: scale(1.05);
 }
-.search-wrapper .search-content-item-user .item-header {
+.search-wrapper .search-content .item-header {
   overflow: hidden;
   display: flex;
 }
-.search-wrapper .search-content-item-user .item-header img {
+.search-wrapper .search-content .item-header img {
   height: 60px;
   width: 60px;
   border-radius: 50%;
 }
-.search-wrapper .search-content-item-user .item-name {
+.search-wrapper .search-content .item-name {
   flex: 1;
   margin-left: 20px;
   height: 60px;
@@ -42,13 +42,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.search-wrapper .search-content-item-user .item-experience {
+.search-wrapper .search-content .item-experience {
   position: absolute;
   top: -20px;
   font-size: 6px;
   font-weight: 200;
 }
-.search-wrapper .search-content-item-user .item-tag {
+.search-wrapper .search-content .item-tag {
   width: 150px;
   font-size: 8px;
   color: gray;
@@ -56,13 +56,13 @@
   align-items: center;
   justify-content: center;
 }
-.search-wrapper .search-content-item-user .item-tag span {
+.search-wrapper .search-content .item-tag span {
   max-width: 75px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.search-wrapper .search-content-item-user .item-info {
+.search-wrapper .search-content .item-info {
   margin-top: 10px;
   height: 30px;
   line-height: 15px;

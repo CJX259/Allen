@@ -1,5 +1,15 @@
 import React from 'react';
+import { LinksFunction, Outlet } from 'remix';
 
-export default function SearchType() {
-  return <h1>classify</h1>;
+import searchStyle from '~/styles/css/search.css';
+
+export const links: LinksFunction = () => {
+  return [{ rel: 'stylesheet', href: searchStyle }];
+};
+
+
+export default function ClassifyPage() {
+  return (
+    <Outlet />
+  );
 };

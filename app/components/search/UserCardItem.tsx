@@ -8,7 +8,7 @@ export default function UserCardItem(props: { data: UserJoinTag}) {
   const { data } = props;
   const roleText = data.role === Role.COMPANY ? <Tag color="red">供应商</Tag> : <Tag color="green">主播</Tag>;
   return (
-    <div className="search-content-item-user">
+    <div className="item-user">
       <div className="item-header">
         <img src="https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813_2867fc0f3cee407eb98115f7ee4b068c.jpeg?from=2956013662" alt="xss" />
         <div className='item-name'>

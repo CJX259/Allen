@@ -93,3 +93,8 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
   });
   return res;
 };
+
+
+export async function searchUserByTag(tagId: number | null, page: number, limit: number) {
+
+};
