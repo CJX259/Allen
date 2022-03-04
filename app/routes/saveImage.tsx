@@ -65,7 +65,6 @@ export default function Avatar() {
       listType="picture-card"
       className="avatar-uploader"
       showUploadList={false}
-      // action="/saveImage"
       // 检验图片规格
       beforeUpload={beforeUpload}
       onChange={handleChange}

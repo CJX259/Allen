@@ -51,6 +51,7 @@ model User {
   introduce    String?  @default("此用户暂无简介")
   realName     String
   idCard       String   @unique
+  avatarKey    String?  @default("569488.default.png")
   address      String
   mail         String
   vx           String

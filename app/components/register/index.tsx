@@ -4,8 +4,10 @@ import { Form, Input, Button, Radio, message } from 'antd';
 import type { FormInstance } from 'antd';
 import type { SubmitFunction } from 'remix';
 import BaseFormItem from './BaseFormItem';
+import config from '~/../cloudConfig.json';
+import Cos from 'cos-js-sdk-v5';
 import { FORM_COL, RULE_REQUIRED } from './const';
-
+import UploadAvatar from './UploadAvatar';
 import { Role } from '@prisma/client';
 import { FormRenderInfo } from '~/types';
 import { formatFormData } from '~/utils/client.index';
@@ -19,10 +21,18 @@ export default function RegisterCmp() {
   const transition = useTransition();
   // 是否为主播，用于表单label判断
   const [isAnchor, setIsAnchor] = useState(true);
+  const [fileObj, setFileObj] = useState(null as any);
   useEffect(() => {
     errorData?.msg ? message.error(errorData.msg) : '';
   }, [errorData]);
   const UserRenderInfos: FormRenderInfo[] = [
+    {
+      name: 'avatarKey',
+      label: {
+        all: '头像',
+      },
+      render: () => <UploadAvatar setFileObj={setFileObj} />,
+    },
     {
       name: 'phone',
       label: {
@@ -161,7 +171,7 @@ export default function RegisterCmp() {
           <div className="form-left"></div>
           <Form
             form={form}
-            onFinish={(v) => onFinish(v, form, submit)}
+            onFinish={(v) => onFinish(v, form, submit, fileObj)}
             className='form-content'
             labelCol={{ span: FORM_COL.label }}
             wrapperCol={{ span: FORM_COL.wrapper }}
@@ -184,8 +194,11 @@ function changeRole(form: FormInstance, setIsAnchor: Function) {
   setIsAnchor(isAnchor ? true : false);
 }
 
-function onFinish(values: any, form: FormInstance, submit: SubmitFunction) {
+function onFinish(values: any, form: FormInstance, submit: SubmitFunction, fileObj?: any) {
   const formatValues = formatFormData(values);
+  if (fileObj) {
+    uploadImage(formatValues.avatarKey, fileObj);
+  }
   submit(formatValues, {
     action: '/register',
     method: 'post',
@@ -213,4 +226,29 @@ async function validateRepeat(key: string, value: any, msg: string) {
     throw new Error(msg);
   }
   return Promise.resolve();
+};
+
+/**
+ * 传入文件名与文件数据（或blob形式），上传至COS
+ *
+ * @param {string} filename
+ * @param {*} file
+ */
+function uploadImage(filename: string, file: any) {
+  const cos = new Cos({
+    SecretId: config.SecretId,
+    SecretKey: config.SecretKey,
+  });
+  cos.putObject({
+    Bucket: 'sls-cloudfunction-ap-guangzhou-code-1301421790', /* 必须 */
+    Region: 'ap-guangzhou', /* 存储桶所在地域，必须字段 */
+    Key: 'Allen-img/' + filename, /* 必须 */
+    StorageClass: 'STANDARD',
+    Body: file, // 上传文件对象
+    onProgress: function(progressData) {
+      console.log(JSON.stringify(progressData));
+    },
+  }, function(err, data) {
+    console.log(err || data);
+  });
 };
