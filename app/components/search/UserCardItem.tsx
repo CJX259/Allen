@@ -17,7 +17,7 @@ export default function UserCardItem(props: { data: UserJoinTag}) {
         </div>
         {/* 标签最多显示2个 */}
         <div className="item-tag">
-          {data.tags.slice(0, 2)?.map((item) => <Tag color='blue' key={item.tagId}>{item.tag.name}</Tag>)}
+          {data.tags?.slice(0, 2)?.map((item) => <Tag color='blue' key={item.tagId}>{item.tag.name}</Tag>)}
         </div>
       </div>
       <div className='item-info'>{data.introduce || '暂无简介'}</div>

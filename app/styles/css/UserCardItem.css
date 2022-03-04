@@ -63,46 +63,4 @@
   text-overflow: ellipsis;
 }
 
-.search-wrapper .search-input {
-  width: 400px;
-  display: flex;
-}
-.search-wrapper .search-content {
-  margin-top: 30px;
-  display: flex;
-  flex-wrap: wrap;
-}
-.search-wrapper .search-content-item-goods {
-  width: 200px;
-  height: 280px;
-  overflow: hidden;
-  border-radius: 5px;
-  transition: transform 0.2s;
-  box-shadow: gray 2px 2px 10px;
-  margin-right: 20px;
-  margin-bottom: 20px;
-}
-.search-wrapper .search-content-item-goods:hover {
-  transform: scale(1.05);
-}
-.search-wrapper .search-content-item-goods img {
-  width: 100%;
-  height: 200px;
-}
-.search-wrapper .search-content-item-goods-text {
-  padding: 10px;
-}
-.search-wrapper .search-content-item-goods-text .item-name {
-  height: 16px;
-  line-height: 16px;
-}
-.search-wrapper .search-content-item-goods-text .item-name span {
-  float: right;
-  font-size: 8px;
-  color: gray;
-  border: 1px solid gray;
-  border-radius: 2px;
-  padding: 1px 3px;
-}
-
-/*# sourceMappingURL=search.css.map */
+/*# sourceMappingURL=UserCardItem.css.map */

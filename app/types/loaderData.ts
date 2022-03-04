@@ -24,8 +24,9 @@ export type UserJoinTag = {
 
 export interface ClassifyLoaderData{
   tagId: number | null;
-  data: Goods[] | null;
+  data: UserJoinTag[] | null | undefined;
   total: number;
   page: number;
   pageSize: number;
+  tag: { name: string; id: number } | null;
 };

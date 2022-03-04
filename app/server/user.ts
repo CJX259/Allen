@@ -95,6 +95,53 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
 };
 
 
-export async function searchUserByTag(tagId: number | null, page: number, limit: number) {
-
+/**
+ * 查出具有该tag的user
+ *
+ * @export
+ * @param {number} tagId
+ * @param {number} page
+ * @param {number} limit
+ * @return {*}
+ */
+export async function searchUserByTag(tagId: number, page: number, limit: number) {
+  const data = await db.tagsOnUsers.findMany({
+    where: {
+      tagId,
+    },
+    take: limit,
+    skip: (page - 1) * limit,
+    include: {
+      user: {
+        include: {
+          tags: {
+            include: {
+              tag: {
+                select: {
+                  name: true,
+                  id: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+  const total = await db.tagsOnUsers.count({
+    where: {
+      tagId,
+    },
+  });
+  const tag = await db.tag.findUnique({
+    where: {
+      id: tagId,
+    },
+    select: {
+      name: true,
+      id: true,
+    },
+  });
+  const userData = data?.map((item) => item.user);
+  return { data: userData, total, tag };
 };

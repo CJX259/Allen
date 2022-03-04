@@ -1,10 +1,10 @@
 import React from 'react';
 import { LinksFunction, Outlet } from 'remix';
 
-import searchStyle from '~/styles/css/search.css';
+import classifyStyle from '~/styles/css/classify.css';
 
 export const links: LinksFunction = () => {
-  return [{ rel: 'stylesheet', href: searchStyle }];
+  return [{ rel: 'stylesheet', href: classifyStyle }];
 };
 
 

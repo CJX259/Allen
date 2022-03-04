@@ -13,7 +13,6 @@ export const loader: ActionFunction = async ({ request, params }) => {
   const searchKey = searchParams.get('searchKey');
   const page = +(searchParams.get('page') || 1);
   const pageSize = +(searchParams.get('pageSize') || USER_PAGESIZE);
-  console.log('params', page, pageSize);
   const res: SearchLoaderData = {
     searchKey,
     data: null,
