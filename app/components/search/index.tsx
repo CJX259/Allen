@@ -5,7 +5,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { SearchLoaderData, SearchType, UserJoinTag } from '~/types';
 import GoodsCardItem from './GoodsCardItem';
 import { Goods } from '@prisma/client';
-import UserCardItem from './UserCardItem';
+import UserCardItem from '../UserCardItem';
 import { USER_PAGESIZE } from '~/const';
 
 export default function SearchComp() {

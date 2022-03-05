@@ -1,7 +1,7 @@
 import { Pagination, Spin } from 'antd';
 import React from 'react';
 import { ActionFunction, SubmitFunction, useLoaderData, useSubmit, useTransition } from 'remix';
-import UserCardItem from '~/components/search/UserCardItem';
+import UserCardItem from '~/components/UserCardItem';
 import { USER_PAGESIZE } from '~/const';
 import { searchUserByTag } from '~/server/user';
 import { ClassifyLoaderData } from '~/types';

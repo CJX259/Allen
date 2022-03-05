@@ -2,6 +2,7 @@ import { message, Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
 import React, { useState } from 'react';
+import { getBase64 } from '~/utils/client.index';
 
 export default function UploadAvatarComp(props: any) {
   const { onChange, setFileObj } = props;
@@ -45,21 +46,6 @@ export default function UploadAvatarComp(props: any) {
     </Upload>
   );
 };
-
-
-/**
- * 将图片的数据读取出来，转换为一个url供预览
- *
- * @param {*} img
- * @param {*} callback
- */
-function getBase64(img: any, callback: any) {
-  const reader = new FileReader();
-  // 绑定事件。读取完后就执行回调，传入图片临时url
-  reader.addEventListener('load', () => callback(reader.result));
-  // 解析图片，生成临时url
-  reader.readAsDataURL(img);
-}
 
 
 /**
