@@ -36,3 +36,18 @@ export function validateFormDatas(validateKeys: string[], data: { [key: string]:
     return false;
   };
 }
+
+
+/**
+ * 将字符undefined与null转化为空字符，避免在http传输过程中造成问题
+ *
+ * @export
+ * @param {*} value
+ * @return {*}
+ */
+export function transformNullAndUndefined(value: any) {
+  if (value === 'undefined' || value === 'null') {
+    return '';
+  }
+  return value;
+};

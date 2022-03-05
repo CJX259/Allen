@@ -6,16 +6,14 @@ import { USER_PAGESIZE } from '~/const';
 import { searchGoods } from '~/server/goods';
 import { searchUser } from '~/server/user';
 import { SearchLoaderData, SearchType } from '~/types';
+import { transformNullAndUndefined } from '~/utils/server.index';
 
 // 处理查询页的搜索请求，返回数据列表
 export const loader: ActionFunction = async ({ request, params }) => {
   const type = params.type as SearchType;
   const searchParams = new URL(request.url).searchParams;
   let searchKey = searchParams.get('searchKey');
-  // 避免转化时转为字符undefined or null
-  if (searchKey === 'undefined' || searchKey === 'null') {
-    searchKey = '';
-  }
+  searchKey = transformNullAndUndefined(searchKey);
   const status = searchParams.get('status');
   const page = +(searchParams.get('page') || 1);
   const pageSize = +(searchParams.get('pageSize') || USER_PAGESIZE);

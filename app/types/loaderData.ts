@@ -32,7 +32,7 @@ export interface ClassifyLoaderData{
 };
 
 export interface AuditUserLoaderData{
-  data: UserJoinTag[] | null;
+  data: UserJoinTag[] | null | undefined;
   total: number;
   searchKey: string | null;
   page: number;

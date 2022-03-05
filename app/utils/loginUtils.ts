@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import md5 from 'md5';
 import { json, redirect, Session } from 'remix';
 import { PARAMS_ERROR, TIME_OUT, USER_ERROR, VERIFY_ERROR } from '~/error';
@@ -21,14 +22,20 @@ export async function hadLogin(session: Session) {
 
 /**
  * 用于需要登录才能访问的页面，未登录则跳转到主页
+ * roles为允许访问的角色
  *
  * @export
  * @param {Request} request
- * @return {*} Response
+ * @param {Role[]} roles
+ * @return {*}
  */
-export async function needLogined(request: Request) {
+export async function needLogined(request: Request, roles?: Role[]) {
   const cookie = request.headers.get('Cookie');
   const session = await getSession(cookie);
+  if (roles) {
+    const { role } = session.get(LoginKey) || {};
+    return roles.indexOf(role) === -1 ? redirect('/home') : null;
+  }
   return await hadLogin(session) ? null : redirect('/home');
 };
 

@@ -1,4 +1,4 @@
-import { Status } from '@prisma/client';
+import { Role, Status } from '@prisma/client';
 import React from 'react';
 import { ActionFunction, LinksFunction, LoaderFunction } from 'remix';
 import AuditUserComp from '~/components/auditUser';
@@ -7,13 +7,14 @@ import { searchUser } from '~/server/user';
 import { AuditUserLoaderData } from '~/types';
 import style from '~/styles/css/auditUser.css';
 import { needLogined } from '~/utils/loginUtils';
+import { transformNullAndUndefined } from '~/utils/server.index';
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: style }];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const redirectRes = await needLogined(request);
+  const redirectRes = await needLogined(request, [Role.ADMIN]);
   console.log('red', redirectRes);
   if (redirectRes) {
     return redirectRes;
@@ -22,10 +23,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   const searchParams = new URL(request.url).searchParams;
   let searchKey = searchParams.get('searchKey');
   // 避免转化时转为字符undefined or null
-  if (searchKey === 'undefined' || searchKey === 'null') {
-    searchKey = '';
-  }
-  const status = searchParams.get('status') as Status;
+  searchKey = transformNullAndUndefined(searchKey);
+  let status = searchParams.get('status') as Status;
+  status = transformNullAndUndefined(status);
   const page = +(searchParams.get('page') || 1);
   const pageSize = +(searchParams.get('pageSize') || USER_PAGESIZE);
   const res: AuditUserLoaderData = {

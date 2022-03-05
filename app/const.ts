@@ -1,3 +1,4 @@
+import { Role, Status } from "@prisma/client";
 
 // session中存储用户id和name的key值
 export const LoginKey = 'USER';
@@ -45,3 +46,17 @@ export const LOAD_TYPE = {
 export const LEVEL_VAR = 2;
 
 export const USER_PAGESIZE = 1;
+
+export const AUDIT_STATUS_MAP = {
+  [Status.ALL]: '全部',
+  [Status.PENDING]: '待审核',
+  [Status.REJECT]: '已下架',
+  [Status.RESOLVE]: '已上架',
+};
+
+export const ROLE_MAP = {
+  [Role.ADMIN]: '管理员',
+  [Role.ANCHOR]: '主播',
+  [Role.COMPANY]: '供应商',
+};
+
