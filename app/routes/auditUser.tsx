@@ -1,13 +1,14 @@
 import { Role, Status } from '@prisma/client';
 import React from 'react';
-import { ActionFunction, LinksFunction, LoaderFunction } from 'remix';
+import { ActionFunction, json, LinksFunction, LoaderFunction } from 'remix';
 import AuditUserComp from '~/components/auditUser';
 import { USER_PAGESIZE } from '~/const';
-import { searchUser } from '~/server/user';
+import { searchUser, updateUser } from '~/server/user';
 import { AuditUserLoaderData } from '~/types';
 import style from '~/styles/css/auditUser.css';
 import { needLogined } from '~/utils/loginUtils';
 import { transformNullAndUndefined } from '~/utils/server.index';
+import { PARAMS_ERROR } from '~/error';
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: style }];
@@ -42,7 +43,16 @@ export const loader: LoaderFunction = async ({ request }) => {
   return res;
 };
 
-export const action: ActionFunction = ({ request }) => {
+export const action: ActionFunction = async ({ request }) => {
+  const formData = await request.formData();
+  const userId = formData.get('id');
+  const status = formData.get('status');
+  if (!userId || !status) {
+    return json(PARAMS_ERROR);
+  }
+  // 更新用户
+  const res = await updateUser(+userId, { status: status } as any);
+  console.log('res', res);
   return null;
 };
 

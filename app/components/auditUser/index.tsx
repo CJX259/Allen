@@ -63,13 +63,16 @@ export default function AuditUserComp() {
       fixed: 'right',
       width: 350,
       render: (value: User, record: User, index: number) => {
+        if (!data) {
+          return null;
+        }
         return (
           <Space>
             <Button onClick={() => {
               setVisible(true);
               setCurIndex(index);
             }}>查看信息</Button>
-            <Button type='primary'>
+            <Button type='primary' onClick={() => changeStatus('' + data[index]?.id, Status.RESOLVE)}>
               上架用户
             </Button>
             <Button danger type='primary'>
@@ -101,6 +104,15 @@ export default function AuditUserComp() {
       method: 'get',
     });
   };
+  // 修改用户审核状态
+  function changeStatus(id: string, userStatus: Status) {
+    submit({
+      id,
+      status: userStatus,
+    }, {
+      method: 'post',
+    });
+  }
   return (
     <Spin spinning={transition.state !== 'idle'}>
       <div className="audit-wrapper">

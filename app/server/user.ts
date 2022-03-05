@@ -1,4 +1,4 @@
-import { Status } from '@prisma/client';
+import { Status, User } from '@prisma/client';
 import { UserJoinTag } from '~/types';
 import { db } from '~/utils/db.server';
 
@@ -166,3 +166,15 @@ export async function searchUserByTag(tagId: number, page: number, limit: number
   const userData = data?.map((item) => item.user);
   return { data: userData, total, tag };
 };
+
+export async function updateUser(id: number, params: User) {
+  return db.user.update({
+    where: {
+      id,
+    },
+    data: {
+      ...params,
+    },
+  });
+};
+
