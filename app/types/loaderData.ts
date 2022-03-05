@@ -1,4 +1,4 @@
-import { Goods, User } from '@prisma/client';
+import { Goods, Status, User } from '@prisma/client';
 import { SearchType, SessionUserData } from '.';
 // import { MenuData } from './menu';
 
@@ -29,4 +29,12 @@ export interface ClassifyLoaderData{
   page: number;
   pageSize: number;
   tag: { name: string; id: number } | null;
+};
+
+export interface AuditUserLoaderData{
+  data: UserJoinTag[] | null;
+  total: number;
+  searchKey: string | null;
+  page: number;
+  status: Status;
 };

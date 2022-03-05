@@ -1,9 +1,6 @@
 @import './UserCardItem.scss';
+@import './SearchInput.scss';
 .search-wrapper{
-  .search-input{
-    width: 400px;
-    display: flex;
-  }
   .search-content{
     margin-top: 30px;
     display: flex;

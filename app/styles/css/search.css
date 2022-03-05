@@ -69,10 +69,11 @@
   text-overflow: ellipsis;
 }
 
-.search-wrapper .search-input {
+.search-input {
   width: 400px;
   display: flex;
 }
+
 .search-wrapper .search-content {
   margin-top: 30px;
   display: flex;

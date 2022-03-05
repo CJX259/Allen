@@ -2,7 +2,7 @@ import { json } from 'remix';
 import { getSession } from '../sessions';
 import React from 'react';
 import type { LoaderFunction, ActionFunction, LinksFunction } from 'remix';
-import { handleCodeSend, handleLogout, needLogined, validatePhone, verifyCode, verifyPsw } from '~/utils/loginUtils';
+import { handleCodeSend, handleLogout, unNeedLogined, validatePhone, verifyCode, verifyPsw } from '~/utils/loginUtils';
 import { REQ_METHOD } from '~/const';
 import { PARAMS_ERROR } from '~/error';
 import LoginCmp from '../components/login';
@@ -14,7 +14,7 @@ export const links: LinksFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  return needLogined(request);
+  return unNeedLogined(request);
 };
 
 export const action: ActionFunction = async ({ request }) => {

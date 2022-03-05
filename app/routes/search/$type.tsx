@@ -11,7 +11,11 @@ import { SearchLoaderData, SearchType } from '~/types';
 export const loader: ActionFunction = async ({ request, params }) => {
   const type = params.type as SearchType;
   const searchParams = new URL(request.url).searchParams;
-  const searchKey = searchParams.get('searchKey');
+  let searchKey = searchParams.get('searchKey');
+  // 避免转化时转为字符undefined or null
+  if (searchKey === 'undefined' || searchKey === 'null') {
+    searchKey = '';
+  }
   const status = searchParams.get('status');
   const page = +(searchParams.get('page') || 1);
   const pageSize = +(searchParams.get('pageSize') || USER_PAGESIZE);

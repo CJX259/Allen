@@ -29,9 +29,21 @@ export async function hadLogin(session: Session) {
 export async function needLogined(request: Request) {
   const cookie = request.headers.get('Cookie');
   const session = await getSession(cookie);
-  return await hadLogin(session) ? redirect('/home') : null;
+  return await hadLogin(session) ? null : redirect('/home');
 };
 
+/**
+ * 未登录才能访问的页面，登录了则跳转到主页
+ *
+ * @export
+ * @param {Request} request
+ * @return {*}
+ */
+export async function unNeedLogined(request: Request) {
+  const cookie = request.headers.get('Cookie');
+  const session = await getSession(cookie);
+  return await hadLogin(session) ? redirect('/home') : null;
+};
 
 /**
  * 校验phone参数

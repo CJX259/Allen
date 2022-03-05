@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Button, Spin, Pagination } from 'antd';
+import { Spin, Pagination, Input, Button } from 'antd';
 import { SubmitFunction, useLoaderData, useSubmit, useTransition } from 'remix';
 import { SearchOutlined } from '@ant-design/icons';
 import { SearchLoaderData, SearchType, UserJoinTag } from '~/types';
@@ -8,9 +8,9 @@ import { Goods } from '@prisma/client';
 import UserCardItem from '../UserCardItem';
 import { USER_PAGESIZE } from '~/const';
 
-export default function SearchComp(props: { isAudit?: boolean; }) {
+export default function SearchComp() {
   const loaderData: SearchLoaderData = useLoaderData();
-  const { searchKey, data } = loaderData;
+  const { searchKey, data, searchType, page, total } = loaderData;
   const [key, setSearchKey] = useState(searchKey || '');
   const submit = useSubmit();
   const transition = useTransition();
@@ -33,14 +33,14 @@ export default function SearchComp(props: { isAudit?: boolean; }) {
         </div>
         {/* 搜索结果展示区 */}
         <div className="search-content">
-          {data?.map((item) => loaderData.searchType === SearchType.goods ?
+          {data?.map((item) => searchType === SearchType.goods ?
           <GoodsCardItem key={item.id} data={item as Goods} /> :
           <UserCardItem key={item.id} data={item as UserJoinTag} />)}
         </div>
         <div className="search-pager">
           <Pagination
-            current={loaderData.page}
-            total={loaderData.total || 0}
+            current={page}
+            total={total || 0}
             onChange={(page) => sendSearch(searchKey || '', submit, page)}
             pageSize={USER_PAGESIZE}
           />
