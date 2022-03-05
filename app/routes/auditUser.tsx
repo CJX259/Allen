@@ -16,7 +16,6 @@ export const links: LinksFunction = () => {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const redirectRes = await needLogined(request, [Role.ADMIN]);
-  console.log('red', redirectRes);
   if (redirectRes) {
     return redirectRes;
   }
@@ -47,12 +46,16 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const userId = formData.get('id');
   const status = formData.get('status');
+  let reason = formData.get('reason');
   if (!userId || !status) {
     return json(PARAMS_ERROR);
   }
   // 更新用户
-  const res = await updateUser(+userId, { status: status } as any);
-  console.log('res', res);
+  const params = { status: status } as any;
+  reason = transformNullAndUndefined(reason);
+  reason ? params.reason = reason : '';
+  const res = await updateUser(+userId, params);
+  console.log(res);
   return null;
 };
 

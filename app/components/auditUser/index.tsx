@@ -1,21 +1,24 @@
 import { Role, Status, User } from '@prisma/client';
-import { Button, Input, Modal, Radio, Space, Spin, Table, Tag } from 'antd';
+import { Button, Input, message, Modal, Radio, Space, Spin, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useLoaderData, useSubmit, useTransition } from 'remix';
+import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { SearchOutlined } from '@ant-design/icons';
-import { AuditUserLoaderData } from '~/types';
+import { AuditUserLoaderData, ERROR } from '~/types';
 import { ColumnsType } from 'antd/lib/table';
 import { AUDIT_STATUS_MAP, ROLE_MAP, USER_PAGESIZE } from '~/const';
 import { formatFormData } from '~/utils/client.index';
-import ModelContent from './ModelContent';
+import InfoModalContent from './InfoModalContent';
+import RejectModalContent from './RejectModalContent';
 
 export default function AuditUserComp() {
   const loaderData: AuditUserLoaderData = useLoaderData();
+  const actionData: ERROR | undefined = useActionData();
   const { searchKey, data, page, total, status: loaderStatus } = loaderData;
-  console.log('data', loaderData);
-  const [visible, setVisible] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(false);
+  const [rejectVisible, setRejectVisible] = useState(false);
   // 当前审核的用户
   const [curIndex, setCurIndex] = useState(null as any);
+  const [reason, setReason] = useState('');
   const [key, setSearchKey] = useState(searchKey || '');
   const [status, setStatus] = useState(loaderStatus || Status.ALL as any);
   const submit = useSubmit();
@@ -69,13 +72,24 @@ export default function AuditUserComp() {
         return (
           <Space>
             <Button onClick={() => {
-              setVisible(true);
+              setInfoVisible(true);
               setCurIndex(index);
             }}>查看信息</Button>
-            <Button type='primary' onClick={() => changeStatus('' + data[index]?.id, Status.RESOLVE)}>
+            <Button
+              type='primary'
+              disabled={data[index].status === Status.RESOLVE}
+              onClick={() => changeStatus('' + data[index]?.id, Status.RESOLVE)}>
               上架用户
             </Button>
-            <Button danger type='primary'>
+            <Button
+              danger
+              type='primary'
+              onClick={() => {
+                setRejectVisible(true);
+                setCurIndex(index);
+              }}
+              disabled={data[index].status === Status.REJECT}
+            >
               下架用户
             </Button>
           </Space>
@@ -89,6 +103,11 @@ export default function AuditUserComp() {
   useEffect(() => {
     sendSearch();
   }, [status]);
+  // 显示操作响应结果
+  useEffect(() => {
+    actionData?.msg ? message.error(actionData.msg) : '';
+  }, [actionData]);
+
   // 发起搜索请求
   function sendSearch(curPage?: number) {
     // 重置分页器
@@ -105,13 +124,17 @@ export default function AuditUserComp() {
     });
   };
   // 修改用户审核状态
-  function changeStatus(id: string, userStatus: Status) {
-    submit({
+  function changeStatus(id: string, userStatus: Status, reason?: string) {
+    const params = {
       id,
       status: userStatus,
-    }, {
+    } as any;
+    reason ? params.reason = reason : '';
+    submit(params, {
       method: 'post',
     });
+    // 提交完后重置reason
+    setReason('');
   }
   return (
     <Spin spinning={transition.state !== 'idle'}>
@@ -155,11 +178,31 @@ export default function AuditUserComp() {
       </div>
       <Modal
         title='用户信息'
-        visible={visible}
-        onCancel={() => setVisible(false)}
-        cancelText='关闭'
+        visible={infoVisible}
+        onCancel={() => setInfoVisible(false)}
+        footer={null}
       >
-        <ModelContent data={data ? data[curIndex] : undefined} />
+        <InfoModalContent data={data ? data[curIndex] : undefined} />
+      </Modal>;
+      <Modal
+        title='下架用户'
+        visible={rejectVisible}
+        onCancel={() => {
+          // 重置reason
+          setReason('');
+          setRejectVisible(false);
+        }}
+        cancelText='取消'
+        maskClosable={false}
+        onOk={() => {
+          if (!data) {
+            return;
+          }
+          changeStatus('' + data[curIndex].id, Status.REJECT, reason);
+          setRejectVisible(false);
+        }}
+      >
+        <RejectModalContent reason={reason} setReason={setReason} />
       </Modal>;
     </Spin>
   );

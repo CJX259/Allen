@@ -4,7 +4,7 @@ import { Form, Input, Tag } from 'antd';
 import Cos from 'cos-js-sdk-v5';
 import BaseFormItem from '~/components/register/BaseFormItem';
 import config from '~/../cloudConfig.json';
-import { Role } from '@prisma/client';
+import { Role, Status } from '@prisma/client';
 import { ROLE_MAP } from '~/const';
 
 const FORM_COL = {
@@ -12,7 +12,7 @@ const FORM_COL = {
   wrapper: 10,
 };
 
-export default function ModelContent(props: { data?: UserJoinTag }) {
+export default function ModalContent(props: { data?: UserJoinTag }) {
   const { data } = props;
   const [form] = Form.useForm();
   function finish(value: any) {
@@ -96,6 +96,14 @@ export default function ModelContent(props: { data?: UserJoinTag }) {
         company: '公司邮箱',
       },
       render: () => <span className='form-item-mail'>{data?.idCard}</span>,
+    },
+    {
+      name: 'reason',
+      label: {
+        all: '拒绝原因',
+      },
+      initialValue: data?.reason ? data.reason : '',
+      render: () => data?.status === Status.REJECT ? <Input.TextArea disabled /> : <span>无</span>,
     },
     {
       name: 'address',
