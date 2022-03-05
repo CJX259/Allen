@@ -34,6 +34,7 @@ export default function UserCardItem(props: { data: UserJoinTag}) {
         <div className='item-name'>
           <div className="item-experience">LV {Math.ceil(data.experience / LEVEL_VAR)}</div>
           {data.name} {roleText}
+          <div className="item-id">ID: {data.id}</div>
         </div>
         {/* 标签最多显示2个 */}
         <div className="item-tag">

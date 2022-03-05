@@ -1,3 +1,4 @@
+import { Status } from '@prisma/client';
 import React from 'react';
 import { ActionFunction } from 'remix';
 import SearchComp from '~/components/search';
@@ -11,6 +12,7 @@ export const loader: ActionFunction = async ({ request, params }) => {
   const type = params.type as SearchType;
   const searchParams = new URL(request.url).searchParams;
   const searchKey = searchParams.get('searchKey');
+  const status = searchParams.get('status');
   const page = +(searchParams.get('page') || 1);
   const pageSize = +(searchParams.get('pageSize') || USER_PAGESIZE);
   const res: SearchLoaderData = {
@@ -23,7 +25,8 @@ export const loader: ActionFunction = async ({ request, params }) => {
   };
   switch (type) {
     case SearchType.user: {
-      const { data, total } = await searchUser(searchKey, page, pageSize);
+      // 默认只搜索已上架的
+      const { data, total } = await searchUser(searchKey, page, pageSize, status as Status || Status.RESOLVE);
       res.data = data;
       res.total = total;
       break;

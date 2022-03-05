@@ -1,16 +1,19 @@
+import { Status } from '@prisma/client';
 import { UserJoinTag } from '~/types';
 import { db } from '~/utils/db.server';
 
 /**
- * key可以为id或name，id精确匹配，name模糊匹配，订单表的信息也返回
+ * key可以为id或name，id精确匹配，name模糊匹配，订单表的信息也返回，status状态筛选，不传则返回全部status
  *
  * @param {*} searchKey
  * @param {number} page
  * @param {number} limit
- * @param {boolean} isAudit
+ * @param {Status} status
  * @return {*} user
  */
-export async function searchUser(searchKey: any, page: number, limit: number) {
+export async function searchUser(searchKey: any, page: number, limit: number, status: Status) {
+  // status状态筛选，不传则返回全部status
+  const statusConfig = status !== Status.ALL ? [status] : [Status.PENDING, Status.RESOLVE, Status.REJECT];
   // 连接外表（user -> tagOnUser -> tag -> tag.name）
   const includeConfig = {
     tags: {
@@ -35,6 +38,9 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
         role: {
           not: 'ADMIN',
         },
+        status: {
+          in: statusConfig,
+        },
       },
       include: includeConfig,
       take: limit,
@@ -44,6 +50,9 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
       where: {
         role: {
           not: 'ADMIN',
+        },
+        status: {
+          in: statusConfig,
         },
       },
     });
@@ -58,6 +67,9 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
         id: +searchKey,
         role: {
           not: 'ADMIN',
+        },
+        status: {
+          in: statusConfig,
         },
       },
     });
@@ -77,6 +89,9 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
       role: {
         not: 'ADMIN',
       },
+      status: {
+        in: statusConfig,
+      },
     },
     take: limit,
     skip: (page - 1) * limit,
@@ -88,6 +103,9 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
       },
       role: {
         not: 'ADMIN',
+      },
+      status: {
+        in: statusConfig,
       },
     },
   });
@@ -105,6 +123,8 @@ export async function searchUser(searchKey: any, page: number, limit: number) {
  * @return {*}
  */
 export async function searchUserByTag(tagId: number, page: number, limit: number) {
+  // 这里连接表时不能再嵌套where操作，导致只能将数据拿出来后再进行筛选，会导致每页实际渲染数据数不同
+  // 直接全量拿？
   const data = await db.tagsOnUsers.findMany({
     where: {
       tagId,
@@ -142,6 +162,7 @@ export async function searchUserByTag(tagId: number, page: number, limit: number
       id: true,
     },
   });
+  // 仅筛选出已上架的用户
   const userData = data?.map((item) => item.user);
   return { data: userData, total, tag };
 };

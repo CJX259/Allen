@@ -8,13 +8,12 @@ import { Goods } from '@prisma/client';
 import UserCardItem from '../UserCardItem';
 import { USER_PAGESIZE } from '~/const';
 
-export default function SearchComp() {
+export default function SearchComp(props: { isAudit?: boolean; }) {
   const loaderData: SearchLoaderData = useLoaderData();
   const { searchKey, data } = loaderData;
   const [key, setSearchKey] = useState(searchKey || '');
   const submit = useSubmit();
   const transition = useTransition();
-  console.log('loaderData', loaderData);
   return (
     <div className='search-wrapper'>
       <Spin spinning={transition.state !== 'idle'}>

@@ -14,6 +14,7 @@ enum Status {
   PENDING
   RESOLVE
   REJECT
+  ALL
 }
 
 enum OrderStatus {
@@ -57,7 +58,7 @@ model User {
   vx           String
   // 合同图片
   contract     String?
-  staus        Status   @default(PENDING)
+  status       Status   @default(PENDING)
   reason       String?
   ctime        DateTime @default(now())
   utime        DateTime @updatedAt

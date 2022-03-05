@@ -56,16 +56,12 @@ function calcMenuList(role: Role | undefined): MenuData[] {
         subTitle: '审核系统',
         children: [
           {
-            title: '主播审核',
-            to: '/audit/anchor',
+            title: '用户审核',
+            to: '/auditUser',
           },
           {
             title: '商品审核',
-            to: '/audit/goods',
-          },
-          {
-            title: '供应商审核',
-            to: '/audit/compayn',
+            to: '/auditGoods',
           },
         ],
       });
