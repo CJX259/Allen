@@ -8,9 +8,9 @@ const { getSession, commitSession, destroySession } =
 
       // all of these are optional
       // domain: '/',
-      expires: new Date(Date.now() + 60_000),
+      // expires: new Date(Date.now() + 60_000),
       httpOnly: true,
-      maxAge: 600,
+      maxAge: 60000,
       path: '/',
       sameSite: 'lax',
       secrets: ['s3cret1'],
@@ -20,7 +20,7 @@ const { getSession, commitSession, destroySession } =
 
 export { getSession, commitSession, destroySession };
 
-// 文件版  垃圾，自动刷新我页面？
+// 文件版  垃圾，自动刷新我页面
 // // app/sessions.js
 // import {
 //   createCookie,

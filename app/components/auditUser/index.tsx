@@ -1,5 +1,5 @@
-import { Role, Status } from '@prisma/client';
-import { Button, Input, Radio, Spin, Table, Tag } from 'antd';
+import { Role, Status, User } from '@prisma/client';
+import { Button, Input, Modal, Radio, Space, Spin, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useLoaderData, useSubmit, useTransition } from 'remix';
 import { SearchOutlined } from '@ant-design/icons';
@@ -7,11 +7,15 @@ import { AuditUserLoaderData } from '~/types';
 import { ColumnsType } from 'antd/lib/table';
 import { AUDIT_STATUS_MAP, ROLE_MAP, USER_PAGESIZE } from '~/const';
 import { formatFormData } from '~/utils/client.index';
+import ModelContent from './ModelContent';
 
 export default function AuditUserComp() {
   const loaderData: AuditUserLoaderData = useLoaderData();
   const { searchKey, data, page, total, status: loaderStatus } = loaderData;
   console.log('data', loaderData);
+  const [visible, setVisible] = useState(false);
+  // 当前审核的用户
+  const [curIndex, setCurIndex] = useState(null as any);
   const [key, setSearchKey] = useState(searchKey || '');
   const [status, setStatus] = useState(loaderStatus || Status.ALL as any);
   const submit = useSubmit();
@@ -51,6 +55,28 @@ export default function AuditUserComp() {
           color = 'green';
         }
         return <Tag color={color}>{AUDIT_STATUS_MAP[v]}</Tag>;
+      },
+    },
+    {
+      title: '操作',
+      key: 'action',
+      fixed: 'right',
+      width: 350,
+      render: (value: User, record: User, index: number) => {
+        return (
+          <Space>
+            <Button onClick={() => {
+              setVisible(true);
+              setCurIndex(index);
+            }}>查看信息</Button>
+            <Button type='primary'>
+              上架用户
+            </Button>
+            <Button danger type='primary'>
+              下架用户
+            </Button>
+          </Space>
+        );
       },
     },
   ];
@@ -115,6 +141,14 @@ export default function AuditUserComp() {
           />
         </div>
       </div>
+      <Modal
+        title='用户信息'
+        visible={visible}
+        onCancel={() => setVisible(false)}
+        cancelText='关闭'
+      >
+        <ModelContent data={data ? data[curIndex] : undefined} />
+      </Modal>;
     </Spin>
   );
 };
