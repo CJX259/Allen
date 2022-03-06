@@ -4,7 +4,7 @@ import { ActionFunction, json, LinksFunction, LoaderFunction } from 'remix';
 import AuditUserComp from '~/components/auditUser';
 import { USER_PAGESIZE } from '~/const';
 import { searchUser, updateUser } from '~/server/user';
-import { AuditUserLoaderData } from '~/types';
+import { AuditUserLoaderData, ERROR } from '~/types';
 import style from '~/styles/css/auditUser.css';
 import { needLogined } from '~/utils/loginUtils';
 import { transformNullAndUndefined } from '~/utils/server.index';
@@ -43,20 +43,27 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
-  const userId = formData.get('id');
-  const status = formData.get('status');
-  let reason = formData.get('reason');
-  if (!userId || !status) {
+  const payload = await request.json();
+  const { id, status } = payload;
+  let { reason } = payload;
+
+  // const formData = await request.formData();
+  // const userId = formData.get('id');
+  // const status = formData.get('status');
+  // let reason = formData.get('reason');
+  if (!id || !status) {
     return json(PARAMS_ERROR);
   }
   // 更新用户
   const params = { status: status } as any;
   reason = transformNullAndUndefined(reason);
   reason ? params.reason = reason : '';
-  const res = await updateUser(+userId, params);
-  console.log(res);
-  return null;
+  try {
+    const res = await updateUser(+id, params);
+    return res;
+  } catch (error: any) {
+    return json({ retcode: 10000, msg: error.message} as ERROR);
+  }
 };
 
 export default function AuditUser() {

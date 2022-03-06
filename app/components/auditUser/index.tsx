@@ -9,6 +9,7 @@ import { AUDIT_STATUS_MAP, ROLE_MAP, USER_PAGESIZE } from '~/const';
 import { formatFormData } from '~/utils/client.index';
 import InfoModalContent from './InfoModalContent';
 import RejectModalContent from './RejectModalContent';
+import axios from 'axios';
 
 export default function AuditUserComp() {
   const loaderData: AuditUserLoaderData = useLoaderData();
@@ -21,6 +22,8 @@ export default function AuditUserComp() {
   const [reason, setReason] = useState('');
   const [key, setSearchKey] = useState(searchKey || '');
   const [status, setStatus] = useState(loaderStatus || Status.ALL as any);
+  const [resLoad, setResLoad] = useState(false);
+  const [rejLoad, setRejLoad] = useState(false);
   const submit = useSubmit();
   const transition = useTransition();
   // 表格列
@@ -76,12 +79,14 @@ export default function AuditUserComp() {
               setCurIndex(index);
             }}>查看信息</Button>
             <Button
+              loading={resLoad}
               type='primary'
               disabled={data[index].status === Status.RESOLVE}
               onClick={() => changeStatus('' + data[index]?.id, Status.RESOLVE)}>
               上架用户
             </Button>
             <Button
+              loading={rejLoad}
               danger
               type='primary'
               onClick={() => {
@@ -112,7 +117,7 @@ export default function AuditUserComp() {
   function sendSearch(curPage?: number) {
     // 重置分页器
     const params = {
-      searchKey,
+      searchKey: key,
       status,
     } as any;
     if (curPage) {
@@ -124,17 +129,35 @@ export default function AuditUserComp() {
     });
   };
   // 修改用户审核状态
-  function changeStatus(id: string, userStatus: Status, reason?: string) {
+  async function changeStatus(id: string, userStatus: Status, reason?: string) {
     const params = {
       id,
       status: userStatus,
     } as any;
-    reason ? params.reason = reason : '';
-    submit(params, {
-      method: 'post',
+    if (reason) {
+      params.reason = reason;
+      setRejLoad(true);
+    } else {
+      setResLoad(true);
+    }
+    const res = await axios.post('/auditUser?_data=routes/auditUser', {
+      ...params,
     });
     // 提交完后重置reason
     setReason('');
+    reason ? setRejLoad(false) : setResLoad(false);
+
+    if (res.data.id) {
+      message.success('更新成功');
+      // 重新刷新页面
+      submit({
+        ...(loaderData as any),
+      }, {
+        method: 'get',
+      });
+    } else {
+      message.error('更新失败，请联系开发人员');
+    }
   }
   return (
     <Spin spinning={transition.state !== 'idle'}>

@@ -175,6 +175,9 @@ export async function updateUser(id: number, params: User) {
     data: {
       ...params,
     },
+    select: {
+      id: true,
+    },
   });
 };
 
