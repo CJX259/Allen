@@ -4,13 +4,11 @@ import { Form, Input, Button, Radio, message } from 'antd';
 import type { FormInstance } from 'antd';
 import type { SubmitFunction } from 'remix';
 import BaseFormItem from './BaseFormItem';
-import config from '~/../cloudConfig.json';
-import Cos from 'cos-js-sdk-v5';
 import { FORM_COL, RULE_REQUIRED } from './const';
 import UploadAvatar from './UploadAvatar';
 import { Role } from '@prisma/client';
 import { FormRenderInfo } from '~/types';
-import { formatFormData } from '~/utils/client.index';
+import { formatFormData, uploadImage, validateRepeat } from '~/utils/client.index';
 import { LOAD_STATE } from '~/const';
 
 export default function RegisterCmp() {
@@ -202,53 +200,5 @@ function onFinish(values: any, form: FormInstance, submit: SubmitFunction, fileO
   submit(formatValues, {
     action: '/register',
     method: 'post',
-  });
-};
-
-
-/**
- * 校验user中是否已存在重复值
- *
- * @param {string} key
- * @param {*} value
- * @param {string} msg
- * @return {*} Promise<any>
- */
-async function validateRepeat(key: string, value: any, msg: string) {
-  if (!value) {
-    return Promise.resolve();
-  }
-  // 调接口，查下数据库有无重复数据
-  const res = await (await fetch(`/queryUser?_data=routes/queryUser&key=${key}&value=${value}`, {
-    method: 'GET',
-  })).json();
-  if (res) {
-    throw new Error(msg);
-  }
-  return Promise.resolve();
-};
-
-/**
- * 传入文件名与文件数据（或blob形式），上传至COS
- *
- * @param {string} filename
- * @param {*} file
- */
-function uploadImage(filename: string, file: any) {
-  const cos = new Cos({
-    SecretId: config.SecretId,
-    SecretKey: config.SecretKey,
-  });
-  cos.putObject({
-    Bucket: 'sls-cloudfunction-ap-guangzhou-code-1301421790', /* 必须 */
-    Region: 'ap-guangzhou', /* 存储桶所在地域，必须字段 */
-    Key: 'Allen-img/' + filename, /* 必须 */
-    StorageClass: 'STANDARD',
-    Body: file, // 上传文件对象
-    onProgress: function(progressData) {
-      console.log(JSON.stringify(progressData));
-    },
-  }, function(err, data) {
-    console.log(err || data);
   });
 };
