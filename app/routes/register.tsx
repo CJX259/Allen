@@ -2,7 +2,7 @@ import React from 'react';
 import { ActionFunction, LoaderFunction, LinksFunction, json } from 'remix';
 import { redirect } from 'remix';
 import md5 from 'md5';
-import { LoginKey, RegisterKey } from '~/const';
+import { LoginKey, RegisterKey, userKeys, userUnRequireKeys } from '~/const';
 import { DB_ERROR, PARAMS_ERROR } from '~/error';
 import { commitSession, getSession } from '~/sessions';
 import { SessionRegisterData, SessionUserData } from '~/types';
@@ -29,10 +29,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const action: ActionFunction = async ({ request, params }) => {
   const rawFormData = await request.formData();
-  const keys = ['phone', 'name', 'address', 'mail', 'role', 'idCard', 'realName', 'introduce', 'password', 'vx', 'avatarKey'];
-  const unRequireKeys = ['introduce', 'password', 'avatarKey'];
-  const requiredKeys = keys.filter((key) => unRequireKeys.indexOf(key) === -1);
-  const formatData = getFromDatas(keys, rawFormData);
+  const requiredKeys = userKeys.filter((key) => userUnRequireKeys.indexOf(key) === -1);
+  const formatData = getFromDatas(userKeys, rawFormData);
   // 是否传了必传的参数
   if (!validateFormDatas(requiredKeys, formatData)) {
     return json(PARAMS_ERROR);

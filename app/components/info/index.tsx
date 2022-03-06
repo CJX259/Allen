@@ -1,21 +1,22 @@
 import { Role } from '@prisma/client';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useLoaderData, useTransition } from 'remix';
+import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { LOAD_STATE } from '~/const';
-import { FormRenderInfo, UserJoinTag } from '~/types';
-import { validateRepeat } from '~/utils/client.index';
+import { ERROR, FormRenderInfo, UserJoinTag } from '~/types';
+import { formatFormData, uploadImage, validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
 import BaseFormItem from '../register/BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from '../register/const';
 import UploadImg from '../UploadImg';
 
 export default function InfoIndex() {
+  const actionData: ERROR & { id: number } | undefined = useActionData();
   const loaderData: UserJoinTag = useLoaderData();
   // 上传图片组件传回的头像图片数据
   const [avatarFileObj, setAvatarFileObj] = useState(null as any);
   const [avatarimgUrl, setAvatarImgUrl] = useState('');
-
+  const submit = useSubmit();
   const [form] = Form.useForm();
   const transition = useTransition();
 
@@ -27,9 +28,27 @@ export default function InfoIndex() {
       });
     }
   }, [loaderData]);
-  function onFinish() {
-    console.log('file', avatarFileObj);
-    return null;
+
+  // 显示出错信息
+  useEffect(() => {
+    if (actionData?.msg) {
+      message.error(actionData.msg);
+    }
+    if (actionData?.id) {
+      message.success('数据更新成功');
+    }
+  }, [actionData]);
+
+  // 提交数据
+  function onFinish(v: any) {
+    const params = formatFormData(v);
+    // 先不传图片到云端
+    if (avatarFileObj) {
+      uploadImage(params.avatarKey, avatarFileObj);
+    }
+    submit(params, {
+      method: 'post',
+    });
   }
   // 审核查看信息渲染form字段
   const infoRenderInfo: FormRenderInfo[] = [
@@ -173,6 +192,8 @@ export default function InfoIndex() {
       >
         <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
           <h2>个人信息表</h2>
+        </Form.Item>
+        <Form.Item style={{ display: 'none'}} initialValue={loaderData.id} name='id'>
         </Form.Item>
         <BaseFormItem data={loaderData} infos={infoRenderInfo} isAnchor={loaderData.role === Role.ANCHOR} />
         <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>

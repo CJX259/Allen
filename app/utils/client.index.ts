@@ -1,6 +1,7 @@
 
 import config from '~/../cloudConfig.json';
 import Cos from 'cos-js-sdk-v5';
+import { message } from 'antd';
 
 /**
  * 删掉为undefined和null的属性
@@ -72,13 +73,17 @@ export function uploadImage(filename: string, file: any) {
   cos.putObject({
     Bucket: 'sls-cloudfunction-ap-guangzhou-code-1301421790', /* 必须 */
     Region: 'ap-guangzhou', /* 存储桶所在地域，必须字段 */
-    Key: 'Allen-img/' + filename, /* 必须 */
+    Key: config.prefix + filename, /* 必须 */
     StorageClass: 'STANDARD',
     Body: file, // 上传文件对象
     onProgress: function(progressData) {
       console.log(JSON.stringify(progressData));
     },
   }, function(err, data) {
-    console.log(err || data);
+    if (err) {
+      message.error('上传云端失败');
+    } else {
+      message.success('上传云端成功');
+    }
   });
 };
