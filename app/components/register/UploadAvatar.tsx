@@ -1,15 +1,20 @@
 import { message, Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getBase64 } from '~/utils/client.index';
 
 
 // 通过FormItem传入onChange，外部传入设置file数据的函数即可，提交时需要在父级传递file数据去COS
 export default function UploadAvatarComp(props: any) {
-  const { onChange, setFileObj } = props;
+  const { onChange, setFileObj, imgUrl } = props;
   const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState(imgUrl || '');
+  console.log('imageUrl', imageUrl);
+  // props传递的url变化
+  useEffect(() => {
+    setImageUrl(imgUrl);
+  }, [imgUrl]);
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}

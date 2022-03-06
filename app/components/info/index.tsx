@@ -1,20 +1,34 @@
 import { Role } from '@prisma/client';
 import { Button, Form, Input } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLoaderData, useTransition } from 'remix';
 import { LOAD_STATE } from '~/const';
 import { FormRenderInfo, UserJoinTag } from '~/types';
+import Cos from 'cos-js-sdk-v5';
 import { validateRepeat } from '~/utils/client.index';
+import { getImgUrl } from '~/utils/cos';
 import BaseFormItem from '../register/BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from '../register/const';
 import UploadAvatar from '../register/UploadAvatar';
 
 export default function InfoIndex() {
   const loaderData: UserJoinTag = useLoaderData();
+  // 上传头像组件传回的文件数据
   const [fileObj, setFileObj] = useState(null as any);
+  const [imgUrl, setImgUrl] = useState('');
   const [form] = Form.useForm();
   const transition = useTransition();
+
+  // 数据更新后，重新拉取头像url
+  useEffect(() => {
+    if (loaderData.avatarKey) {
+      getImgUrl(loaderData.avatarKey, (data: Cos.GetObjectUrlResult) => {
+        setImgUrl(data.Url);
+      });
+    }
+  }, [loaderData]);
   function onFinish() {
+    console.log('file', fileObj);
     return null;
   }
   // 审核查看信息渲染form字段
@@ -25,7 +39,7 @@ export default function InfoIndex() {
         all: '头像',
       },
       render: (data) => {
-        return <UploadAvatar setFileObj={setFileObj} />;
+        return <UploadAvatar imgUrl={imgUrl} setFileObj={setFileObj} />;
       },
     },
     {
@@ -157,6 +171,9 @@ export default function InfoIndex() {
         labelCol={{ span: FORM_COL.label }}
         wrapperCol={{ span: FORM_COL.wrapper }}
       >
+        <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
+          <h2>个人信息表</h2>
+        </Form.Item>
         <BaseFormItem data={loaderData} infos={infoRenderInfo} isAnchor={loaderData.role === Role.ANCHOR} />
         <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
           <Button loading={transition.state === LOAD_STATE.submitting} type='primary' htmlType='submit'>提交</Button>

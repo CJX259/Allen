@@ -36,7 +36,7 @@ export default function RegisterCmp() {
       label: {
         all: '手机号',
       },
-      initialValue: phone,
+      initialValue: () => phone,
       rules: [RULE_REQUIRED],
       render: () => <Input disabled/>,
     },
@@ -45,7 +45,7 @@ export default function RegisterCmp() {
       label: {
         all: '微信号',
       },
-      initialValue: phone,
+      initialValue: () => phone,
       rules: [RULE_REQUIRED],
       render: () => <Input />,
     },
@@ -55,7 +55,7 @@ export default function RegisterCmp() {
         all: '您的身份是：',
       },
       rules: [RULE_REQUIRED],
-      initialValue: Role.ANCHOR,
+      initialValue: () => Role.ANCHOR,
       render: () => {
         return (
           <Radio.Group onChange={() => changeRole(form, setIsAnchor)}>
