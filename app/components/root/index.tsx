@@ -63,7 +63,7 @@ function renderRightContent(user: SessionUserData | null, submit: SubmitFunction
     wording: '登录/注册',
   };
   const userLink: InfoData = {
-    to: '/home',
+    to: `/info/${user?.id}`,
     wording: '我的信息',
   };
   let renderLink = noUserLink;

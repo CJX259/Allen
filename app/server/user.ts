@@ -167,6 +167,15 @@ export async function searchUserByTag(tagId: number, page: number, limit: number
   return { data: userData, total, tag };
 };
 
+
+/**
+ * 更新用户数据
+ *
+ * @export
+ * @param {number} id
+ * @param {User} params
+ * @return {*}
+ */
 export async function updateUser(id: number, params: User) {
   return db.user.update({
     where: {
@@ -181,3 +190,6 @@ export async function updateUser(id: number, params: User) {
   });
 };
 
+export async function searchUserById(userId: number) {
+
+};

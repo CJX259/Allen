@@ -67,8 +67,19 @@ function calcMenuList(role: Role | undefined): MenuData[] {
       });
       break;
     }
-    case Role.ANCHOR:
-      // anchor与company相同
+    case Role.ANCHOR: {
+      base.push({
+        subTitle: '签约系统',
+        children: [
+          {
+            title: '匹配用户',
+            to: '/match',
+          },
+        ],
+      });
+      break;
+    }
+    // anchor与company相同
     case Role.COMPANY: {
       break;
     }
