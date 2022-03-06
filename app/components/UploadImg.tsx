@@ -1,4 +1,4 @@
-import { message, Upload } from 'antd';
+import { message, Popover, Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
 import React, { useEffect, useState } from 'react';
@@ -6,11 +6,10 @@ import { getBase64 } from '~/utils/client.index';
 
 
 // 通过FormItem传入onChange，外部传入设置file数据的函数即可，提交时需要在父级传递file数据去COS
-export default function UploadAvatarComp(props: any) {
+export default function UploadImg(props: any) {
   const { onChange, setFileObj, imgUrl } = props;
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(imgUrl || '');
-  console.log('imageUrl', imageUrl);
   // props传递的url变化
   useEffect(() => {
     setImageUrl(imgUrl);
@@ -20,6 +19,15 @@ export default function UploadAvatarComp(props: any) {
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div style={{ marginTop: 8 }}>上传头像</div>
     </div>
+  );
+  const hoverImage = (
+    <Popover
+      content={
+        <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+      }
+      title="预览图">
+      <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+    </Popover>
   );
   function handleChange(info:UploadChangeParam<any>) {
     if (info.file.status === 'uploading') {
@@ -49,7 +57,11 @@ export default function UploadAvatarComp(props: any) {
       beforeUpload={beforeUpload}
       onChange={handleChange}
     >
-      {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+      {
+        imageUrl ?
+        hoverImage :
+        uploadButton
+      }
     </Upload>
   );
 };

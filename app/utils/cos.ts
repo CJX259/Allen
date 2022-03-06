@@ -28,7 +28,7 @@ export function getCos() {
  * @param {string} key
  * @param {Function} callback
  */
-export function getImgUrl(key: string, callback: Function) {
+export function getImgUrl(key: string, callback: (data: Cos.GetObjectUrlResult) => void) {
   const cos = getCos();
   cos.getObjectUrl({
     Bucket: 'sls-cloudfunction-ap-guangzhou-code-1301421790',

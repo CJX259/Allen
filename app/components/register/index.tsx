@@ -5,7 +5,7 @@ import type { FormInstance } from 'antd';
 import type { SubmitFunction } from 'remix';
 import BaseFormItem from './BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from './const';
-import UploadAvatar from './UploadAvatar';
+import UploadImg from '../UploadImg';
 import { Role } from '@prisma/client';
 import { FormRenderInfo } from '~/types';
 import { formatFormData, uploadImage, validateRepeat } from '~/utils/client.index';
@@ -29,7 +29,7 @@ export default function RegisterCmp() {
       label: {
         all: '头像',
       },
-      render: () => <UploadAvatar setFileObj={setFileObj} />,
+      render: () => <UploadImg setFileObj={setFileObj} />,
     },
     {
       name: 'phone',

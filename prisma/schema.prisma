@@ -56,8 +56,6 @@ model User {
   address      String
   mail         String
   vx           String
-  // 合同图片
-  contract     String?
   status       Status   @default(PENDING)
   reason       String?
   ctime        DateTime @default(now())

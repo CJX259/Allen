@@ -4,31 +4,31 @@ import React, { useEffect, useState } from 'react';
 import { useLoaderData, useTransition } from 'remix';
 import { LOAD_STATE } from '~/const';
 import { FormRenderInfo, UserJoinTag } from '~/types';
-import Cos from 'cos-js-sdk-v5';
 import { validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
 import BaseFormItem from '../register/BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from '../register/const';
-import UploadAvatar from '../register/UploadAvatar';
+import UploadImg from '../UploadImg';
 
 export default function InfoIndex() {
   const loaderData: UserJoinTag = useLoaderData();
-  // 上传头像组件传回的文件数据
-  const [fileObj, setFileObj] = useState(null as any);
-  const [imgUrl, setImgUrl] = useState('');
+  // 上传图片组件传回的头像图片数据
+  const [avatarFileObj, setAvatarFileObj] = useState(null as any);
+  const [avatarimgUrl, setAvatarImgUrl] = useState('');
+
   const [form] = Form.useForm();
   const transition = useTransition();
 
-  // 数据更新后，重新拉取头像url
+  // 数据更新后，重新拉取图片url
   useEffect(() => {
     if (loaderData.avatarKey) {
-      getImgUrl(loaderData.avatarKey, (data: Cos.GetObjectUrlResult) => {
-        setImgUrl(data.Url);
+      getImgUrl(loaderData.avatarKey, (data) => {
+        setAvatarImgUrl(data.Url);
       });
     }
   }, [loaderData]);
   function onFinish() {
-    console.log('file', fileObj);
+    console.log('file', avatarFileObj);
     return null;
   }
   // 审核查看信息渲染form字段
@@ -39,7 +39,7 @@ export default function InfoIndex() {
         all: '头像',
       },
       render: (data) => {
-        return <UploadAvatar imgUrl={imgUrl} setFileObj={setFileObj} />;
+        return <UploadImg imgUrl={avatarimgUrl} setFileObj={setAvatarFileObj} />;
       },
     },
     {
@@ -82,6 +82,13 @@ export default function InfoIndex() {
       rules: [RULE_REQUIRED],
       initialValue: (data) => data?.vx,
       render: () => <Input />,
+    },
+    {
+      name: 'password',
+      label: {
+        all: '登录密码',
+      },
+      render: () => <Input.Password placeholder='(选填，不填仅能用验证码登录)'/>,
     },
     {
       name: 'realName',
@@ -145,13 +152,6 @@ export default function InfoIndex() {
       ],
       initialValue: (data) => data?.address ? data.address : '',
       render: () => <Input.TextArea placeholder='请填写地址（精确到街道）' />,
-    },
-    {
-      name: 'password',
-      label: {
-        all: '登录密码',
-      },
-      render: () => <Input.Password placeholder='(选填，不填仅能用验证码登录)'/>,
     },
     {
       name: 'introduce',
