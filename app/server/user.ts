@@ -190,6 +190,29 @@ export async function updateUser(id: number, params: User) {
   });
 };
 
-export async function searchUserById(userId: number) {
-
+/**
+ * 通过id搜索用户
+ *
+ * @export
+ * @param {number} id
+ * @return {*}
+ */
+export async function searchUserById(id: number) {
+  return db.user.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      tags: {
+        include: {
+          tag: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
+    },
+  });
 };

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Form } from 'antd';
-import { FormRenderInfo } from '~/types';
+import { FormRenderInfo, UserJoinTag } from '~/types';
 
-export default function BaseFormItem(props: { infos: FormRenderInfo[], isAnchor: boolean}) {
-  const { infos, isAnchor } = props;
+export default function BaseFormItem(props: { data?: UserJoinTag, infos: FormRenderInfo[], isAnchor: boolean}) {
+  const { infos, isAnchor, data } = props;
   const res = infos.map((ele: FormRenderInfo) => {
     return (
       <Form.Item
@@ -11,9 +11,9 @@ export default function BaseFormItem(props: { infos: FormRenderInfo[], isAnchor:
         label={ele.label.all ? ele.label.all : ( isAnchor ? ele.label.anchor : ele.label.company)}
         name={ele.name}
         rules={ele.rules ? ele.rules : undefined}
-        initialValue={ele.initialValue ? ele.initialValue : undefined}
+        initialValue={ele.initialValue ? ele.initialValue(data ? data : null) : undefined}
       >
-        {ele.render()}
+        {ele.render(data ? data : null)}
       </Form.Item>
     );
   });

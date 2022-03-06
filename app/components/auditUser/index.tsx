@@ -208,7 +208,7 @@ export default function AuditUserComp() {
         footer={null}
       >
         <InfoModalContent data={data ? data[curIndex] : undefined} />
-      </Modal>;
+      </Modal>
       <Modal
         title='下架用户'
         visible={rejectVisible}
@@ -228,7 +228,7 @@ export default function AuditUserComp() {
         }}
       >
         <RejectModalContent reason={reason} setReason={setReason} />
-      </Modal>;
+      </Modal>
     </Spin>
   );
 };

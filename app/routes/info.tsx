@@ -1,5 +1,5 @@
 import React from 'react';
-import { LinksFunction, Outlet } from 'remix';
+import { Outlet } from 'remix';
 
 // import classifyStyle from '~/styles/css/classify.css';
 

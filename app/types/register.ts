@@ -1,4 +1,5 @@
 import type { Rule } from 'antd/lib/form';
+import { UserJoinTag } from '.';
 
 export interface SessionRegisterData {
   phone: string;
@@ -11,7 +12,7 @@ export interface Laebl{
 export interface FormRenderInfo {
   name: string;
   label: Laebl;
-  render: () => JSX.Element;
+  render: (user: UserJoinTag | null) => JSX.Element;
   rules?: Rule[];
-  initialValue?: any;
+  initialValue?: (user: UserJoinTag | null) => any;
 };
