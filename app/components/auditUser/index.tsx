@@ -151,7 +151,9 @@ export default function AuditUserComp() {
       message.success('更新成功');
       // 重新刷新页面
       submit({
-        ...(loaderData as any),
+        searchKey: searchKey || '',
+        page: '' + page,
+        status,
       }, {
         method: 'get',
       });
