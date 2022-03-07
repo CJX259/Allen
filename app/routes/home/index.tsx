@@ -19,7 +19,6 @@ export default function HomePageCmp() {
 }
 
 
-
 export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);
   return (
