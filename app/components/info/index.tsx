@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { LOAD_STATE, ROLE_MAP } from '~/const';
 import { ERROR, FormRenderInfo, UserJoinTag } from '~/types';
-import { formatFormData, uploadImage, validateRepeat } from '~/utils/client.index';
+import { formatFormData, validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
 import BaseFormItem from '../register/BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from '../register/const';
@@ -16,7 +16,6 @@ export default function InfoIndex() {
   const { user, loginUser: { id: loginId, role: loginRole } } = loaderData;
   let isVisitor = user.id !== loginId;
   // 上传图片组件传回的头像图片数据
-  const [avatarFileObj, setAvatarFileObj] = useState(null as any);
   const [avatarimgUrl, setAvatarImgUrl] = useState('');
   const submit = useSubmit();
   const [form] = Form.useForm();
@@ -45,10 +44,10 @@ export default function InfoIndex() {
   // 提交数据
   function onFinish(v: any) {
     const params = formatFormData(v);
-    // 先不传图片到云端
-    if (avatarFileObj) {
-      uploadImage(params.avatarKey, avatarFileObj);
-    }
+    // // 先不传图片到云端
+    // if (avatarFileObj) {
+    //   uploadImage(params.avatarKey, avatarFileObj);
+    // }
     submit(params, {
       method: 'post',
     });
@@ -85,7 +84,7 @@ export default function InfoIndex() {
       render: (data) => {
         return isVisitor ?
           <img src={avatarimgUrl} style={{ width: 150, height: 150, borderRadius: '50%' }} alt="avatar" /> :
-          <UploadImg imgUrl={avatarimgUrl} setFileObj={setAvatarFileObj} />;
+          <UploadImg imgUrl={avatarimgUrl} />;
       },
     },
     {

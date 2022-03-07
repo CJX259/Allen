@@ -8,7 +8,7 @@ import { FORM_COL, RULE_REQUIRED } from './const';
 import UploadImg from '../UploadImg';
 import { Role } from '@prisma/client';
 import { FormRenderInfo } from '~/types';
-import { formatFormData, uploadImage, validateRepeat } from '~/utils/client.index';
+import { formatFormData, validateRepeat } from '~/utils/client.index';
 import { LOAD_STATE } from '~/const';
 
 export default function RegisterCmp() {
@@ -19,7 +19,6 @@ export default function RegisterCmp() {
   const transition = useTransition();
   // 是否为主播，用于表单label判断
   const [isAnchor, setIsAnchor] = useState(true);
-  const [fileObj, setFileObj] = useState(null as any);
   useEffect(() => {
     errorData?.msg ? message.error(errorData.msg) : '';
   }, [errorData]);
@@ -29,7 +28,7 @@ export default function RegisterCmp() {
       label: {
         all: '头像',
       },
-      render: () => <UploadImg setFileObj={setFileObj} />,
+      render: () => <UploadImg />,
     },
     {
       name: 'phone',
@@ -169,7 +168,7 @@ export default function RegisterCmp() {
           <div className="form-left"></div>
           <Form
             form={form}
-            onFinish={(v) => onFinish(v, form, submit, fileObj)}
+            onFinish={(v) => onFinish(v, form, submit)}
             className='form-content'
             labelCol={{ span: FORM_COL.label }}
             wrapperCol={{ span: FORM_COL.wrapper }}
@@ -192,11 +191,11 @@ function changeRole(form: FormInstance, setIsAnchor: Function) {
   setIsAnchor(isAnchor ? true : false);
 }
 
-function onFinish(values: any, form: FormInstance, submit: SubmitFunction, fileObj?: any) {
+function onFinish(values: any, form: FormInstance, submit: SubmitFunction) {
   const formatValues = formatFormData(values);
-  if (fileObj) {
-    uploadImage(formatValues.avatarKey, fileObj);
-  }
+  // if (fileObj) {
+  //   uploadImage(formatValues.avatarKey, fileObj);
+  // }
   submit(formatValues, {
     action: '/register',
     method: 'post',

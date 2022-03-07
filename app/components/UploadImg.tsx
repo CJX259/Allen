@@ -2,12 +2,12 @@ import { message, Popover, Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { UploadChangeParam } from 'antd/lib/upload';
 import React, { useEffect, useState } from 'react';
-import { getBase64 } from '~/utils/client.index';
+import { getBase64, uploadImage } from '~/utils/client.index';
 
 
 // 通过FormItem传入onChange，外部传入设置file数据的函数即可，提交时需要在父级传递file数据去COS
 export default function UploadImg(props: any) {
-  const { onChange, setFileObj, imgUrl } = props;
+  const { onChange, imgUrl } = props;
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(imgUrl || '');
   // props传递的url变化
@@ -23,10 +23,10 @@ export default function UploadImg(props: any) {
   const hoverImage = (
     <Popover
       content={
-        <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+        <img src={imageUrl} alt="avatar" style={{ width: '100%', maxWidth: 400 }} />
       }
       title="预览图">
-      <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+      <img src={imageUrl} alt="avatar" style={{ width: '100%', height: '100%' }} />
     </Popover>
   );
   function handleChange(info:UploadChangeParam<any>) {
@@ -35,10 +35,10 @@ export default function UploadImg(props: any) {
       return;
     }
     if (info.file.status === 'done') {
+      console.log('file done');
       const random = `${Math.floor(Math.random() * 1000000)}`;
       onChange(`${random}.${info.file.name}`);
-      setFileObj(info.file.originFileObj);
-      // uploadImage(`${random}.${info.file.name}`, info.file.originFileObj);
+      uploadImage(`${random}.${info.file.name}`, info.file.originFileObj);
       // Get this url from response in real world.
       getBase64(info.file.originFileObj, (imageUrl: string) => {
         setLoading(false);
@@ -53,6 +53,8 @@ export default function UploadImg(props: any) {
       listType="picture-card"
       className="avatar-uploader"
       showUploadList={false}
+      // action到一个不作处理的url
+      action={'/queryUser'}
       // 检验图片规格
       beforeUpload={beforeUpload}
       onChange={handleChange}

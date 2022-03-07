@@ -1,4 +1,4 @@
-import { LoaderFunction } from 'remix';
+import { ActionFunction, LoaderFunction } from 'remix';
 import { LoginKey } from '~/const';
 import { getSession } from '~/sessions';
 import { SessionUserData } from '~/types';
@@ -27,4 +27,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     return null;
   }
   return repeatUser || null;
+};
+
+export const action: ActionFunction = async ({request}) => {
+  return null;
 };
