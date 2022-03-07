@@ -2,7 +2,7 @@ import React from 'react';
 import { ActionFunction, LoaderFunction, LinksFunction, json } from 'remix';
 import { redirect } from 'remix';
 import md5 from 'md5';
-import { LoginKey, RegisterKey, userKeys, userUnRequireKeys } from '~/const';
+import { DEFAULT_AVATAR_KEY, LoginKey, RegisterKey, userKeys, userUnRequireKeys } from '~/const';
 import { DB_ERROR, PARAMS_ERROR } from '~/error';
 import { commitSession, getSession } from '~/sessions';
 import { SessionRegisterData, SessionUserData } from '~/types';
@@ -39,6 +39,10 @@ export const action: ActionFunction = async ({ request, params }) => {
   if (formatData.password) {
     formatData.password = md5(formatData.password);
   }
+  // 注册时没传头像的，设置默认头像
+  if (!formatData.avatarKey) {
+    formatData.avatarKey = DEFAULT_AVATAR_KEY;
+  }
   try {
     // 插入新数据
     const newUser = await db.user.create({
@@ -68,3 +72,14 @@ export default function Register() {
   return <RegisterCmp />;
 };
 
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return (
+    <div>
+      <h1>500</h1>
+      <h2>服务器出错</h2>
+      <h3>{error.message}</h3>
+    </div>
+  );
+};

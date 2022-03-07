@@ -19,13 +19,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return redirect;
   }
   const session = await getSession(request.headers.get('Cookie'));
-  const { id } = session.get(LoginKey) || {};
+  const { id, role } = session.get(LoginKey) || {};
   const userId = params.userId;
   if (!userId) {
     return json(PARAMS_ERROR);
   }
   const user = await searchUserById(+userId);
-  return { user, loginId: id };
+  return { user, loginUser: { id, role } };
 };
 export const action: ActionFunction = async ({ request }) => {
   const rawFormData = await request.formData();
@@ -65,3 +65,15 @@ export const action: ActionFunction = async ({ request }) => {
 export default function UserInfo() {
   return <InfoIndex />;
 }
+
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return (
+    <div>
+      <h1>500</h1>
+      <h2>服务器出错</h2>
+      <h3>{error.message}</h3>
+    </div>
+  );
+};

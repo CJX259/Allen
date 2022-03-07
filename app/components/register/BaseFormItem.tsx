@@ -10,6 +10,7 @@ export default function BaseFormItem(props: { data?: UserJoinTag, infos: FormRen
         key={ele.name}
         label={ele.label.all ? ele.label.all : ( isAnchor ? ele.label.anchor : ele.label.company)}
         name={ele.name}
+        style={ele.style}
         rules={ele.rules ? ele.rules : undefined}
         initialValue={ele.initialValue ? ele.initialValue(data ? data : null) : undefined}
       >

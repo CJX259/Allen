@@ -11,6 +11,7 @@ export interface Laebl{
 }
 export interface FormRenderInfo {
   name: string;
+  style?: { [key: string]: any };
   label: Laebl;
   render: (user: UserJoinTag | null) => JSX.Element;
   rules?: Rule[];

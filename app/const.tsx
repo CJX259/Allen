@@ -159,3 +159,5 @@ export const userKeys = [...userBaseKeys, 'role'];
 export const userUnRequireKeys = ['introduce', 'password', 'avatarKey'];
 // 更新所需字段
 export const updateUserKeys = [...userBaseKeys, 'id'];
+
+export const DEFAULT_AVATAR_KEY = '569488.default.png';

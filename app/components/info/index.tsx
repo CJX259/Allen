@@ -1,8 +1,8 @@
 import { Role } from '@prisma/client';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input, message, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
-import { LOAD_STATE } from '~/const';
+import { LOAD_STATE, ROLE_MAP } from '~/const';
 import { ERROR, FormRenderInfo, UserJoinTag } from '~/types';
 import { formatFormData, uploadImage, validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
@@ -12,8 +12,8 @@ import UploadImg from '../UploadImg';
 
 export default function InfoIndex() {
   const actionData: ERROR & { id: number } | undefined = useActionData();
-  const loaderData: { user: UserJoinTag, loginId: number }= useLoaderData();
-  const { user, loginId } = loaderData;
+  const loaderData: { user: UserJoinTag, loginUser: { id: number; role: Role } }= useLoaderData();
+  const { user, loginUser: { id: loginId, role: loginRole } } = loaderData;
   let isVisitor = user.id !== loginId;
   // 上传图片组件传回的头像图片数据
   const [avatarFileObj, setAvatarFileObj] = useState(null as any);
@@ -53,6 +53,28 @@ export default function InfoIndex() {
       method: 'post',
     });
   }
+
+  // 渲染提交按钮
+  function renderButton() {
+    if (isVisitor) {
+      return (
+        <Button
+          type='primary'
+          disabled={user.role === loginRole}
+        >
+          发起签约
+        </Button>
+      );
+    }
+    return (
+      <Button
+        loading={transition.state === LOAD_STATE.submitting}
+        type='primary'
+        htmlType='submit'
+      >提交
+      </Button>
+    );
+  };
   // 审核查看信息渲染form字段
   const infoRenderInfo: FormRenderInfo[] = [
     {
@@ -62,7 +84,7 @@ export default function InfoIndex() {
       },
       render: (data) => {
         return isVisitor ?
-          <img src={avatarimgUrl} style={{ width: 150, height: 150 }} alt="avatar" /> :
+          <img src={avatarimgUrl} style={{ width: 150, height: 150, borderRadius: '50%' }} alt="avatar" /> :
           <UploadImg imgUrl={avatarimgUrl} setFileObj={setAvatarFileObj} />;
       },
     },
@@ -85,8 +107,10 @@ export default function InfoIndex() {
         },
       ],
       initialValue: (data) => data?.name,
-      render: () => (
-        <Input disabled={isVisitor} placeholder='请填写昵称(小于12个字符)' />
+      render: (data) => (
+        isVisitor ?
+        <span>{data?.name}<Tag color={data?.role === Role.ANCHOR ? 'green' : 'red'}>{data ? ROLE_MAP[data?.role] : ''}</Tag></span> :
+        <Input placeholder='请填写昵称(小于12个字符)' />
       ),
     },
     {
@@ -96,7 +120,7 @@ export default function InfoIndex() {
       },
       rules: [RULE_REQUIRED],
       initialValue: (data) => data?.phone,
-      render: () => <Input disabled={isVisitor} />,
+      render: (data) => (isVisitor ? <span>{data?.phone}</span> : <Input />),
     },
     {
       name: 'vx',
@@ -105,13 +129,14 @@ export default function InfoIndex() {
       },
       rules: [RULE_REQUIRED],
       initialValue: (data) => data?.vx,
-      render: () => <Input disabled={isVisitor} />,
+      render: (data) => (isVisitor ? <span>{data?.vx}</span> : <Input />),
     },
     {
       name: 'password',
       label: {
         all: '登录密码',
       },
+      style: isVisitor ? { display: 'none' } : {},
       render: () => <Input.Password disabled={isVisitor} placeholder='(选填，不填仅能用验证码登录)'/>,
     },
     {
@@ -120,6 +145,7 @@ export default function InfoIndex() {
         anchor: '真实姓名',
         company: '公司法人姓名',
       },
+      style: isVisitor ? { display: 'none' } : {},
       initialValue: (data) => data?.realName,
       render: (data) => <Input disabled={isVisitor} placeholder='请填写真实姓名' />,
     },
@@ -137,6 +163,7 @@ export default function InfoIndex() {
           },
         },
       ],
+      style: isVisitor ? { display: 'none' } : {},
       initialValue: (data) => data?.idCard,
       render: (data) => <Input disabled={isVisitor} placeholder='请填写身份证号码' />,
     },
@@ -147,7 +174,7 @@ export default function InfoIndex() {
         company: '公司邮箱',
       },
       initialValue: (data) => data?.mail,
-      render: (data) => <Input disabled={isVisitor} placeholder='请填写邮箱地址' />,
+      render: (data) => (isVisitor ? <span>{data?.mail}</span> : <Input placeholder='请填写邮箱地址' />),
       rules: [
         RULE_REQUIRED,
         {
@@ -162,6 +189,7 @@ export default function InfoIndex() {
         anchor: '现居地址',
         company: '公司地址',
       },
+      style: isVisitor ? { display: 'none' } : {},
       rules: [
         RULE_REQUIRED,
         // {
@@ -175,7 +203,7 @@ export default function InfoIndex() {
         // },
       ],
       initialValue: (data) => data?.address ? data.address : '',
-      render: () => <Input.TextArea disabled={isVisitor} placeholder='请填写地址（精确到街道）' />,
+      render: (data) => (isVisitor ? <span>{data?.address}</span> : <Input.TextArea placeholder='请填写地址（精确到街道）' />),
     },
     {
       name: 'introduce',
@@ -183,7 +211,7 @@ export default function InfoIndex() {
         all: '简介',
       },
       initialValue: (data) => data?.introduce ? data.introduce : '',
-      render: () => <Input.TextArea disabled={isVisitor} placeholder='介绍一下自己，可以让别人更快了解你'/>,
+      render: (data) => (isVisitor ? <span>{data?.introduce}</span> : <Input.TextArea placeholder='介绍一下自己，可以让别人更快了解你' />),
     },
   ];
   return (
@@ -202,14 +230,10 @@ export default function InfoIndex() {
         </Form.Item>
         <BaseFormItem data={user} infos={infoRenderInfo} isAnchor={user.role === Role.ANCHOR} />
         <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
-          <Button
-            loading={transition.state === LOAD_STATE.submitting}
-            disabled={isVisitor}
-            type='primary'
-            htmlType='submit'
-          >提交</Button>
+          {renderButton()}
         </Form.Item>
       </Form>
     </div>
   );
 }
+

@@ -1,7 +1,13 @@
+import { LoaderFunction } from 'remix';
 import React from 'react';
 
-export default function AuditUser() {
-  return <h1>审核页goods</h1>;
+export const loader: LoaderFunction = async ({ request }) => {
+  return null;
+};
+
+
+export default function Match() {
+  return <h1>orderHistory</h1>;
 };
 
 

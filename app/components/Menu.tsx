@@ -67,7 +67,7 @@ function calcMenuList(role: Role | undefined): MenuData[] {
       });
       break;
     }
-    case Role.ANCHOR: {
+    case (Role.ANCHOR || Role.COMPANY): {
       base.push({
         subTitle: '签约系统',
         children: [
@@ -75,12 +75,12 @@ function calcMenuList(role: Role | undefined): MenuData[] {
             title: '匹配用户',
             to: '/match',
           },
+          {
+            title: '签约记录',
+            to: '/orderHistory',
+          },
         ],
       });
-      break;
-    }
-    // anchor与company相同
-    case Role.COMPANY: {
       break;
     }
   }
