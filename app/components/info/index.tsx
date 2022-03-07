@@ -12,7 +12,9 @@ import UploadImg from '../UploadImg';
 
 export default function InfoIndex() {
   const actionData: ERROR & { id: number } | undefined = useActionData();
-  const loaderData: UserJoinTag = useLoaderData();
+  const loaderData: { user: UserJoinTag, loginId: number }= useLoaderData();
+  const { user, loginId } = loaderData;
+  let isVisitor = user.id !== loginId;
   // 上传图片组件传回的头像图片数据
   const [avatarFileObj, setAvatarFileObj] = useState(null as any);
   const [avatarimgUrl, setAvatarImgUrl] = useState('');
@@ -22,11 +24,12 @@ export default function InfoIndex() {
 
   // 数据更新后，重新拉取图片url
   useEffect(() => {
-    if (loaderData.avatarKey) {
-      getImgUrl(loaderData.avatarKey, (data) => {
+    if (user.avatarKey) {
+      getImgUrl(user.avatarKey, (data) => {
         setAvatarImgUrl(data.Url);
       });
     }
+    isVisitor = user.id !== loginId;
   }, [loaderData]);
 
   // 显示出错信息
@@ -58,7 +61,9 @@ export default function InfoIndex() {
         all: '头像',
       },
       render: (data) => {
-        return <UploadImg imgUrl={avatarimgUrl} setFileObj={setAvatarFileObj} />;
+        return isVisitor ?
+          <img src={avatarimgUrl} style={{ width: 150, height: 150 }} alt="avatar" /> :
+          <UploadImg imgUrl={avatarimgUrl} setFileObj={setAvatarFileObj} />;
       },
     },
     {
@@ -81,7 +86,7 @@ export default function InfoIndex() {
       ],
       initialValue: (data) => data?.name,
       render: () => (
-        <Input placeholder='请填写昵称(小于12个字符)' />
+        <Input disabled={isVisitor} placeholder='请填写昵称(小于12个字符)' />
       ),
     },
     {
@@ -91,7 +96,7 @@ export default function InfoIndex() {
       },
       rules: [RULE_REQUIRED],
       initialValue: (data) => data?.phone,
-      render: () => <Input/>,
+      render: () => <Input disabled={isVisitor} />,
     },
     {
       name: 'vx',
@@ -100,14 +105,14 @@ export default function InfoIndex() {
       },
       rules: [RULE_REQUIRED],
       initialValue: (data) => data?.vx,
-      render: () => <Input />,
+      render: () => <Input disabled={isVisitor} />,
     },
     {
       name: 'password',
       label: {
         all: '登录密码',
       },
-      render: () => <Input.Password placeholder='(选填，不填仅能用验证码登录)'/>,
+      render: () => <Input.Password disabled={isVisitor} placeholder='(选填，不填仅能用验证码登录)'/>,
     },
     {
       name: 'realName',
@@ -116,7 +121,7 @@ export default function InfoIndex() {
         company: '公司法人姓名',
       },
       initialValue: (data) => data?.realName,
-      render: (data) => <Input placeholder='请填写真实姓名' />,
+      render: (data) => <Input disabled={isVisitor} placeholder='请填写真实姓名' />,
     },
     {
       name: 'idCard',
@@ -133,7 +138,7 @@ export default function InfoIndex() {
         },
       ],
       initialValue: (data) => data?.idCard,
-      render: (data) => <Input placeholder='请填写身份证号码' />,
+      render: (data) => <Input disabled={isVisitor} placeholder='请填写身份证号码' />,
     },
     {
       name: 'mail',
@@ -142,7 +147,7 @@ export default function InfoIndex() {
         company: '公司邮箱',
       },
       initialValue: (data) => data?.mail,
-      render: (data) => <Input placeholder='请填写邮箱地址' />,
+      render: (data) => <Input disabled={isVisitor} placeholder='请填写邮箱地址' />,
       rules: [
         RULE_REQUIRED,
         {
@@ -170,7 +175,7 @@ export default function InfoIndex() {
         // },
       ],
       initialValue: (data) => data?.address ? data.address : '',
-      render: () => <Input.TextArea placeholder='请填写地址（精确到街道）' />,
+      render: () => <Input.TextArea disabled={isVisitor} placeholder='请填写地址（精确到街道）' />,
     },
     {
       name: 'introduce',
@@ -178,7 +183,7 @@ export default function InfoIndex() {
         all: '简介',
       },
       initialValue: (data) => data?.introduce ? data.introduce : '',
-      render: () => <Input.TextArea placeholder='介绍一下自己，可以让别人更快了解你'/>,
+      render: () => <Input.TextArea disabled={isVisitor} placeholder='介绍一下自己，可以让别人更快了解你'/>,
     },
   ];
   return (
@@ -193,11 +198,16 @@ export default function InfoIndex() {
         <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
           <h2>个人信息表</h2>
         </Form.Item>
-        <Form.Item style={{ display: 'none'}} initialValue={loaderData.id} name='id'>
+        <Form.Item style={{ display: 'none'}} initialValue={user.id} name='id'>
         </Form.Item>
-        <BaseFormItem data={loaderData} infos={infoRenderInfo} isAnchor={loaderData.role === Role.ANCHOR} />
+        <BaseFormItem data={user} infos={infoRenderInfo} isAnchor={user.role === Role.ANCHOR} />
         <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
-          <Button loading={transition.state === LOAD_STATE.submitting} type='primary' htmlType='submit'>提交</Button>
+          <Button
+            loading={transition.state === LOAD_STATE.submitting}
+            disabled={isVisitor}
+            type='primary'
+            htmlType='submit'
+          >提交</Button>
         </Form.Item>
       </Form>
     </div>
