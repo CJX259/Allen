@@ -6,8 +6,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 
-export default function Match() {
-  return <h1>orderHistory</h1>;
+export default function History() {
+  return <h1>orderdetail</h1>;
 };
 
 

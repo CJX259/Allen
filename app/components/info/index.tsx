@@ -1,10 +1,10 @@
 import { Role } from '@prisma/client';
-import { Button, Form, Input, message, Tag } from 'antd';
+import { Button, Form, Input, message, Popconfirm, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { LOAD_STATE, ROLE_MAP } from '~/const';
 import { ERROR, FormRenderInfo, UserJoinTag } from '~/types';
-import { formatFormData, validateRepeat } from '~/utils/client.index';
+import { formatFormData, sendOrder, validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
 import BaseFormItem from '../register/BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from '../register/const';
@@ -57,12 +57,19 @@ export default function InfoIndex() {
   function renderButton() {
     if (isVisitor) {
       return (
-        <Button
-          type='primary'
-          disabled={user.role === loginRole}
+        <Popconfirm
+          title="确定发起签约吗？"
+          onConfirm={() => sendOrder(user.id, user.role, submit)}
+          okText="确定"
+          cancelText="取消"
         >
-          发起签约
-        </Button>
+          <Button
+            type='primary'
+            disabled={user.role === loginRole}
+          >
+            发起签约
+          </Button>
+        </Popconfirm>
       );
     }
     return (
@@ -74,6 +81,7 @@ export default function InfoIndex() {
       </Button>
     );
   };
+
   // 审核查看信息渲染form字段
   const infoRenderInfo: FormRenderInfo[] = [
     {

@@ -2,6 +2,8 @@
 import config from '~/../cloudConfig.json';
 import Cos from 'cos-js-sdk-v5';
 import { message } from 'antd';
+import { Role } from '@prisma/client';
+import { SubmitFunction } from 'remix';
 
 /**
  * 删掉为undefined和null的属性
@@ -85,5 +87,16 @@ export function uploadImage(filename: string, file: any) {
     } else {
       message.success('上传云端成功');
     }
+  });
+};
+
+// 发起签约请求
+export function sendOrder(id: number, role: Role, submit: SubmitFunction) {
+  submit({
+    targetId: '' + id,
+    targetRole: role,
+  }, {
+    method: 'post',
+    action: '/order',
   });
 };

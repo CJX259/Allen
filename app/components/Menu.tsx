@@ -77,7 +77,7 @@ function calcMenuList(role: Role | undefined): MenuData[] {
           },
           {
             title: '签约记录',
-            to: '/orderHistory',
+            to: '/order/history',
           },
         ],
       });

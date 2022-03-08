@@ -20,6 +20,8 @@ enum Status {
 enum OrderStatus {
   CONTRACTING
   CONTRACTED
+  CHECKING
+  CHECKED
   DOING
   DONE
   REJECTING
@@ -64,7 +66,8 @@ model User {
   tags          TagsOnUsers[]
   goods        Goods?
   // audit        Audit?
-  order        Order?
+  author       Order? @relation(name: "author")
+  target       Order? @relation(name: "target")
   userComment  UserComment?
 }
 
@@ -75,7 +78,7 @@ model Goods {
   price       Int
   companyId   Int
   company     User @relation(fields: [companyId], references: [id])
-  order       Order?
+  // order       Order?
   tags        TagsOnGoods[]
   // tag         Tag @relation(fields: [tagId], references: [id])
   ctime       DateTime @default(now())
@@ -112,13 +115,18 @@ model TagsOnGoods {
 model Order {
   id          Int @id @default(autoincrement())
   status      OrderStatus
-  liveUrl     String
-  time        String
-  times       Int
-  goodsId     Int
-  goods       Goods @relation(fields: [goodsId], references: [id])
-  anchorId    Int
-  anchor      User  @relation(fields: [anchorId], references: [id])
+  liveUrl     String?
+  time        String?
+  times       Int?
+  // goodsId     Int
+  // goods       Goods @relation(fields: [goodsId], references: [id])
+  // 发起人id
+  authorId    Int
+  author      User @relation(name: "author", fields: [authorId], references: [id])
+  authorRole  Role
+  targetId    Int
+  target      User @relation(name: "target", fields: [targetId], references: [id])
+  targetRole  Role
   ctime       DateTime @default(now())
   utime       DateTime @updatedAt
 }
