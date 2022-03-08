@@ -1,8 +1,9 @@
 import React from 'react';
 import { ColumnsType } from 'antd/lib/table';
-import { useLoaderData } from 'remix';
-import { Tabs, Table } from 'antd';
+import { Link, useLoaderData } from 'remix';
+import { Tabs, Table, Tooltip } from 'antd';
 import { OrderHistoryLoaderData, OrderJoinUser } from '~/types';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import RoleTag from '../RoleTag';
 import { ORDER_STATUS_MAP } from '~/const';
 import { OrderStatus } from '@prisma/client';
@@ -19,7 +20,10 @@ export default function HistoryComp() {
     {
       title: '发起人',
       dataIndex: ['author', 'name'],
-      render: (v, record: OrderJoinUser) => <span>{v} <RoleTag role={record.authorRole} /></span>,
+      render: (v, record: OrderJoinUser) => <>
+        <Link to={`/info/${record.authorId}`}>{v}</Link>
+        <RoleTag role={record.authorRole} />
+      </>,
     },
     {
       title: '接收人',
@@ -33,6 +37,9 @@ export default function HistoryComp() {
         return (
           <span>
             {ORDER_STATUS_MAP[v].text}
+            <Tooltip title={ORDER_STATUS_MAP[v].explain}>
+              <QuestionCircleOutlined style={{ marginLeft: 10 }} />
+            </Tooltip>
           </span>
         );
       },

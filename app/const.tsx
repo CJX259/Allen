@@ -74,7 +74,7 @@ export const ORDER_STATUS_MAP = {
   // },
   [OrderStatus.CHECKING]: {
     text: '检验中',
-    explain: '请 供应商 发货给 主播、平台 检验，待双方确认完货物质量后，进入下一步（注: 若直播时售出货物质量与检验的货物质量不符，后果仅由供应商承担）',
+    explain: '请 供应商 发货给 主播、平台 检验，待双方确认完货物质量后，进入下一步。平台收件地址xxxx，主播地址请联系主播确认。（注: 若直播时售出货物质量与检验的货物质量不符，后果仅由供应商承担）',
   },
   // [OrderStatus.CHECKED]: '已检验',
   [OrderStatus.DOING]: {
