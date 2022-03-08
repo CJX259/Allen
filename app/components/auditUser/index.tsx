@@ -10,6 +10,7 @@ import { formatFormData } from '~/utils/client.index';
 import InfoModalContent from './InfoModalContent';
 import RejectModalContent from './RejectModalContent';
 import axios from 'axios';
+import RoleTag from '../RoleTag';
 
 export default function AuditUserComp() {
   const loaderData: AuditUserLoaderData = useLoaderData();
@@ -44,9 +45,7 @@ export default function AuditUserComp() {
       title: '角色',
       dataIndex: 'role',
       key: 'role',
-      render: (v: Role) => {
-        return <Tag color={v === Role.ANCHOR ? 'green' : 'red'}>{ROLE_MAP[v]}</Tag>;
-      },
+      render: (v: Role) => <RoleTag role={v} />,
     },
     {
       title: '审核状态',
@@ -191,6 +190,7 @@ export default function AuditUserComp() {
         <div className="audit-table">
           <Table
             columns={columns}
+            rowKey='id'
             pagination={{
               total,
               current: page,

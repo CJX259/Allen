@@ -39,6 +39,11 @@ export async function needLogined(request: Request, roles?: Role[]) {
   return await hadLogin(session) ? null : redirect('/home');
 };
 
+export async function getSessionUserData(request: Request): Promise<SessionUserData> {
+  const session = await getSession(request.headers.get('Cookie'));
+  return session.get(LoginKey);
+}
+
 /**
  * 未登录才能访问的页面，登录了则跳转到主页
  *

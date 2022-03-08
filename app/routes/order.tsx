@@ -1,4 +1,4 @@
-import { ActionFunction, json, redirect } from 'remix';
+import { ActionFunction, json, Outlet, redirect } from 'remix';
 import React from 'react';
 import { LoginKey, REQ_METHOD } from '~/const';
 import { getFromDatas, validateFormDatas } from '~/utils/server.index';
@@ -40,7 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 
 export default function Order() {
-  return null;
+  return <Outlet />;
 };
 
 

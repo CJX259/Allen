@@ -19,9 +19,9 @@ enum Status {
 
 enum OrderStatus {
   CONTRACTING
-  CONTRACTED
+  // CONTRACTED
   CHECKING
-  CHECKED
+  // CHECKED
   DOING
   DONE
   REJECTING

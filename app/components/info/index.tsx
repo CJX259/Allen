@@ -1,13 +1,14 @@
 import { Role } from '@prisma/client';
-import { Button, Form, Input, message, Popconfirm, Tag } from 'antd';
+import { Button, Form, Input, message, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
-import { LOAD_STATE, ROLE_MAP } from '~/const';
+import { LOAD_STATE } from '~/const';
 import { ERROR, FormRenderInfo, UserJoinTag } from '~/types';
 import { formatFormData, sendOrder, validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
 import BaseFormItem from '../register/BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from '../register/const';
+import RoleTag from '../RoleTag';
 import UploadImg from '../UploadImg';
 
 export default function InfoIndex() {
@@ -116,7 +117,7 @@ export default function InfoIndex() {
       initialValue: (data) => data?.name,
       render: (data) => (
         isVisitor ?
-        <span>{data?.name}<Tag color={data?.role === Role.ANCHOR ? 'green' : 'red'}>{data ? ROLE_MAP[data?.role] : ''}</Tag></span> :
+        <span>{data?.name} <RoleTag role={data?.role}/></span> :
         <Input placeholder='请填写昵称(小于12个字符)' />
       ),
     },
