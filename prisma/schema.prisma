@@ -124,9 +124,13 @@ model Order {
   authorId    Int
   author      User @relation(name: "author", fields: [authorId], references: [id])
   authorRole  Role
+  // 发起人准备进入下一状态
+  authorNext  Boolean?
   targetId    Int
   target      User @relation(name: "target", fields: [targetId], references: [id])
   targetRole  Role
+  // 接收人准备进入下一状态
+  targetNext  Boolean?
   ctime       DateTime @default(now())
   utime       DateTime @updatedAt
 }

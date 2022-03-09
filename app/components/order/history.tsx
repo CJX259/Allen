@@ -47,7 +47,7 @@ export default function HistoryComp() {
     {
       title: '操作',
       key: 'action',
-      render: (v, record: OrderJoinUser) => <TableActions status={record.status} orderData={record} />,
+      render: (v, record: OrderJoinUser) => <TableActions page={'1'} status={record.status} orderData={record} />,
     },
   ];
   return (

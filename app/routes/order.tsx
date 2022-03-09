@@ -57,6 +57,7 @@ async function handleCreateOrder(rowFormData: FormData, loginUser: SessionUserDa
     data: {
       authorId: loginUser.id,
       authorRole: loginUser.role,
+      authorNext: true,
       targetId: +targetId,
       targetRole,
       status: OrderStatus.CONTRACTING,

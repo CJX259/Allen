@@ -34,3 +34,8 @@ export const USER_ERROR: ERROR = {
   retcode: 10007,
   msg: '账号或密码错误',
 };
+
+export const NO_PERMISSION: ERROR = {
+  retcode: 10008,
+  msg: '账号没有权限',
+};

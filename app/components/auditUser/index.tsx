@@ -148,7 +148,7 @@ export default function AuditUserComp() {
 
     if (res.data.id) {
       message.success('更新成功');
-      // 重新刷新页面
+      // 重新请求loader数据
       submit({
         searchKey: searchKey || '',
         page: '' + page,

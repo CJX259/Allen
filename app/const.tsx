@@ -63,6 +63,28 @@ export const ROLE_MAP = {
   [Role.COMPANY]: '供应商',
 };
 
+// prisma的enum不能设置为1、2...只能在这再定义一下状态顺序
+export const ORDER_STATUS_SEQUENCE = {
+  [OrderStatus.CONTRACTING]: {
+    next: OrderStatus.CHECKING,
+  },
+  [OrderStatus.CHECKING]: {
+    next: OrderStatus.DOING,
+  },
+  [OrderStatus.DOING]: {
+    next: OrderStatus.DONE,
+  },
+  [OrderStatus.DONE]: {
+    next: null,
+  },
+  [OrderStatus.REJECTING]: {
+    next: OrderStatus.REJECTED,
+  },
+  [OrderStatus.REJECTED]: {
+    next: null,
+  },
+};
+
 export const ORDER_STATUS_MAP = {
   [OrderStatus.CONTRACTING]: {
     text: '签约中',

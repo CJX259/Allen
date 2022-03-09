@@ -50,39 +50,34 @@ function calcMenuList(role: Role | undefined): MenuData[] {
       ],
     },
   ];
-  switch (role) {
-    case Role.ADMIN: {
-      base.push({
-        subTitle: '审核系统',
-        children: [
-          {
-            title: '用户审核',
-            to: '/auditUser',
-          },
-          {
-            title: '商品审核',
-            to: '/auditGoods',
-          },
-        ],
-      });
-      break;
-    }
-    case (Role.ANCHOR || Role.COMPANY): {
-      base.push({
-        subTitle: '签约系统',
-        children: [
-          {
-            title: '匹配用户',
-            to: '/match',
-          },
-          {
-            title: '签约记录',
-            to: '/order/history',
-          },
-        ],
-      });
-      break;
-    }
+  if (role === Role.ADMIN) {
+    base.push({
+      subTitle: '审核系统',
+      children: [
+        {
+          title: '用户审核',
+          to: '/auditUser',
+        },
+        {
+          title: '商品审核',
+          to: '/auditGoods',
+        },
+      ],
+    });
+  } else if (role === Role.COMPANY || role === Role.ANCHOR) {
+    base.push({
+      subTitle: '签约系统',
+      children: [
+        {
+          title: '匹配用户',
+          to: '/match',
+        },
+        {
+          title: '签约记录',
+          to: '/order/history',
+        },
+      ],
+    });
   }
   return base;
 }
