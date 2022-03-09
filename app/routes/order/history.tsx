@@ -7,7 +7,7 @@ import { NextStepParams, OrderHistoryLoaderData, SUCCESS } from '~/types';
 import { validateFormDatas } from '~/utils/server.index';
 import { DB_ERROR, NO_PERMISSION, PARAMS_ERROR } from '~/error';
 import { Order, OrderStatus } from '@prisma/client';
-import { ORDER_STATUS_SEQUENCE } from '~/const';
+import { ORDER_STATUS_SEQUENCE, USER_PAGESIZE } from '~/const';
 
 // 分页拉历史记录数据
 export const loader: LoaderFunction = async ({ request }) => {
@@ -17,12 +17,17 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect;
   }
   const userData = await getSessionUserData(request);
+  const searchParams = new URL(request.url).searchParams;
+
+
+  const page = searchParams.get('page') || '1';
   const proms = [];
 
   proms.push(db.order.findMany({
     where: {
       targetId: +userData.id,
     },
+    skip: (+page - 1) * USER_PAGESIZE,
     include: {
       author: {
         select: {
@@ -40,6 +45,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     where: {
       authorId: +userData.id,
     },
+    skip: (+page - 1) * USER_PAGESIZE,
     include: {
       author: {
         select: {
@@ -53,10 +59,41 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     },
   }));
+  const promsTotal = [];
+  promsTotal.push(db.order.count({
+    where: {
+      targetId: +userData.id,
+    },
+  }));
+  promsTotal.push(db.order.count({
+    where: {
+      authorId: +userData.id,
+    },
+  }));
   const [targetOrders, authorOrders] = await Promise.all(proms);
+  const [targetTotal, authorTotal] = await Promise.all(promsTotal);
+
+  // 判断每个签约是否为等待中
+  // 如果target为自己，则看taegetNext是否为true，为true则为等待中
+  // 如果author为自己，则看author是否为true，为true则为等待中
+  const resTargetOrders = targetOrders.map((item) => {
+    return {
+      ...item,
+      pendding: !!item.targetNext,
+    };
+  });
+  const resAuthorOrders = authorOrders.map((item) => {
+    return {
+      ...item,
+      pendding: !!item.authorNext,
+    };
+  });
   const resData: OrderHistoryLoaderData = {
-    targetOrders,
-    authorOrders,
+    targetOrders: resTargetOrders,
+    authorOrders: resAuthorOrders,
+    page: +page,
+    targetTotal: targetTotal,
+    authorTotal: authorTotal,
   };
   return json(resData);
 };
@@ -67,16 +104,13 @@ export const action: ActionFunction = async ({request}) => {
   if (redirect) {
     return redirect;
   }
-  console.log('axios请求到了');
   const sessionUserData = await getSessionUserData(request);
   const payload = await request.json() as { status: OrderStatus, next: boolean } & Order;
   const requireKeys = ['status', 'next', 'id'];
   const { status, next, id } = payload;
-  console.log('validate before');
   if (!validateFormDatas(requireKeys, payload)) {
     return json(PARAMS_ERROR);
   };
-  console.log('validate after', payload);
   const curOrder = await db.order.findUnique({
     where: {
       id,
@@ -123,7 +157,7 @@ async function nextStep(data: NextStepParams) {
   const nextStatus = ORDER_STATUS_SEQUENCE[status].next;
   if (!nextStatus) {
     // 已是最后阶段
-    return null;
+    return json({ success: true });
   }
   console.log('isAuthor', isAuthor, targetNext, authorNext);
   if ((isAuthor && targetNext) || (!isAuthor && authorNext)) {

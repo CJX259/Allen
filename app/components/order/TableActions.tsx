@@ -12,22 +12,27 @@ export default function TableActions(props: { status: OrderStatus, orderData: Or
   const [rejLoading, setRejLoading] = useState(false);
   const { status, page, orderData } = props;
   const { id } = orderData;
-  let renderBtn;
-
   // 渲染签约中按钮
-  function renderContractiongBtn() {
+  function renderBtn() {
+    if (status === OrderStatus.DONE || status === OrderStatus.REJECTED) {
+      // 已完成和已拒绝都显示订单已完成
+      // 后续已完成状态时，可给用户评论
+      return <span>订单已关闭</span>;
+    }
     return (
       <Space>
         <Popconfirm
           title="确定同意进入下一阶段吗？"
           onConfirm={() => onAgree()}
+          disabled={orderData.pendding}
           okText="确定"
           cancelText="取消"
         >
           <Button
+            disabled={orderData.pendding}
             loading={resLoading}
             type='primary'
-          >同意</Button>
+          >{orderData.pendding ? '等待中' : '下一步'}</Button>
         </Popconfirm>
         <Popconfirm
           title="确定（发起取消订单/拒绝进入下一阶段）吗"
@@ -87,15 +92,5 @@ export default function TableActions(props: { status: OrderStatus, orderData: Or
     setResLoading(false);
   };
 
-  // 不同状态渲染不同的按钮
-  switch (status) {
-    case OrderStatus.CONTRACTING: {
-      renderBtn = renderContractiongBtn();
-      break;
-    }
-  }
-
-  return (
-    <div>{renderBtn}</div>
-  );
+  return renderBtn();
 }

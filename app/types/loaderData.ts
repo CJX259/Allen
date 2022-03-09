@@ -42,6 +42,9 @@ export interface AuditUserLoaderData{
 export interface OrderHistoryLoaderData{
   targetOrders: OrderJoinUser[],
   authorOrders: OrderJoinUser[],
+  page: number;
+  targetTotal: number;
+  authorTotal: number;
 };
 
 export type OrderJoinUser = {
@@ -51,4 +54,6 @@ export type OrderJoinUser = {
   target: {
     name: string;
   }
+  // 是否等待另一方确认
+  pendding: boolean;
 } & Order;
