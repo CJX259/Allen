@@ -61,6 +61,7 @@ export default function TableActions(props: { status: OrderStatus, orderData: Or
         <Modal
           visible={visible}
           onCancel={initState}
+          title="请输入必要信息"
           onOk={() => sendNextStep(true, opts)}
         >
           <ModalContent curUser={curUser} status={status} setOpts={setOpts} />

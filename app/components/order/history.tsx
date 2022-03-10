@@ -1,7 +1,7 @@
 import React from 'react';
 import { ColumnsType } from 'antd/lib/table';
 import { Link, useLoaderData, useSubmit, useTransition } from 'remix';
-import { Tabs, Table, Tooltip, Spin } from 'antd';
+import { Tabs, Table, Tooltip, Spin, Button } from 'antd';
 import { OrderHistoryLoaderData, OrderJoinUser } from '~/types';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import RoleTag from '../RoleTag';
@@ -49,7 +49,8 @@ export default function HistoryComp() {
     {
       title: '操作',
       key: 'action',
-      render: (v, record: OrderJoinUser) => <TableActions curUser={user} page={'1'} status={record.status} orderData={record} />,
+      render: (v, record: OrderJoinUser) => <Button type='primary'><Link to={`/order/${record.id}`}>查看详情</Link></Button>,
+      // render: (v, record: OrderJoinUser) => <TableActions curUser={user} page={'1'} status={record.status} orderData={record} />,
     },
   ];
   function sendSearch() {

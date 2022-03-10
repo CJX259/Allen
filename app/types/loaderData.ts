@@ -1,4 +1,4 @@
-import { Goods, Status, User, Order } from '@prisma/client';
+import { Goods, Status, User, Order, Role } from '@prisma/client';
 import { SearchType, SessionUserData } from '.';
 // import { MenuData } from './menu';
 
@@ -51,10 +51,17 @@ export interface OrderHistoryLoaderData{
 export type OrderJoinUser = {
   author: {
     name: string;
+    role?: Role;
   }
   target: {
+    role?: Role;
     name: string;
   }
   // 是否等待另一方确认
   pendding: boolean;
 } & Order;
+
+export interface OrderDetailLoaderData{
+  curUser: SessionUserData;
+  orderInfo: OrderJoinUser;
+};
