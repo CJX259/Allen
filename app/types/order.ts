@@ -7,3 +7,18 @@ export interface NextStepParams {
   authorNext: boolean | null;
   opts?: any
 };
+
+export type OrderOpts = OrderCheckingOpts & OrderDoingOpts;
+
+export type OrderDoingOpts = {
+  times: number;
+  time: string;
+  liveUrl: string;
+}
+
+export type OrderCheckingOpts = {
+  expressNum: string;
+  expressType: string;
+  tips?: string;
+  [key: string]: any;
+};

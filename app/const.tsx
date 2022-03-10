@@ -215,3 +215,10 @@ export const userUnRequireKeys = ['introduce', 'password', 'avatarKey'];
 export const updateUserKeys = [...userBaseKeys, 'id'];
 
 export const DEFAULT_AVATAR_KEY = '569488.default.png';
+
+// 签约的快递参数
+export const ORDER_EXPRESS_PARAMS = {
+  expressType: 'expressType',
+  tips: 'tips',
+  expressNum: 'expressNum',
+};

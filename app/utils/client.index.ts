@@ -2,8 +2,9 @@
 import config from '~/../cloudConfig.json';
 import Cos from 'cos-js-sdk-v5';
 import { message } from 'antd';
-import { Role } from '@prisma/client';
+import { Order, OrderStatus, Role } from '@prisma/client';
 import { SubmitFunction } from 'remix';
+import { SessionUserData } from '~/types';
 
 /**
  * 删掉为undefined和null的属性
@@ -99,4 +100,41 @@ export function sendOrder(id: number, role: Role, submit: SubmitFunction) {
     method: 'post',
     action: '/order',
   });
+};
+
+// 计算当角色的签约状态是否为pendding
+export function isPendding(curUser: SessionUserData, orderInfo: Order) {
+  const { authorId, targetId, authorNext, targetNext, status } = orderInfo;
+  // 是否为等待中，发起人就看发起人有没有同意，发起人同意了说明在等待接收人同意。接收人同理
+  let pendding = isAuthor(curUser.id, authorId, targetId) ? !!authorNext : !!targetNext;
+  // 都没同意则也可以通过
+  if (pendding && !targetNext && !authorNext) {
+    pendding = false;
+  }
+  // 以上基础上，还要对不同流程下角色进行限制
+  // 检验中时，要等供应商点下一步后，主播才能开始点
+  // 化为判断式就是，角色为主播且两边都没点next(懒得判断供应商是target还是author了)
+  if (status === OrderStatus.CHECKING && curUser.role === Role.ANCHOR && !targetNext && !authorNext) {
+    return true;
+  }
+  // 完成中时，要等主播点下一步提交信息后，供应商才能开始点
+  // 化为判断式就是，角色为供应商且两边都没点next
+  if (status === OrderStatus.DOING && curUser.role === Role.COMPANY && !targetNext && !authorNext) {
+    return true;
+  }
+  // 不满足上面两个特殊情况，就按照原来的判断
+  return pendding;
+};
+
+/**
+ * 判断当前角色是否为发起者（默认为发起者与接受者之间）
+ *
+ * @export
+ * @param {number} curUserId
+ * @param {number} authorId
+ * @param {number} targetId
+ * @return {*}
+ */
+export function isAuthor(curUserId: number, authorId: number, targetId: number) {
+  return curUserId === authorId ? true : false;
 };

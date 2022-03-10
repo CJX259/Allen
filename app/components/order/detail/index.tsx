@@ -1,53 +1,87 @@
 import { OrderStatus } from '@prisma/client';
 import { Button, message, Popconfirm, Steps } from 'antd';
+import axios from 'axios';
 import React, { useState } from 'react';
-import { useLoaderData } from 'remix';
-import { OrderDetailLoaderData } from '~/types';
+import { useLoaderData, useSubmit } from 'remix';
+import { ERROR, OrderDetailLoaderData, OrderOpts, SUCCESS } from '~/types';
+import { isPendding } from '~/utils/client.index';
+import CheckingForm from './CheckingForm';
 
 const { Step } = Steps;
 
-const steps = [
-  {
-    title: '签约中',
-    key: OrderStatus.CONTRACTING,
-    content: '是否已与该用户进行线下签约?',
-  },
-  {
-    title: '检验中',
-    key: OrderStatus.CHECKING,
-    content: '请仔细检验货物质量',
-  },
-  {
-    title: '直播中',
-    key: OrderStatus.DOING,
-    content: '请主播',
-  },
-  {
-    title: '已完成',
-    key: OrderStatus.DONE,
-    content: '双方完成了自己的合同内容',
-  },
-];
-
 export default function OrderDetail() {
   const loaderData: OrderDetailLoaderData = useLoaderData();
+  const submit = useSubmit();
   const { curUser, orderInfo } = loaderData;
-  // 是否为等待中
-  const pendding = (orderInfo.authorNext && !orderInfo.targetNext) || (!orderInfo.authorNext && orderInfo.targetNext) || true;
-  const [current, setCurrent] = useState();
-  const [opts, setOpts] = useState({});
+  const { status, author, target, id } = orderInfo;
+  // 不是签约的两个用户，后台会鉴权后转到/home
+  // const isAuthor = curUser.id === authorId ? true : false;
+  const pendding = isPendding(curUser, orderInfo);
+  const [opts, setOpts] = useState({} as OrderOpts);
   console.log('loaderData', loaderData);
-  const next = () => {
-    setCurrent(current + 1);
+  const steps = [
+    {
+      title: '签约中',
+      key: OrderStatus.CONTRACTING,
+      tips: '是否已与该用户进行线下签约?',
+      content: null,
+    },
+    {
+      title: '检验中',
+      key: OrderStatus.CHECKING,
+      tips: '请仔细检验货物质量',
+      content: <CheckingForm pendding={pendding} opts={opts} setOpts={setOpts} curUser={curUser} />,
+    },
+    {
+      title: '直播中',
+      key: OrderStatus.DOING,
+      tips: '请主播',
+    },
+    {
+      title: '已完成',
+      key: OrderStatus.DONE,
+      tips: '双方完成了自己的合同内容',
+    },
+    {
+      title: '取消中',
+      key: OrderStatus.REJECTING as any,
+      tips: '签约取消中，请双方确认同意',
+    },
+  ];
+  const current = steps.findIndex((item) => item.key === status);
+  // 发送请求，进入下一步骤
+  async function next(next: boolean) {
+    const baseParams = {
+      status,
+      // next为true代表进入下一阶段，false代表取消或拒绝取消
+      next,
+      id,
+    };
+
+    // 使用axios发送，因为使用submit，页面数据无法及时刷新，axios可以在拿到响应结果后调用submit请求loader
+    const res: SUCCESS & ERROR = await axios.post('/order/history?_data=routes/order/history', {
+      ...baseParams,
+      ...opts,
+    });
+    if (res.data.success) {
+      message.success('操作成功');
+      submit({}, { method: 'get' });
+    } else {
+      message.error('操作失败');
+    }
   };
 
   const prev = () => {
-    setCurrent(current - 1);
   };
 
+  let stepStatus = 'process';
+  if (status === OrderStatus.REJECTING || status === OrderStatus.REJECTED) {
+    stepStatus = 'error';
+  }
   return (
     <>
-      <Steps current={current}>
+      <h2>{author.name} 向 {target.name} 发起的签约记录</h2>
+      <Steps current={current} status={stepStatus as any}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} />
         ))}
@@ -57,7 +91,7 @@ export default function OrderDetail() {
         {current < steps.length - 1 && (
           <Popconfirm
             title="确定同意进入下一阶段吗？"
-            onConfirm={() => next()}
+            onConfirm={() => next(true)}
             disabled={pendding}
             okText="确定"
             cancelText="取消"
@@ -66,19 +100,12 @@ export default function OrderDetail() {
               disabled={pendding}
               // loading={resLoading}
               type='primary'
-            >{pendding ? '等待中' : '下一步'}</Button>
+            >{pendding ? '等待另一方确认' : '下一步'}</Button>
           </Popconfirm>
         )}
-        {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => message.success('Processing complete!')}>
-            Done
-          </Button>
-        )}
-        {current > 0 && (
-          <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-            Previous
-          </Button>
-        )}
+        <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
+          取消
+        </Button>
       </div>
     </>
   );

@@ -99,49 +99,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(resData);
 };
 
-// 处理流程
-export const action: ActionFunction = async ({request}) => {
-  const redirect = await needLogined(request);
-  if (redirect) {
-    return redirect;
-  }
-  const sessionUserData = await getSessionUserData(request);
-  const payload = await request.json() as { status: OrderStatus, next: boolean } & Order;
-  const requireKeys = ['status', 'next', 'id'];
-  const { status, next, id } = payload;
-  if (!validateFormDatas(requireKeys, payload)) {
-    return json(PARAMS_ERROR);
-  };
-  const curOrder = await db.order.findUnique({
-    where: {
-      id,
-    },
-  });
-  if (!curOrder) {
-    return json(PARAMS_ERROR);
-  }
-  const { authorId, targetId, authorNext, targetNext } = curOrder;
-  // 判断当前操作者属于发起者还是接受者
-  const isAuthor = judgeIsAuthor(sessionUserData.id, targetId, authorId);
-  if (isAuthor === null) {
-    return json(NO_PERMISSION);
-  }
-
-  // 没有next，就是拒绝/取消
-  if (!next) {
-    // 如果已经为取消中，再传next = false即为拒绝取消，回到正常状态
-    if ( status === OrderStatus.REJECTING) {
-      // 回到上一步
-    } else {
-      // 原本为正常状态，则应该转为取消中，并把xxxnext设为true，等待答复
-    }
-  } else {
-    // next为true则按着流程走，无论是取消中还是正常流程(因为取消中也是传next=true同意的)
-    return await nextStep({ id, isAuthor, status, targetNext, authorNext });
-  }
-  return null;
-};
-
 export default function History() {
   return <HistoryComp />;
 };
