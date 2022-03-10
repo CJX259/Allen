@@ -94,6 +94,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     page: +page,
     targetTotal: targetTotal,
     authorTotal: authorTotal,
+    user: userData,
   };
   return json(resData);
 };

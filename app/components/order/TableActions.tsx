@@ -1,16 +1,20 @@
-import { OrderStatus } from '@prisma/client';
-import { message, Popconfirm, Space } from 'antd';
+import { OrderStatus, Role } from '@prisma/client';
+import { message, Modal, Popconfirm, Space } from 'antd';
 import { Button } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useSubmit } from 'remix';
-import { ERROR, OrderJoinUser, SUCCESS } from '~/types';
+import { ERROR, OrderJoinUser, SessionUserData, SUCCESS } from '~/types';
+import ModalContent from './ModalContent';
 
-export default function TableActions(props: { status: OrderStatus, orderData: OrderJoinUser, page: string }) {
+export default function TableActions(props: { status: OrderStatus, orderData: OrderJoinUser, page: string, curUser: SessionUserData }) {
   const submit = useSubmit();
   const [resLoading, setResLoading] = useState(false);
   const [rejLoading, setRejLoading] = useState(false);
-  const { status, page, orderData } = props;
+  const [visible, setVisible] = useState(false);
+  // 某些流程所需参数
+  const [opts, setOpts] = useState({});
+  const { status, page, orderData, curUser } = props;
   const { id } = orderData;
   // 渲染签约中按钮
   function renderBtn() {
@@ -19,43 +23,61 @@ export default function TableActions(props: { status: OrderStatus, orderData: Or
       // 后续已完成状态时，可给用户评论
       return <span>订单已关闭</span>;
     }
+    let nextWording = '下一步';
+    // 主播且为完成中时，需要弹框填写直播信息
+    if (status === OrderStatus.DOING && curUser.role === Role.ANCHOR) {
+      nextWording = '填写直播信息';
+    }
     return (
-      <Space>
-        <Popconfirm
-          title="确定同意进入下一阶段吗？"
-          onConfirm={() => onAgree()}
-          disabled={orderData.pendding}
-          okText="确定"
-          cancelText="取消"
-        >
-          <Button
+      <>
+        <Space>
+          <Popconfirm
+            title="确定同意进入下一阶段吗？"
+            onConfirm={() => onAgree()}
             disabled={orderData.pendding}
-            loading={resLoading}
-            type='primary'
-          >{orderData.pendding ? '等待中' : '下一步'}</Button>
-        </Popconfirm>
-        <Popconfirm
-          title="确定（发起取消订单/拒绝进入下一阶段）吗"
-          onConfirm={() => onReject()}
-          okText="确定"
-          cancelText="取消"
+            okText="确定"
+            cancelText="取消"
+          >
+            <Button
+              disabled={orderData.pendding}
+              loading={resLoading}
+              type='primary'
+            >{orderData.pendding ? '等待中' : nextWording}</Button>
+          </Popconfirm>
+          <Popconfirm
+            title="确定（发起取消订单/拒绝进入下一阶段）吗"
+            onConfirm={() => onReject()}
+            okText="确定"
+            cancelText="取消"
+          >
+            <Button
+              loading={rejLoading}
+              type='primary'
+              danger
+            >拒绝/取消
+            </Button>
+          </Popconfirm>
+        </Space>
+        <Modal
+          visible={visible}
+          onCancel={initState}
+          onOk={() => sendNextStep(true, opts)}
         >
-          <Button
-            loading={rejLoading}
-            type='primary'
-            danger
-          >拒绝/取消
-          </Button>
-        </Popconfirm>
-      </Space>
+          <ModalContent curUser={curUser} status={status} setOpts={setOpts} />
+        </Modal>
+      </>
     );
   };
 
   // 分状态弹出一些框补充信息，然后再发请求
-  function onAgree() {
-    // 先简单发一个请求
+  function onAgree(opts?: any) {
     setResLoading(true);
-    sendNextStep(true, {});
+    // 检验中，完成中和已完成需要弹出框填写下一步信息
+    if (status === OrderStatus.CHECKING || status === OrderStatus.DOING || status === OrderStatus.DONE) {
+      setVisible(true);
+    } else {
+      sendNextStep(true, {});
+    }
   }
 
   // 处理取消按钮逻辑
@@ -63,11 +85,15 @@ export default function TableActions(props: { status: OrderStatus, orderData: Or
 
   }
 
-  // 发送请求，同意，进入下一步骤
+  function initState() {
+    setOpts({});
+    setRejLoading(false);
+    setResLoading(false);
+    setVisible(false);
+  }
+
+  // 发送请求，进入下一步骤
   async function sendNextStep(next: boolean, params?: any) {
-    // submit({}, {
-    //   method: 'post',
-    // });
     const baseParams = {
       status,
       // next为true代表进入下一阶段，false代表取消或拒绝取消

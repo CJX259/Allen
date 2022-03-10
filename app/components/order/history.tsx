@@ -13,7 +13,7 @@ const { TabPane } = Tabs;
 
 export default function HistoryComp() {
   const loaderData: OrderHistoryLoaderData = useLoaderData();
-  const { targetOrders, authorOrders, page, targetTotal, authorTotal } = loaderData;
+  const { targetOrders, authorOrders, page, targetTotal, authorTotal, user } = loaderData;
   const transition = useTransition();
   const submit = useSubmit();
   console.log('data', targetOrders, authorOrders);
@@ -49,7 +49,7 @@ export default function HistoryComp() {
     {
       title: '操作',
       key: 'action',
-      render: (v, record: OrderJoinUser) => <TableActions page={'1'} status={record.status} orderData={record} />,
+      render: (v, record: OrderJoinUser) => <TableActions curUser={user} page={'1'} status={record.status} orderData={record} />,
     },
   ];
   function sendSearch() {

@@ -45,6 +45,7 @@ export interface OrderHistoryLoaderData{
   page: number;
   targetTotal: number;
   authorTotal: number;
+  user: SessionUserData;
 };
 
 export type OrderJoinUser = {
