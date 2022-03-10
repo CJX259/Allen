@@ -12,6 +12,7 @@ const { Step } = Steps;
 export default function OrderDetail() {
   const loaderData: OrderDetailLoaderData = useLoaderData();
   const submit = useSubmit();
+  const [resLoading, setResLoading] = useState(false);
   const { curUser, orderInfo } = loaderData;
   const { status, author, target, id } = orderInfo;
   // 不是签约的两个用户，后台会鉴权后转到/home
@@ -51,6 +52,7 @@ export default function OrderDetail() {
   const current = steps.findIndex((item) => item.key === status);
   // 发送请求，进入下一步骤
   async function next(next: boolean) {
+    setResLoading(true);
     const baseParams = {
       status,
       // next为true代表进入下一阶段，false代表取消或拒绝取消
@@ -59,7 +61,7 @@ export default function OrderDetail() {
     };
 
     // 使用axios发送，因为使用submit，页面数据无法及时刷新，axios可以在拿到响应结果后调用submit请求loader
-    const res: SUCCESS & ERROR = await axios.post('/order/history?_data=routes/order/history', {
+    const res: SUCCESS & ERROR = await axios.post(`/order/${id}?_data=routes/order/$orderId`, {
       ...baseParams,
       ...opts,
     });
@@ -69,6 +71,7 @@ export default function OrderDetail() {
     } else {
       message.error('操作失败');
     }
+    setResLoading(false);
   };
 
   const prev = () => {
@@ -98,7 +101,7 @@ export default function OrderDetail() {
           >
             <Button
               disabled={pendding}
-              // loading={resLoading}
+              loading={resLoading}
               type='primary'
             >{pendding ? '等待另一方确认' : '下一步'}</Button>
           </Popconfirm>
