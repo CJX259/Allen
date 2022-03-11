@@ -95,7 +95,7 @@ export function uploadImage(filename: string, file: any) {
 export function sendOrder(id: number, role: Role, submit: SubmitFunction) {
   submit({
     targetId: '' + id,
-    targetRole: role,
+    // targetRole: role,
   }, {
     method: 'post',
     action: '/order',

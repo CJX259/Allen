@@ -46,20 +46,20 @@ export default function Order() {
 
 // 新建签约订单
 async function handleCreateOrder(rowFormData: FormData, loginUser: SessionUserData) {
-  const keys = ['targetId', 'targetRole'];
+  const keys = ['targetId'];
   const formData = getFromDatas(keys, rowFormData);
   // 校验参数，不存在则返回
   if (!validateFormDatas(keys, formData)) {
     return json(PARAMS_ERROR);
   }
-  const { targetId, targetRole } = formData;
+  const { targetId } = formData;
   const newOrder = await db.order.create({
     data: {
       authorId: loginUser.id,
-      authorRole: loginUser.role,
+      // authorRole: loginUser.role,
       authorNext: true,
       targetId: +targetId,
-      targetRole,
+      // targetRole,
       status: OrderStatus.CONTRACTING,
     },
   });

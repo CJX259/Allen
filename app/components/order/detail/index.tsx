@@ -1,4 +1,4 @@
-import { OrderStatus } from '@prisma/client';
+import { OrderStatus, Role } from '@prisma/client';
 import { Button, message, Popconfirm, Steps } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -19,7 +19,6 @@ export default function OrderDetail() {
   // const isAuthor = curUser.id === authorId ? true : false;
   const pendding = isPendding(curUser, orderInfo);
   const [opts, setOpts] = useState({} as OrderOpts);
-  console.log('loaderData', loaderData);
   const steps = [
     {
       title: '签约中',
@@ -31,7 +30,12 @@ export default function OrderDetail() {
       title: '检验中',
       key: OrderStatus.CHECKING,
       tips: '请仔细检验货物质量',
-      content: <CheckingForm pendding={pendding} opts={opts} setOpts={setOpts} curUser={curUser} />,
+      // 主播不能填写表单，所以如果当前角色为主播，则也禁止填写
+      content: <CheckingForm disable={pendding || curUser.role === Role.ANCHOR} opts={{
+        expressNum: orderInfo.expressNum || '',
+        expressType: orderInfo.expressType || '',
+        tips: orderInfo.tips || '',
+      }} setOpts={setOpts} curUser={curUser} />,
     },
     {
       title: '直播中',
@@ -63,7 +67,7 @@ export default function OrderDetail() {
     // 使用axios发送，因为使用submit，页面数据无法及时刷新，axios可以在拿到响应结果后调用submit请求loader
     const res: SUCCESS & ERROR = await axios.post(`/order/${id}?_data=routes/order/$orderId`, {
       ...baseParams,
-      ...opts,
+      opts,
     });
     if (res.data.success) {
       message.success('操作成功');

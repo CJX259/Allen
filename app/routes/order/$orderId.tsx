@@ -76,6 +76,7 @@ export const action: ActionFunction = async ({request, params}) => {
   }
   const payload = await request.json() as { status: OrderStatus, next: boolean, opts?: OrderOpts } & Order;
   const requireKeys = ['status', 'next'];
+  console.log('payload', payload);
   const { status, next, opts } = payload;
   if (!validateFormDatas(requireKeys, payload)) {
     return json(PARAMS_ERROR);
@@ -125,10 +126,8 @@ async function nextStep(data: NextStepParams) {
     // 已是最后阶段
     return json({ success: true });
   }
-  console.log('isAuthor', isAuthor, targetNext, authorNext);
   if ((isAuthor && targetNext) || (!isAuthor && authorNext)) {
     // 清掉同意记录，进入下一阶段
-    console.log('进入下一阶段');
     try {
       const updateOrder = await db.order.update({
         where: {
@@ -142,6 +141,7 @@ async function nextStep(data: NextStepParams) {
           ...opts,
         },
       });
+      console.log('update', updateOrder);
       return json({
         order: { ...updateOrder},
         success: true,
@@ -165,7 +165,8 @@ async function nextStep(data: NextStepParams) {
         order: { ...updateOrder},
         success: true,
       } as SUCCESS);
-    } catch (error) {
+    } catch (error: any) {
+      console.log('error', error.message);
       return json(DB_ERROR);
     }
   }

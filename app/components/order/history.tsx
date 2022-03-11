@@ -24,13 +24,13 @@ export default function HistoryComp() {
       dataIndex: ['author', 'name'],
       render: (v, record: OrderJoinUser) => <>
         <Link to={`/info/${record.authorId}`}>{v}</Link>
-        <RoleTag role={record.authorRole} />
+        <RoleTag role={record.author.role} />
       </>,
     },
     {
       title: '接收人',
       dataIndex: ['target', 'name'],
-      render: (v, record: OrderJoinUser) => <span>{v} <RoleTag role={record.targetRole} /></span>,
+      render: (v, record: OrderJoinUser) => <span>{v} <RoleTag role={record.target.role} /></span>,
     },
     {
       title: '签约状态',

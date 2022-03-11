@@ -1,16 +1,17 @@
-import { Form, Input, Radio } from 'antd';
+import { Input, Radio } from 'antd';
 import React from 'react';
 import { ORDER_EXPRESS_PARAMS } from '~/const';
 import { OrderCheckingOpts, SessionUserData } from '~/types';
 
 export default function CheckingForm(props: {
-  pendding: boolean;
+  disable: boolean;
   opts: OrderCheckingOpts;
   setOpts: Function;
   curUser: SessionUserData;
   }) {
   // 把数据传递到父级，父级调用api
-  const { setOpts, opts, pendding } = props;
+  const { setOpts, opts, disable } = props;
+  console.log('opts', opts);
   const handleChange = (key: string, value: string) => {
     setOpts({
       ...opts,
@@ -19,8 +20,14 @@ export default function CheckingForm(props: {
   };
   return (
     <div className='checking-form'>
-      <Form.Item label="请选择快递公司: " initialValue={opts[ORDER_EXPRESS_PARAMS.expressType] || ''} labelCol={{ span: 3 }} wrapperCol={{ span: 15 }}>
-        <Radio.Group disabled={pendding} onChange={(e) => handleChange(ORDER_EXPRESS_PARAMS.expressType, e.target.value)}>
+      <div className="form-type">
+        <span className='label'>请选择快递公司: </span>
+        <Radio.Group
+          disabled={disable}
+          defaultValue={opts.expressType}
+          onChange={(e) => handleChange(ORDER_EXPRESS_PARAMS.expressType, e.target.value)}
+          className="type-group"
+        >
           <Radio value={'顺丰快递'}>顺丰快递</Radio>
           <Radio value={'京东快递'}>京东快递</Radio>
           <Radio value={'韵达快递'}>韵达快递</Radio>
@@ -30,19 +37,22 @@ export default function CheckingForm(props: {
             其他快递:
             <Input
               onChange={(e) => handleChange(ORDER_EXPRESS_PARAMS.tips, e.target.value)}
-              disabled={pendding}
-              value={opts[ORDER_EXPRESS_PARAMS.tips] || ''}
+              disabled={disable}
+              value={opts.tips}
               style={{ width: 100, marginLeft: 10 }}
             />
           </Radio>
         </Radio.Group>
-      </Form.Item>
-      <Form.Item initialValue={opts[ORDER_EXPRESS_PARAMS.expressNum] || ''} label="请输入快递单号: " labelCol={{ span: 3 }} wrapperCol={{ span: 8 }}>
+      </div>
+      <div className="form-num">
+        <span className='label'>请输入快递单号: </span>
         <Input
+          className='num-input'
+          defaultValue={opts.expressNum}
           onChange={(e) => handleChange(ORDER_EXPRESS_PARAMS.expressNum, e.target.value)}
-          disabled={pendding}
+          disabled={disable}
         />
-      </Form.Item>
+      </div>
     </div>
   );
 }

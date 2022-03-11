@@ -63,11 +63,10 @@ model User {
   ctime        DateTime @default(now())
   utime        DateTime @updatedAt
   role         Role
-  tags          TagsOnUsers[]
+  tags         TagsOnUsers[]
   goods        Goods?
-  // audit        Audit?
-  author       Order? @relation(name: "author")
-  target       Order? @relation(name: "target")
+  author       Order[] @relation(name: "author")
+  target       Order[] @relation(name: "target")
   userComment  UserComment?
 }
 
@@ -102,15 +101,6 @@ model TagsOnGoods {
 
   @@id([tagId, goodsId])
 }
-// model Audit {
-//   id          Int  @id @default(autoincrement())
-//   status      Status
-//   reason      String
-//   userId      Int
-//   user        User @relation(fields: [userId], references: [id])
-//   ctime       DateTime @default(now())
-//   utime       DateTime @updatedAt
-// }
 
 model Order {
   id          Int @id @default(autoincrement())
@@ -123,14 +113,20 @@ model Order {
   // 发起人id
   authorId    Int
   author      User @relation(name: "author", fields: [authorId], references: [id])
-  authorRole  Role
+  // authorRole  Role
   // 发起人准备进入下一状态
   authorNext  Boolean?
   targetId    Int
   target      User @relation(name: "target", fields: [targetId], references: [id])
-  targetRole  Role
+  // targetRole  Role
   // 接收人准备进入下一状态
   targetNext  Boolean?
+  // 快递单号
+  expressNum  String?
+  // 快递公司
+  expressType String?
+  // 备注（其他公司时填写）
+  tips        String?
   ctime       DateTime @default(now())
   utime       DateTime @updatedAt
 }
@@ -152,37 +148,3 @@ model GoodsComment {
   ctime       DateTime @default(now())
   utime       DateTime @updatedAt
 }
-
-// model User {
-//   id       Int      @id @default(autoincrement())
-//   name     String
-//   jobTitle String
-//   posts    Post[]
-//   profile  Profile?
-//   email    String
-// }
-
-// model Profile {
-//   id       Int    @id @default(autoincrement())
-//   biograpy String // Intentional typo!
-//   userId   Int
-//   user     User   @relation(fields: [userId], references: [id])
-// }
-
-// model Post {
-//   id         Int        @id @default(autoincrement())
-//   title      String
-//   published  Boolean    @default(true)
-//   content    String     @db.VarChar(500)
-//   authorId   Int
-//   author     User       @relation(fields: [authorId], references: [id])
-//   categories Category[]
-// }
-
-// model Category {
-//   id    Int    @id @default(autoincrement())
-//   name  String @db.VarChar(50)
-//   posts Post[]
-
-//   @@unique([name])
-// }
