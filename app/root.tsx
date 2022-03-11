@@ -16,6 +16,7 @@ import { getSession } from './sessions';
 import { LoginKey } from './const';
 import { SessionUserData } from './types';
 import { RootLoaderData } from './types/loaderData';
+import { db } from './utils/db.server';
 
 export const meta: MetaFunction = () => {
   return { title: 'ALLEN 电商直播配对平台' };
@@ -34,9 +35,14 @@ export const loader: LoaderFunction = async ({ request }) => {
       request.headers.get('Cookie'),
   );
   const sessionUser = session.get(LoginKey) as SessionUserData;
+  const curUser = await db.user.findUnique({
+    where: {
+      id: sessionUser.id,
+    },
+  });
   // 页面通过user是否为null，判断用户是否登录
   const res: RootLoaderData = {
-    user: sessionUser,
+    user: curUser,
     pathname,
   };
   return res;

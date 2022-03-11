@@ -1,11 +1,10 @@
 import { useLoaderData, Link, Outlet, useSubmit, SubmitFunction, useActionData } from 'remix';
 import React, { useEffect } from 'react';
 import { Popconfirm, Button, message } from 'antd';
-// import type { User } from '@prisma/client';
-// import { db } from '~/utils/db.server';
-import { SessionUserData } from '~/types';
 import MenuComp from '../Menu';
 import { RootLoaderData } from '~/types/loaderData';
+import { User } from '@prisma/client';
+import { ROLE_MAP } from '~/const';
 /**
  * 默认主页
  *
@@ -53,11 +52,11 @@ interface InfoData {
 /**
  * 渲染header右侧按钮
  *
- * @param {SessionUserData} user
+ * @param {User} user
  * @param {SubmitFunction} submit
  * @return {*} JSX.Element
  */
-function renderRightContent(user: SessionUserData | null, submit: SubmitFunction) {
+function renderRightContent(user: User | null, submit: SubmitFunction) {
   const noUserLink: InfoData = {
     to: '/login',
     wording: '登录/注册',
@@ -75,8 +74,9 @@ function renderRightContent(user: SessionUserData | null, submit: SubmitFunction
   }
   return (
     <div className="right-content">
+      {user && `您好, ${ROLE_MAP[user.role]}: ${user.name}`}
       <Link prefetch='intent' to={renderLink.to}>
-        <Button type='primary'>{renderLink.wording}</Button>
+        <Button style={{ marginLeft: 10 }} type='primary'>{renderLink.wording}</Button>
       </Link>
       {user &&
         <Popconfirm

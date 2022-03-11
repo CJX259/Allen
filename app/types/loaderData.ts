@@ -3,7 +3,7 @@ import { SearchType, SessionUserData } from '.';
 // import { MenuData } from './menu';
 
 export interface RootLoaderData {
-  user: SessionUserData | null;
+  user: User | null;
   // menuList: MenuData[];
   pathname: string;
 };
