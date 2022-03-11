@@ -67,7 +67,8 @@ model User {
   goods        Goods?
   author       Order[] @relation(name: "author")
   target       Order[] @relation(name: "target")
-  userComment  UserComment?
+  commentFrom  UserComment[] @relation("from")
+  commentTo    UserComment[] @relation("to")
 }
 
 model Goods {
@@ -127,6 +128,7 @@ model Order {
   expressType String?
   // 备注（其他公司时填写）
   tips        String?
+  userComment UserComment[]
   ctime       DateTime @default(now())
   utime       DateTime @updatedAt
 }
@@ -134,17 +136,21 @@ model Order {
 model UserComment {
   id          Int @id @default(autoincrement())
   comment     String
-  rating      Int
-  userId      Int
-  user        User  @relation(fields: [userId], references: [id])
+  rating      String
+  fromId      Int
+  from        User  @relation("from", fields: [fromId], references: [id])
+  toId        Int
+  to          User  @relation("to", fields: [toId], references: [id])
+  orderId     Int
+  order       Order @relation(fields: [orderId], references: [id])
   ctime       DateTime @default(now())
   utime       DateTime @updatedAt
 }
 
-model GoodsComment {
-  id          Int @id @default(autoincrement())
-  comment     String
-  rating      Int
-  ctime       DateTime @default(now())
-  utime       DateTime @updatedAt
-}
+// model GoodsComment {
+//   id          Int @id @default(autoincrement())
+//   comment     String
+//   rating      Int
+//   ctime       DateTime @default(now())
+//   utime       DateTime @updatedAt
+// }

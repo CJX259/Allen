@@ -21,15 +21,24 @@
       .num-input,
       .type-group,
       .time-picker,
-      .url-input
+      .url-input,
+      .comment-rate,
+      .comment-input
       {
         float: left;
       }
       .num-input,
-      .url-input
+      .url-input,
+      .comment-input
       {
         width: 400px;
       }
+    }
+  }
+  .comment-wrapper{
+    height: 200px;
+    .comment-input {
+      height: 200px;
     }
   }
 }

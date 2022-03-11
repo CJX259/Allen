@@ -20,12 +20,21 @@
 .steps-content .form-item .num-input,
 .steps-content .form-item .type-group,
 .steps-content .form-item .time-picker,
-.steps-content .form-item .url-input {
+.steps-content .form-item .url-input,
+.steps-content .form-item .comment-rate,
+.steps-content .form-item .comment-input {
   float: left;
 }
 .steps-content .form-item .num-input,
-.steps-content .form-item .url-input {
+.steps-content .form-item .url-input,
+.steps-content .form-item .comment-input {
   width: 400px;
+}
+.steps-content .comment-wrapper {
+  height: 200px;
+}
+.steps-content .comment-wrapper .comment-input {
+  height: 200px;
 }
 
 .steps-action {

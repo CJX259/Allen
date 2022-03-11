@@ -229,4 +229,11 @@ export const ORDER_LIVE_INFO = {
   liveUrl: 'liveUrl',
 };
 
+// 签约的已完成参数
+export const ORDER_COMMNET = {
+  comment: 'comment',
+  rating: 'rating',
+};
+
+
 export const TIME_FORMAT = 'YYYY-MM-DD hh-mm';

@@ -7,6 +7,7 @@ import { ERROR, OrderDetailLoaderData, OrderOpts, SUCCESS } from '~/types';
 import { isPendding } from '~/utils/client.index';
 import CheckingForm from './CheckingForm';
 import DoingForm from './DoingForm';
+import DoneForm from './DoneForm';
 
 const { Step } = Steps;
 
@@ -28,6 +29,8 @@ export default function OrderDetail() {
     // 直播中
     time: orderInfo?.time || '',
     liveUrl: orderInfo?.liveUrl || '',
+    // 已完成
+    // comment: orderInfo.comment
   } as OrderOpts);
   const steps = [
     {
@@ -57,6 +60,11 @@ export default function OrderDetail() {
       title: '已完成',
       key: OrderStatus.DONE,
       tips: '双方完成了自己的合同内容',
+      content: <DoneForm
+        setOpts={setOpts}
+        curUser={curUser}
+        opts={opts}
+      />,
     },
     {
       title: '取消中',

@@ -8,7 +8,7 @@ export interface NextStepParams {
   opts?: OrderOpts;
 };
 
-export type OrderOpts = OrderCheckingOpts & OrderDoingOpts;
+export type OrderOpts = OrderCheckingOpts & OrderDoingOpts & OrderDoneOpts;
 
 export type OrderDoingOpts = {
   time: string;
@@ -20,4 +20,9 @@ export type OrderCheckingOpts = {
   expressType: string;
   tips?: string;
   [key: string]: any;
+};
+
+export type OrderDoneOpts = {
+  comment: string;
+  rating: string;
 };
