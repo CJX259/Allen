@@ -4,14 +4,13 @@ import { ORDER_EXPRESS_PARAMS } from '~/const';
 import { OrderCheckingOpts, SessionUserData } from '~/types';
 
 export default function CheckingForm(props: {
-  disable: boolean;
-  opts: OrderCheckingOpts;
-  setOpts: Function;
-  curUser: SessionUserData;
+    disable: boolean;
+    opts: OrderCheckingOpts;
+    setOpts: Function;
+    curUser: SessionUserData;
   }) {
   // 把数据传递到父级，父级调用api
   const { setOpts, opts, disable } = props;
-  console.log('opts', opts);
   const handleChange = (key: string, value: string) => {
     setOpts({
       ...opts,
@@ -20,7 +19,7 @@ export default function CheckingForm(props: {
   };
   return (
     <div className='checking-form'>
-      <div className="form-type">
+      <div className="form-item">
         <span className='label'>请选择快递公司: </span>
         <Radio.Group
           disabled={disable}
@@ -44,7 +43,7 @@ export default function CheckingForm(props: {
           </Radio>
         </Radio.Group>
       </div>
-      <div className="form-num">
+      <div className="form-item">
         <span className='label'>请输入快递单号: </span>
         <Input
           className='num-input'

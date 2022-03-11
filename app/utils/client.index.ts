@@ -104,6 +104,9 @@ export function sendOrder(id: number, role: Role, submit: SubmitFunction) {
 
 // 计算当角色的签约状态是否为pendding
 export function isPendding(curUser: SessionUserData, orderInfo: Order) {
+  if (!orderInfo || !curUser) {
+    throw new Error('参数错误');
+  }
   const { authorId, targetId, authorNext, targetNext, status } = orderInfo;
   // 是否为等待中，发起人就看发起人有没有同意，发起人同意了说明在等待接收人同意。接收人同理
   let pendding = isAuthor(curUser.id, authorId, targetId) ? !!authorNext : !!targetNext;

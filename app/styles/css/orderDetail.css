@@ -7,29 +7,25 @@
   border: 1px dashed #e9e9e9;
   border-radius: 2px;
 }
-.steps-content .form-num {
+.steps-content .label {
+  float: left;
+  width: 200px;
+  line-height: 32px;
+}
+.steps-content .form-item {
+  margin-bottom: 10px;
   overflow: hidden;
   height: 32px;
 }
-.steps-content .form-num .label {
+.steps-content .form-item .num-input,
+.steps-content .form-item .type-group,
+.steps-content .form-item .time-picker,
+.steps-content .form-item .url-input {
   float: left;
-  width: 200px;
-  line-height: 32px;
 }
-.steps-content .form-num .num-input {
+.steps-content .form-item .num-input,
+.steps-content .form-item .url-input {
   width: 400px;
-  float: left;
-}
-.steps-content .form-type {
-  overflow: hidden;
-}
-.steps-content .form-type .label {
-  float: left;
-  line-height: 32px;
-  width: 200px;
-}
-.steps-content .form-type .type-group {
-  float: left;
 }
 
 .steps-action {

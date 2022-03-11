@@ -107,7 +107,7 @@ model Order {
   status      OrderStatus
   liveUrl     String?
   time        String?
-  times       Int?
+  // times       Int?
   // goodsId     Int
   // goods       Goods @relation(fields: [goodsId], references: [id])
   // 发起人id

@@ -6,6 +6,7 @@ import { useLoaderData, useSubmit } from 'remix';
 import { ERROR, OrderDetailLoaderData, OrderOpts, SUCCESS } from '~/types';
 import { isPendding } from '~/utils/client.index';
 import CheckingForm from './CheckingForm';
+import DoingForm from './DoingForm';
 
 const { Step } = Steps;
 
@@ -14,11 +15,20 @@ export default function OrderDetail() {
   const submit = useSubmit();
   const [resLoading, setResLoading] = useState(false);
   const { curUser, orderInfo } = loaderData;
-  const { status, author, target, id } = orderInfo;
+  console.log('orderInfo', orderInfo);
+  const { status, author, target, id } = orderInfo || {};
   // 不是签约的两个用户，后台会鉴权后转到/home
   // const isAuthor = curUser.id === authorId ? true : false;
   const pendding = isPendding(curUser, orderInfo);
-  const [opts, setOpts] = useState({} as OrderOpts);
+  const [opts, setOpts] = useState({
+    // 检验中
+    expressNum: orderInfo?.expressNum || '',
+    expressType: orderInfo?.expressType || '',
+    tips: orderInfo?.tips || '',
+    // 直播中
+    time: orderInfo?.time || '',
+    liveUrl: orderInfo?.liveUrl || '',
+  } as OrderOpts);
   const steps = [
     {
       title: '签约中',
@@ -31,16 +41,17 @@ export default function OrderDetail() {
       key: OrderStatus.CHECKING,
       tips: '请仔细检验货物质量',
       // 主播不能填写表单，所以如果当前角色为主播，则也禁止填写
-      content: <CheckingForm disable={pendding || curUser.role === Role.ANCHOR} opts={{
-        expressNum: orderInfo.expressNum || '',
-        expressType: orderInfo.expressType || '',
-        tips: orderInfo.tips || '',
-      }} setOpts={setOpts} curUser={curUser} />,
+      content: <CheckingForm disable={pendding || curUser.role === Role.ANCHOR} opts={opts} setOpts={setOpts} curUser={curUser} />,
     },
     {
       title: '直播中',
       key: OrderStatus.DOING,
       tips: '请主播',
+      content: <DoingForm
+        setOpts={setOpts}
+        curUser={curUser}
+        opts={opts}
+        disable={pendding || curUser.role === Role.COMPANY} />,
     },
     {
       title: '已完成',
@@ -78,9 +89,6 @@ export default function OrderDetail() {
     setResLoading(false);
   };
 
-  const prev = () => {
-  };
-
   let stepStatus = 'process';
   if (status === OrderStatus.REJECTING || status === OrderStatus.REJECTED) {
     stepStatus = 'error';
@@ -110,9 +118,6 @@ export default function OrderDetail() {
             >{pendding ? '等待另一方确认' : '下一步'}</Button>
           </Popconfirm>
         )}
-        <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-          取消
-        </Button>
       </div>
     </>
   );

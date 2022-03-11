@@ -222,3 +222,11 @@ export const ORDER_EXPRESS_PARAMS = {
   tips: 'tips',
   expressNum: 'expressNum',
 };
+
+// 签约的完成中参数
+export const ORDER_LIVE_INFO = {
+  time: 'time',
+  liveUrl: 'liveUrl',
+};
+
+export const TIME_FORMAT = 'YYYY-MM-DD hh-mm';

@@ -76,11 +76,11 @@ export const action: ActionFunction = async ({request, params}) => {
   }
   const payload = await request.json() as { status: OrderStatus, next: boolean, opts?: OrderOpts } & Order;
   const requireKeys = ['status', 'next'];
-  console.log('payload', payload);
-  const { status, next, opts } = payload;
+  const { status, opts } = payload;
   if (!validateFormDatas(requireKeys, payload)) {
     return json(PARAMS_ERROR);
   };
+  console.log('payload', payload);
   const curOrder = await db.order.findUnique({
     where: {
       id: +orderId,
@@ -96,9 +96,11 @@ export const action: ActionFunction = async ({request, params}) => {
   if (isAuthor === null) {
     return json(NO_PERMISSION);
   }
+  // return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts });
 
+  // 加拒绝的流程，砍掉
   // 没有next，就是拒绝/取消
-  if (!next) {
+  if (!payload.next) {
     // 如果已经为取消中，再传next = false即为拒绝取消，回到正常状态
     if ( status === OrderStatus.REJECTING) {
       // 回到上一步
@@ -109,7 +111,7 @@ export const action: ActionFunction = async ({request, params}) => {
     // next为true则按着流程走，无论是取消中还是正常流程(因为取消中也是传next=true同意的)
     return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts });
   }
-  return null;
+  // return null;
 };
 
 
