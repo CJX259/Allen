@@ -40,15 +40,15 @@ export interface AuditUserLoaderData{
 };
 
 export interface OrderHistoryLoaderData{
-  targetOrders: OrderJoinUser[],
-  authorOrders: OrderJoinUser[],
+  targetOrders: OrderJoinUserAndComment[],
+  authorOrders: OrderJoinUserAndComment[],
   page: number;
   targetTotal: number;
   authorTotal: number;
   user: SessionUserData;
 };
 
-export type OrderJoinUser = {
+export type OrderJoinUserAndComment = {
   author: {
     name: string;
     role?: Role;
@@ -57,11 +57,16 @@ export type OrderJoinUser = {
     role?: Role;
     name: string;
   }
-  // 是否等待另一方确认
-  pendding: boolean;
+  userComment: {
+    orderId: number;
+    fromId: number;
+    toId: number;
+    rating: number;
+    comment: string;
+}[];
 } & Order;
 
 export interface OrderDetailLoaderData{
   curUser: SessionUserData;
-  orderInfo: OrderJoinUser;
+  orderInfo: OrderJoinUserAndComment;
 };

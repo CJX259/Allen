@@ -4,7 +4,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useLoaderData, useSubmit } from 'remix';
 import { ERROR, OrderDetailLoaderData, OrderOpts, SUCCESS } from '~/types';
-import { isPendding } from '~/utils/client.index';
+import { isAuthor, isPendding } from '~/utils/client.index';
 import CheckingForm from './CheckingForm';
 import DoingForm from './DoingForm';
 import DoneForm from './DoneForm';
@@ -30,7 +30,12 @@ export default function OrderDetail() {
     time: orderInfo?.time || '',
     liveUrl: orderInfo?.liveUrl || '',
     // 已完成
-    // comment: orderInfo.comment
+    comment: orderInfo.userComment[0]?.comment || '',
+    rating: orderInfo.userComment[0]?.rating || null,
+    // 是发起人，那么fromId就是发起人的id，否则就是接收人的id
+    fromId: isAuthor(curUser.id, orderInfo.authorId) ? orderInfo.authorId : orderInfo.targetId,
+    // 是发起人，那么toId就是接收人的id，否则就是发起人的id
+    toId: isAuthor(curUser.id, orderInfo.authorId) ? orderInfo.targetId : orderInfo.authorId,
   } as OrderOpts);
   const steps = [
     {
@@ -64,6 +69,7 @@ export default function OrderDetail() {
         setOpts={setOpts}
         curUser={curUser}
         opts={opts}
+        disable={pendding}
       />,
     },
     {

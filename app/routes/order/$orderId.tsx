@@ -49,6 +49,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
             role: true,
           },
         },
+        userComment: {
+          where: {
+            fromId: userData.id,
+          },
+          select: {
+            fromId: true,
+            toId: true,
+            orderId: true,
+            rating: true,
+            comment: true,
+          },
+        },
       },
     });
     // 如果不包含该用户的订单，则无权访问
@@ -122,10 +134,33 @@ export const action: ActionFunction = async ({request, params}) => {
  * @return {*}
  */
 async function nextStep(data: NextStepParams) {
-  const { isAuthor, id, targetNext, status, authorNext, opts = {} } = data;
+  const { isAuthor, id, targetNext, status, authorNext, opts } = data;
   const nextStatus = ORDER_STATUS_SEQUENCE[status].next;
   if (!nextStatus) {
-    // 已是最后阶段
+    // 已是最后阶段,处理评论
+    console.log('删除的', opts);
+    const { comment, rating, fromId, toId } = opts;
+    const upsertComment = await db.userComment.upsert({
+      where: {
+        orderId_fromId_toId: {
+          orderId: id,
+          fromId,
+          toId,
+        },
+      },
+      create: {
+        fromId,
+        toId,
+        orderId: id,
+        comment,
+        rating,
+      },
+      update: {
+        comment,
+        rating,
+      },
+    });
+    console.log('upsert', upsertComment);
     return json({ success: true });
   }
   if ((isAuthor && targetNext) || (!isAuthor && authorNext)) {
@@ -178,7 +213,7 @@ async function nextStep(data: NextStepParams) {
 
 
 /**
- * 判断当前用户是否为发起人
+ * 判断当前用户是否为发起人(服务端的判断，可能有其他用户)
  *
  * @param {string} sessionUserId
  * @param {string} targetId

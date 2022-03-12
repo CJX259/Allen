@@ -134,9 +134,9 @@ model Order {
 }
 
 model UserComment {
-  id          Int @id @default(autoincrement())
+  // id          Int @id @default(autoincrement())
   comment     String
-  rating      String
+  rating      Int
   fromId      Int
   from        User  @relation("from", fields: [fromId], references: [id])
   toId        Int
@@ -144,7 +144,9 @@ model UserComment {
   orderId     Int
   order       Order @relation(fields: [orderId], references: [id])
   ctime       DateTime @default(now())
-  utime       DateTime @updatedAt
+  // utime       DateTime @updatedAt
+
+  @@id([orderId, fromId, toId])
 }
 
 // model GoodsComment {

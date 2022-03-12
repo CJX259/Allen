@@ -28,7 +28,7 @@ export default function DoneForm(props:
           style={{ width: 200 }}
           tooltips={desc}
           onChange={(e) => handleChange(ORDER_COMMNET.rating, e)}
-          value={+opts.rating}
+          defaultValue={opts.rating}
         />
       </div>
       <div className="form-item comment-wrapper">

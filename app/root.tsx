@@ -35,11 +35,14 @@ export const loader: LoaderFunction = async ({ request }) => {
       request.headers.get('Cookie'),
   );
   const sessionUser = session.get(LoginKey) as SessionUserData;
-  const curUser = await db.user.findUnique({
-    where: {
-      id: sessionUser.id,
-    },
-  });
+  let curUser = null;
+  if (sessionUser) {
+    curUser = await db.user.findUnique({
+      where: {
+        id: sessionUser.id,
+      },
+    });
+  }
   // 页面通过user是否为null，判断用户是否登录
   const res: RootLoaderData = {
     user: curUser,

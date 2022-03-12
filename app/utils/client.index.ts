@@ -138,6 +138,6 @@ export function isPendding(curUser: SessionUserData, orderInfo: Order) {
  * @param {number} targetId
  * @return {*}
  */
-export function isAuthor(curUserId: number, authorId: number, targetId: number) {
+export function isAuthor(curUserId: number, authorId: number) {
   return curUserId === authorId ? true : false;
 };

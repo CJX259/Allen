@@ -5,7 +5,7 @@ export interface NextStepParams {
   status: OrderStatus;
   targetNext: boolean | null;
   authorNext: boolean | null;
-  opts?: OrderOpts;
+  opts: OrderOpts;
 };
 
 export type OrderOpts = OrderCheckingOpts & OrderDoingOpts & OrderDoneOpts;
@@ -24,5 +24,7 @@ export type OrderCheckingOpts = {
 
 export type OrderDoneOpts = {
   comment: string;
-  rating: string;
+  rating: number;
+  fromId: number;
+  toId: number;
 };

@@ -2,12 +2,11 @@ import React from 'react';
 import { ColumnsType } from 'antd/lib/table';
 import { Link, useLoaderData, useSubmit, useTransition } from 'remix';
 import { Tabs, Table, Tooltip, Spin, Button } from 'antd';
-import { OrderHistoryLoaderData, OrderJoinUser } from '~/types';
+import { OrderHistoryLoaderData, OrderJoinUserAndComment } from '~/types';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import RoleTag from '../RoleTag';
 import { ORDER_STATUS_MAP, USER_PAGESIZE } from '~/const';
 import { OrderStatus } from '@prisma/client';
-import TableActions from './TableActions';
 
 const { TabPane } = Tabs;
 
@@ -22,7 +21,7 @@ export default function HistoryComp() {
     {
       title: '发起人',
       dataIndex: ['author', 'name'],
-      render: (v, record: OrderJoinUser) => <>
+      render: (v, record: OrderJoinUserAndComment) => <>
         <Link to={`/info/${record.authorId}`}>{v}</Link>
         <RoleTag role={record.author.role} />
       </>,
@@ -30,7 +29,7 @@ export default function HistoryComp() {
     {
       title: '接收人',
       dataIndex: ['target', 'name'],
-      render: (v, record: OrderJoinUser) => <span>{v} <RoleTag role={record.target.role} /></span>,
+      render: (v, record: OrderJoinUserAndComment) => <span>{v} <RoleTag role={record.target.role} /></span>,
     },
     {
       title: '签约状态',
@@ -49,8 +48,8 @@ export default function HistoryComp() {
     {
       title: '操作',
       key: 'action',
-      render: (v, record: OrderJoinUser) => <Button type='primary'><Link to={`/order/${record.id}`}>查看详情</Link></Button>,
-      // render: (v, record: OrderJoinUser) => <TableActions curUser={user} page={'1'} status={record.status} orderData={record} />,
+      render: (v, record: OrderJoinUserAndComment) => <Button type='primary'><Link to={`/order/${record.id}`}>查看详情</Link></Button>,
+      // render: (v, record: OrderJoinUserAndComment) => <TableActions curUser={user} page={'1'} status={record.status} orderData={record} />,
     },
   ];
   function sendSearch() {

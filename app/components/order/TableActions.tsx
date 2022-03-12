@@ -4,10 +4,10 @@ import { Button } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useSubmit } from 'remix';
-import { ERROR, OrderJoinUser, SessionUserData, SUCCESS } from '~/types';
+import { ERROR, OrderJoinUserAndComment, SessionUserData, SUCCESS } from '~/types';
 import ModalContent from './ModalContent';
 
-export default function TableActions(props: { status: OrderStatus, orderData: OrderJoinUser, page: string, curUser: SessionUserData }) {
+export default function TableActions(props: { status: OrderStatus, orderData: OrderJoinUserAndComment, page: string, curUser: SessionUserData }) {
   const submit = useSubmit();
   const [resLoading, setResLoading] = useState(false);
   const [rejLoading, setRejLoading] = useState(false);
