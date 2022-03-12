@@ -216,3 +216,55 @@ export async function searchUserById(id: number) {
     },
   });
 };
+
+
+/**
+ * 更新用户经验
+ *
+ * @export
+ * @param {number} authorId
+ * @param {number} targetId
+ * @return {*}
+ */
+export async function addExperience(authorId: number, targetId: number) {
+  const promsFind = [];
+  const promsUpdate = [];
+  promsFind.push(db.user.findUnique({
+    where: {
+      id: authorId,
+    },
+    select: {
+      experience: true,
+    },
+  }));
+  promsFind.push(db.user.findUnique({
+    where: {
+      id: targetId,
+    },
+    select: {
+      experience: true,
+    },
+  }));
+  const [authorExp, targetExp] = await Promise.all(promsFind);
+  if (authorExp === null || targetExp === null) {
+    throw new Error('用户不存在,经验录入失败');
+  }
+  console.log('exp', authorExp, targetExp);
+  promsUpdate.push(db.user.update({
+    where: {
+      id: authorId,
+    },
+    data: {
+      experience: authorExp.experience + 10,
+    },
+  }));
+  promsUpdate.push(db.user.update({
+    where: {
+      id: targetId,
+    },
+    data: {
+      experience: targetExp.experience + 10,
+    },
+  }));
+  return Promise.all(promsUpdate);
+};

@@ -135,13 +135,13 @@ export default function OrderDetail() {
         <Popconfirm
           title="确定取消吗?"
           onConfirm={() => next(false)}
-          disabled={pendding || stepStatus === 'error'}
+          disabled={pendding || status === OrderStatus.DONE || status === OrderStatus.REJECTED}
           okText="确定"
           cancelText="取消"
         >
           <Button
             style={{ marginLeft: 10 }}
-            disabled={pendding || stepStatus === 'error'}
+            disabled={pendding || status === OrderStatus.DONE || status === OrderStatus.REJECTED}
             loading={resLoading}
             type='primary'
             danger

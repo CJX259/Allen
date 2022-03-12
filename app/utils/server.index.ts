@@ -1,3 +1,6 @@
+import { ORDER_EXPRESS_PARAMS, ORDER_LIVE_INFO } from '~/const';
+import { OrderOpts } from '~/types';
+
 /**
  * 处理formData，返回一个统一对象
  *
@@ -48,4 +51,20 @@ export function transformNullAndUndefined(value: any) {
     return '';
   }
   return value;
+};
+
+export function formatOpts(opts: OrderOpts) {
+  const orderKeys = [
+    ORDER_EXPRESS_PARAMS.expressNum,
+    ORDER_EXPRESS_PARAMS.expressType,
+    ORDER_EXPRESS_PARAMS.tips,
+    ORDER_LIVE_INFO.liveUrl,
+    ORDER_LIVE_INFO.time,
+  ];
+  return Object.keys(opts).reduce((prev, cur) => {
+    if (orderKeys.indexOf(cur) !== -1) {
+      prev[cur] = opts[cur];
+    };
+    return prev;
+  }, {} as { [key: string]: any});
 };

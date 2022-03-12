@@ -7,8 +7,9 @@ import { getSessionUserData, needLogined } from '~/utils/loginUtils';
 import { db } from '~/utils/db.server';
 import { NextStepParams, OrderDetailLoaderData, OrderOpts, SUCCESS } from '~/types';
 import { Order, OrderStatus } from '@prisma/client';
-import { validateFormDatas } from '~/utils/server.index';
+import { formatOpts, validateFormDatas } from '~/utils/server.index';
 import { ORDER_STATUS_SEQUENCE } from '~/const';
+import { addExperience } from '~/server/user';
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: detailStyle }];
@@ -114,9 +115,8 @@ export const action: ActionFunction = async ({request, params}) => {
     return await handleCancel(+orderId);
   } else {
     // next为true则按着流程走，无论是取消中还是正常流程(因为取消中也是传next=true同意的)
-    return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts });
+    return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts, authorId, targetId });
   }
-  // return null;
 };
 
 
@@ -128,11 +128,10 @@ export const action: ActionFunction = async ({request, params}) => {
  */
 async function nextStep(data: NextStepParams) {
   console.log('next');
-  const { isAuthor, id, targetNext, status, authorNext, opts } = data;
+  const { isAuthor, id, targetNext, status, authorNext, opts, authorId, targetId } = data;
   const nextStatus = ORDER_STATUS_SEQUENCE[status].next;
   if (!nextStatus) {
-    // 已是最后阶段,处理评论
-    console.log('删除的', opts);
+    // 已是最后阶段,处理评论,登记经验值
     const { comment, rating, fromId, toId } = opts;
     const upsertComment = await db.userComment.upsert({
       where: {
@@ -158,8 +157,15 @@ async function nextStep(data: NextStepParams) {
     return json({ success: true });
   }
   if ((isAuthor && targetNext) || (!isAuthor && authorNext)) {
+    if (status === OrderStatus.DOING) {
+      // 如果是完成中，则双方同意时，需要给双方都加上经验值
+      addExperience(authorId, targetId);
+    }
     // 清掉同意记录，进入下一阶段
     try {
+      // 在opts中只提取出Order表里的字段
+      const newOpts = formatOpts(opts);
+      console.log('newOpts', newOpts);
       const updateOrder = await db.order.update({
         where: {
           id,
@@ -169,7 +175,7 @@ async function nextStep(data: NextStepParams) {
           targetNext: false,
           status: nextStatus,
           // 再把其他阶段所需信息传入
-          ...opts,
+          ...newOpts,
         },
       });
       console.log('update', updateOrder);
@@ -184,7 +190,10 @@ async function nextStep(data: NextStepParams) {
   } else {
     // 另一方未确认，进入等待状态
     try {
-      const temp = isAuthor ? { authorNext: true, ...opts } : { targetNext: true, ...opts };
+      // 在opts中只提取出Order表里的字段
+      const newOpts = formatOpts(opts);
+      console.log('newOpts', newOpts);
+      const temp = isAuthor ? { authorNext: true, ...newOpts } : { targetNext: true, ...newOpts };
       const updateOrder = await db.order.update({
         where: {
           id,
@@ -203,7 +212,7 @@ async function nextStep(data: NextStepParams) {
   }
 }
 
-// 一方发起取消，等待另一方(或另一方也确认了)
+// 直接取消
 async function handleCancel(id: number) {
   try {
     const resOrder = await db.order.update({
@@ -222,8 +231,6 @@ async function handleCancel(id: number) {
     console.log('err', error.message);
   }
 }
-
-// 其中一方拒绝，返回上一阶段
 
 
 /**
