@@ -10,6 +10,7 @@ import { Order, OrderStatus } from '@prisma/client';
 import { formatOpts, validateFormDatas } from '~/utils/server.index';
 import { ORDER_STATUS_SEQUENCE } from '~/const';
 import { addExperience } from '~/server/user';
+import { handleComment } from '~/server/comment';
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: detailStyle }];
@@ -127,88 +128,55 @@ export const action: ActionFunction = async ({request, params}) => {
  * @return {*}
  */
 async function nextStep(data: NextStepParams) {
-  console.log('next');
   const { isAuthor, id, targetNext, status, authorNext, opts, authorId, targetId } = data;
   const nextStatus = ORDER_STATUS_SEQUENCE[status].next;
   if (!nextStatus) {
-    // 已是最后阶段,处理评论,登记经验值
-    const { comment, rating, fromId, toId } = opts;
-    const upsertComment = await db.userComment.upsert({
-      where: {
-        orderId_fromId_toId: {
-          orderId: id,
-          fromId,
-          toId,
-        },
-      },
-      create: {
-        fromId,
-        toId,
-        orderId: id,
-        comment,
-        rating,
-      },
-      update: {
-        comment,
-        rating,
-      },
-    });
-    console.log('upsert', upsertComment);
-    return json({ success: true });
+    try {
+      await handleComment(id, opts);
+      return json({ success: true });
+    } catch (error: any) {
+      console.log(error.message);
+      return json(DB_ERROR);
+    };
   }
+  let updateData;
+
+  // 在opts中只提取出Order表里的字段
+  const newOpts = formatOpts(opts);
+
   if ((isAuthor && targetNext) || (!isAuthor && authorNext)) {
     if (status === OrderStatus.DOING) {
       // 如果是完成中，则双方同意时，需要给双方都加上经验值
       addExperience(authorId, targetId);
     }
     // 清掉同意记录，进入下一阶段
-    try {
-      // 在opts中只提取出Order表里的字段
-      const newOpts = formatOpts(opts);
-      console.log('newOpts', newOpts);
-      const updateOrder = await db.order.update({
-        where: {
-          id,
-        },
-        data: {
-          authorNext: false,
-          targetNext: false,
-          status: nextStatus,
-          // 再把其他阶段所需信息传入
-          ...newOpts,
-        },
-      });
-      console.log('update', updateOrder);
-      return json({
-        order: { ...updateOrder},
-        success: true,
-      } as SUCCESS);
-    } catch (error) {
-      console.log('error', error);
-      return json(DB_ERROR);
+    updateData = {
+      authorNext: false,
+      targetNext: false,
+      status: nextStatus,
+      // 再把其他阶段所需信息传入
+      ...newOpts,
     };
   } else {
     // 另一方未确认，进入等待状态
-    try {
-      // 在opts中只提取出Order表里的字段
-      const newOpts = formatOpts(opts);
-      console.log('newOpts', newOpts);
-      const temp = isAuthor ? { authorNext: true, ...newOpts } : { targetNext: true, ...newOpts };
-      const updateOrder = await db.order.update({
-        where: {
-          id,
-        },
-        data: temp,
-      });
-      console.log('updateOrder', updateOrder);
-      return json({
-        order: { ...updateOrder},
-        success: true,
-      } as SUCCESS);
-    } catch (error: any) {
-      console.log('error', error.message);
-      return json(DB_ERROR);
-    }
+    updateData = isAuthor ? { authorNext: true, ...newOpts } : { targetNext: true, ...newOpts };
+  }
+
+  // 操作数据库
+  try {
+    const updateOrder = await db.order.update({
+      where: {
+        id,
+      },
+      data: updateData,
+    });
+    return json({
+      order: { ...updateOrder},
+      success: true,
+    } as SUCCESS);
+  } catch (error: any) {
+    console.log('error', error.message);
+    return json(DB_ERROR);
   }
 }
 
@@ -231,7 +199,6 @@ async function handleCancel(id: number) {
     console.log('err', error.message);
   }
 }
-
 
 /**
  * 判断当前用户是否为发起人(服务端的判断，可能有其他用户)
