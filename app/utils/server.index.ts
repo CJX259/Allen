@@ -1,5 +1,3 @@
-import { User } from '@prisma/client';
-
 /**
  * 处理formData，返回一个统一对象
  *
@@ -27,7 +25,7 @@ export function getFromDatas(keys: string[], formData: FormData) {
 export function validateFormDatas(validateKeys: string[], data: { [key: string]: any }) {
   try {
     validateKeys.forEach((key) => {
-      if (!data[key]) {
+      if (!data[key] && data[key] !== false && data[key] !== undefined && data[key] !== '' && data[key] !== 0) {
         throw new Error();
       }
     });

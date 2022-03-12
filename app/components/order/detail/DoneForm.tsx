@@ -1,18 +1,17 @@
 import { Input, Rate } from 'antd';
 import React from 'react';
 import { ORDER_COMMNET } from '~/const';
-import { OrderDoneOpts, SessionUserData } from '~/types';
+import { OrderDoneOpts } from '~/types';
 
 const desc = ['糟糕', '还行', '不错', '良好', '优秀'];
 
 export default function DoneForm(props:
   {
     setOpts: Function;
-    curUser: SessionUserData;
     opts: OrderDoneOpts;
     disable: boolean;
   }) {
-  const { setOpts, curUser, opts, disable } = props;
+  const { setOpts, opts, disable } = props;
   const handleChange = (key: string, value: number | string) => {
     setOpts({
       ...opts,

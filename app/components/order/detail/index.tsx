@@ -67,15 +67,15 @@ export default function OrderDetail() {
       tips: '双方完成了自己的合同内容',
       content: <DoneForm
         setOpts={setOpts}
-        curUser={curUser}
         opts={opts}
         disable={pendding}
       />,
     },
     {
-      title: '取消中',
-      key: OrderStatus.REJECTING as any,
-      tips: '签约取消中，请双方确认同意',
+      title: '已取消',
+      key: OrderStatus.REJECTED,
+      tips: '签约取消',
+      content: <h3>签约已取消</h3>,
     },
   ];
   const current = steps.findIndex((item) => item.key === status);
@@ -119,7 +119,7 @@ export default function OrderDetail() {
       <div className="steps-action">
         {current < steps.length - 1 && (
           <Popconfirm
-            title="确定同意进入下一阶段吗？"
+            title="确定吗?"
             onConfirm={() => next(true)}
             disabled={pendding}
             okText="确定"
@@ -129,9 +129,24 @@ export default function OrderDetail() {
               disabled={pendding}
               loading={resLoading}
               type='primary'
-            >{pendding ? '等待另一方确认' : '下一步'}</Button>
+            >{pendding ? '等待另一方确认' : (status === OrderStatus.DONE ? '提交评论' : '下一步')}</Button>
           </Popconfirm>
         )}
+        <Popconfirm
+          title="确定取消吗?"
+          onConfirm={() => next(false)}
+          disabled={pendding || stepStatus === 'error'}
+          okText="确定"
+          cancelText="取消"
+        >
+          <Button
+            style={{ marginLeft: 10 }}
+            disabled={pendding || stepStatus === 'error'}
+            loading={resLoading}
+            type='primary'
+            danger
+          >取消</Button>
+        </Popconfirm>
       </div>
     </>
   );

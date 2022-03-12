@@ -106,6 +106,7 @@ model TagsOnGoods {
 model Order {
   id          Int @id @default(autoincrement())
   status      OrderStatus
+  prevStatus  OrderStatus?
   liveUrl     String?
   time        String?
   // times       Int?

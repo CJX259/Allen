@@ -86,13 +86,12 @@ export const action: ActionFunction = async ({request, params}) => {
   if (!orderId) {
     return json(PARAMS_ERROR);
   }
-  const payload = await request.json() as { status: OrderStatus, next: boolean, opts?: OrderOpts } & Order;
+  const payload = await request.json() as { status: OrderStatus, next: boolean, opts: OrderOpts } & Order;
   const requireKeys = ['status', 'next'];
   const { status, opts } = payload;
   if (!validateFormDatas(requireKeys, payload)) {
     return json(PARAMS_ERROR);
   };
-  console.log('payload', payload);
   const curOrder = await db.order.findUnique({
     where: {
       id: +orderId,
@@ -110,15 +109,9 @@ export const action: ActionFunction = async ({request, params}) => {
   }
   // return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts });
 
-  // 加拒绝的流程，砍掉
   // 没有next，就是拒绝/取消
-  if (!payload.next) {
-    // 如果已经为取消中，再传next = false即为拒绝取消，回到正常状态
-    if ( status === OrderStatus.REJECTING) {
-      // 回到上一步
-    } else {
-      // 原本为正常状态，则应该转为取消中，并把xxxnext设为true，等待答复
-    }
+  if (payload.next === false) {
+    return await handleCancel(+orderId);
   } else {
     // next为true则按着流程走，无论是取消中还是正常流程(因为取消中也是传next=true同意的)
     return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts });
@@ -134,6 +127,7 @@ export const action: ActionFunction = async ({request, params}) => {
  * @return {*}
  */
 async function nextStep(data: NextStepParams) {
+  console.log('next');
   const { isAuthor, id, targetNext, status, authorNext, opts } = data;
   const nextStatus = ORDER_STATUS_SEQUENCE[status].next;
   if (!nextStatus) {
@@ -206,6 +200,26 @@ async function nextStep(data: NextStepParams) {
       console.log('error', error.message);
       return json(DB_ERROR);
     }
+  }
+}
+
+// 一方发起取消，等待另一方(或另一方也确认了)
+async function handleCancel(id: number) {
+  try {
+    const resOrder = await db.order.update({
+      where: {
+        id,
+      },
+      data: {
+        status: OrderStatus.REJECTED,
+      },
+    });
+    return json({
+      success: true,
+      order: resOrder,
+    } as SUCCESS);
+  } catch (error: any) {
+    console.log('err', error.message);
   }
 }
 
