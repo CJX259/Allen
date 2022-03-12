@@ -45,13 +45,13 @@
 .item-experience {
   position: absolute;
   top: -20px;
-  font-size: 6px;
+  font-size: 10px;
   font-weight: 200;
 }
 .item-id {
   position: absolute;
   top: 20px;
-  font-size: 6px;
+  font-size: 10px;
   font-weight: 200;
 }
 .item-tag {

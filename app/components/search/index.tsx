@@ -36,11 +36,13 @@ export default function SearchComp() {
           {data?.map((item) => searchType === SearchType.goods ?
           <GoodsCardItem key={item.id} data={item as Goods} /> :
           <UserCardItem key={item.id} data={item as UserJoinTag} />)}
+          {!data?.length && <h2>暂无结果</h2>}
         </div>
         <div className="search-pager">
           <Pagination
             current={page}
             total={total || 0}
+            disabled={!data?.length}
             onChange={(page) => sendSearch(searchKey || '', submit, page)}
             pageSize={USER_PAGESIZE}
           />
