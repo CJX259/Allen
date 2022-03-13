@@ -14,7 +14,7 @@ import UploadImg from '../UploadImg';
 export default function InfoIndex() {
   const actionData: ERROR & { id: number } | undefined = useActionData();
   const loaderData: { user: UserJoinTag, loginUser: { id: number; role: Role } }= useLoaderData();
-  const { user, loginUser: { id: loginId, role: loginRole } } = loaderData;
+  const { user, loginUser: { id: loginId = -1, role: loginRole } } = loaderData;
   let isVisitor = user.id !== loginId;
   // 上传图片组件传回的头像图片数据
   const [avatarimgUrl, setAvatarImgUrl] = useState('');
@@ -66,7 +66,7 @@ export default function InfoIndex() {
         >
           <Button
             type='primary'
-            disabled={user.role === loginRole}
+            disabled={user.role === loginRole || !loginRole}
           >
             发起签约
           </Button>

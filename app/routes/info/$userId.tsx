@@ -7,25 +7,19 @@ import { DB_ERROR, PARAMS_ERROR } from '~/error';
 import { searchUserById } from '~/server/user';
 import { getSession } from '~/sessions';
 import { db } from '~/utils/db.server';
-import { needLogined } from '~/utils/loginUtils';
 import { getFromDatas, validateFormDatas } from '~/utils/server.index';
 
 
 // 处理查询页的搜索请求，返回数据列表
 export const loader: LoaderFunction = async ({ request, params }) => {
-  // 拿session的userid
-  const redirect = await needLogined(request);
-  if (redirect) {
-    return redirect;
-  }
   const session = await getSession(request.headers.get('Cookie'));
-  const { id, role } = session.get(LoginKey) || {};
+  // const { id, role } = session.get(LoginKey) || {};
   const userId = params.userId;
   if (!userId) {
     return json(PARAMS_ERROR);
   }
   const user = await searchUserById(+userId);
-  return { user, loginUser: { id, role } };
+  return { user, loginUser: session.get(LoginKey) || {} };
 };
 export const action: ActionFunction = async ({ request }) => {
   const rawFormData = await request.formData();
