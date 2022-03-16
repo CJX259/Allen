@@ -38,22 +38,22 @@ export const action: ActionFunction = async ({ request }) => {
     },
   });
   const curTagIds = curUser?.tags.map((item) => item.tagId) || [];
-  // 根据当前用户的标签，找出与同类标签的主播，签约最多的供应商
-  const sameTagCompanys = [] as any[];
+  // 根据当前用户的标签，找出与同类标签的用户，签约最多的供应商（or主播）
+  const sameTagUsers = [] as any[];
   for (let i = 0; i < curTagIds.length; i++) {
     const tagId = curTagIds[i];
-    const companies = await matchSameTagCompany(tagId, curUser?.role);
-    sameTagCompanys.push(...companies);
+    const companies = await matchSameTagUser(tagId, curUser?.role);
+    sameTagUsers.push(...companies);
   }
-  console.log('sameTagCompanys', sameTagCompanys);
+  console.log('sameTagUsers', sameTagUsers);
   // 再在同标签的供应商中，找出签约数量最多和好评率最高的
-  // const maxCountCompany = findMaxCountCompany(sameTagCompanys.map((item) => item.id));
+  // const maxCountCompany = findMaxCountCompany(sameTagUsers.map((item) => item.id));
 
-  return json({ data: sameTagCompanys });
+  return json({ data: sameTagUsers });
 };
 
 // 匹配同类标签的供应商
-async function matchSameTagCompany(tagId: number, curRole?: Role): Promise<any []> {
+async function matchSameTagUser(tagId: number, curRole?: Role): Promise<any []> {
   const sameTagUsers = await db.user.findMany({
     where: {
       tags: {
@@ -61,7 +61,7 @@ async function matchSameTagCompany(tagId: number, curRole?: Role): Promise<any [
           tagId,
         },
       },
-      role: Role.COMPANY,
+      role: curRole === Role.COMPANY ? Role.ANCHOR : Role.COMPANY,
     },
     include: {
       // 连接order表，用于计算签约数最多的用户
@@ -78,12 +78,12 @@ async function matchSameTagCompany(tagId: number, curRole?: Role): Promise<any [
     },
   });
   console.log('sameTagUsers', sameTagUsers);
-  const count = await findMaxCountCompany(sameTagUsers);
+  const count = await findMaxCountUser(sameTagUsers);
   return sameTagUsers;
 }
 
-// 找出这些id中，按签约数筛选
-async function findMaxCountCompany(users: User[]) {
+// 找出这些id中，签约数最多的用户
+async function findMaxCountUser(users: User[]) {
   const res = [];
   for (let i = 0; i < users.length; i++) {
     const user = users[i];
@@ -109,11 +109,14 @@ async function findMaxCountCompany(users: User[]) {
     };
   }
   // 针对orderCount字段排序，降序排序
+
+
   return res;
 }
 
-// 找出这些id中，按好评率筛选
+// 找出这些id中，按好评评分均值高低筛选
 async function findQulatiy(params: any) {
+
 }
 
 export default function Match() {
