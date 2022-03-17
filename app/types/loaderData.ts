@@ -70,3 +70,8 @@ export interface OrderDetailLoaderData{
   curUser: SessionUserData;
   orderInfo: OrderJoinUserAndComment;
 };
+
+export interface MatchActionData{
+  count: User[] & { orderCount: number}[];
+  quality: User[] & { avgRating: number }[];
+};

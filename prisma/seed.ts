@@ -105,7 +105,7 @@ function initSomeUsers() {
         idCard: `${getRandom(15)}${num}${i}`,
         address: '广东省茂名市茂南区官渡2路248号大院',
         mail: '1049602251@qq.com',
-        role: Role.ANCHOR,
+        role,
         phone: `${getRandom(10)}${num}${i}`,
         vx: 'sxyyasw',
         password: md5('123123'),

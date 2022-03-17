@@ -1,12 +1,12 @@
 import { Button, Spin } from 'antd';
 import React from 'react';
 import { useActionData, useSubmit, useTransition } from 'remix';
-import { MATCH_TYPES } from '~/types';
+import { MatchActionData, MATCH_TYPES } from '~/types';
 
 export default function MatchIndex() {
   const transition = useTransition();
   const submit = useSubmit();
-  const actionData = useActionData();
+  const actionData: MatchActionData | undefined = useActionData();
   console.log('actionData', actionData);
   function startMatch(type: MATCH_TYPES) {
     submit({
