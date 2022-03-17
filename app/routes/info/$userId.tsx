@@ -4,8 +4,10 @@ import { ActionFunction, json, LoaderFunction } from 'remix';
 import InfoIndex from '~/components/info/index';
 import { LoginKey, updateUserKeys, userUnRequireKeys } from '~/const';
 import { DB_ERROR, PARAMS_ERROR } from '~/error';
+import { getAllTags, userConnectTag } from '~/server/tag';
 import { searchUserById } from '~/server/user';
 import { getSession } from '~/sessions';
+import { InfoLoaderData } from '~/types';
 import { db } from '~/utils/db.server';
 import { getFromDatas, validateFormDatas } from '~/utils/server.index';
 
@@ -19,8 +21,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json(PARAMS_ERROR);
   }
   const user = await searchUserById(+userId);
-  return { user, loginUser: session.get(LoginKey) || {} };
+  const allTags = await getAllTags();
+  return { user, loginUser: session.get(LoginKey) || {}, allTags } as InfoLoaderData;
 };
+
+// 更新用户数据
 export const action: ActionFunction = async ({ request }) => {
   const rawFormData = await request.formData();
   const requiredKeys = updateUserKeys.filter((key) => userUnRequireKeys.indexOf(key) === -1);
@@ -34,6 +39,13 @@ export const action: ActionFunction = async ({ request }) => {
   const newFormatData = {...formDatas};
   delete newFormatData.id;
   try {
+    // 传了tags，就处理tag与user的映射表
+    if (newFormatData.tags) {
+      // 解析tags
+      const tags = newFormatData.tags.split(',').map((item: string) => +item);
+      await userConnectTag(id, tags);
+      delete newFormatData.tags;
+    }
     // 更新数据
     const updateUser = await db.user.update({
       where: {

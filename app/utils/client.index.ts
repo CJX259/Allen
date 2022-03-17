@@ -107,9 +107,9 @@ export function isPendding(curUser: SessionUserData, orderInfo: Order) {
   if (!orderInfo || !curUser) {
     throw new Error('参数错误');
   }
-  const { authorId, targetId, authorNext, targetNext, status } = orderInfo;
+  const { authorId, authorNext, targetNext, status } = orderInfo;
   // 是否为等待中，发起人就看发起人有没有同意，发起人同意了说明在等待接收人同意。接收人同理
-  let pendding = isAuthor(curUser.id, authorId, targetId) ? !!authorNext : !!targetNext;
+  let pendding = isAuthor(curUser.id, authorId) ? !!authorNext : !!targetNext;
   // 都没同意则也可以通过
   if (pendding && !targetNext && !authorNext) {
     pendding = false;

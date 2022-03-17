@@ -1,9 +1,9 @@
 import { Role } from '@prisma/client';
-import { Button, Form, Input, InputNumber, message, Popconfirm } from 'antd';
+import { Button, Form, Input, InputNumber, message, Popconfirm, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { LOAD_STATE } from '~/const';
-import { ERROR, FormRenderInfo, UserJoinTag } from '~/types';
+import { ERROR, FormRenderInfo, InfoLoaderData } from '~/types';
 import { formatFormData, sendOrder, validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
 import BaseFormItem from '../register/BaseFormItem';
@@ -11,10 +11,12 @@ import { FORM_COL, RULE_REQUIRED } from '../register/const';
 import RoleTag from '../RoleTag';
 import UploadImg from '../UploadImg';
 
+const { Option } = Select;
+
 export default function InfoIndex() {
   const actionData: ERROR & { id: number } | undefined = useActionData();
-  const loaderData: { user: UserJoinTag, loginUser: { id: number; role: Role } }= useLoaderData();
-  const { user, loginUser: { id: loginId = -1, role: loginRole } } = loaderData;
+  const loaderData: InfoLoaderData= useLoaderData();
+  const { user, allTags, loginUser: { id: loginId = -1, role: loginRole } } = loaderData;
   let isVisitor = user.id !== loginId;
   // 上传图片组件传回的头像图片数据
   const [avatarimgUrl, setAvatarImgUrl] = useState('');
@@ -44,7 +46,16 @@ export default function InfoIndex() {
 
   // 提交数据
   function onFinish(v: any) {
+    // 将tagId转为number
+    // submit貌似传不了数组类型，用字符代替，服务端再解析如'1,2,3'
+    v.tags = v.tags?.reduce((prev: string, cur: string, index: number) => {
+      if (index === v.tags.length - 1) {
+        return prev + cur;
+      }
+      return prev + cur + ',';
+    }, '');
     const params = formatFormData(v);
+    console.log('params', params);
     // // 先不传图片到云端
     // if (avatarFileObj) {
     //   uploadImage(params.avatarKey, avatarFileObj);
@@ -198,6 +209,25 @@ export default function InfoIndex() {
       },
       initialValue: (data) => data?.price,
       render: (data) => (isVisitor ? <span>{data?.price}</span> : <InputNumber />),
+    },
+    // 最多选择2个标签，带搜索的多选select
+    {
+      name: 'tags',
+      label: {
+        all: '标签类别',
+      },
+      initialValue: (data) => data?.tags.map((item) => '' + item.tagId),
+      render: (data) => (
+        <Select
+          mode="multiple"
+          allowClear
+          disabled={isVisitor}
+          optionFilterProp="children"
+        >
+          {/* 应该是全部tag才对 */}
+          {allTags.map((item, index) => <Option key={item.id}>{item.name}</Option>)}
+        </Select>
+      ),
     },
     {
       name: 'address',

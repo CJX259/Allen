@@ -75,3 +75,9 @@ export interface MatchActionData{
   count: User[] & { orderCount: number}[];
   quality: User[] & { avgRating: number }[];
 };
+
+export interface InfoLoaderData{
+  user: UserJoinTag;
+  loginUser: { id: number; role: Role };
+  allTags: { name: string; id: number; }[];
+};
