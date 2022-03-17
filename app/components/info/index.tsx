@@ -1,5 +1,5 @@
 import { Role } from '@prisma/client';
-import { Button, Form, Input, message, Popconfirm } from 'antd';
+import { Button, Form, Input, InputNumber, message, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { LOAD_STATE } from '~/const';
@@ -190,6 +190,14 @@ export default function InfoIndex() {
           message: '邮箱格式不正确',
         },
       ],
+    },
+    {
+      name: 'price',
+      label: {
+        all: '单场价格(单位/分)',
+      },
+      initialValue: (data) => data?.price,
+      render: (data) => (isVisitor ? <span>{data?.price}</span> : <InputNumber />),
     },
     {
       name: 'address',

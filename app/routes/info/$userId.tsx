@@ -24,17 +24,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const action: ActionFunction = async ({ request }) => {
   const rawFormData = await request.formData();
   const requiredKeys = updateUserKeys.filter((key) => userUnRequireKeys.indexOf(key) === -1);
-  const formatData = getFromDatas(updateUserKeys, rawFormData);
+  const formDatas = getFromDatas(updateUserKeys, rawFormData);
   // 是否传了必传的参数
-  if (!validateFormDatas(requiredKeys, formatData)) {
+  if (!validateFormDatas(requiredKeys, formDatas)) {
     return json(PARAMS_ERROR);
   }
-  // 如果传了密码，则进行md5加密
-  if (formatData.password) {
-    formatData.password = md5(formatData.password);
-  }
-  const id = +formatData.id;
-  const newFormatData = {...formatData};
+  handleFormat(formDatas);
+  const id = +formDatas.id;
+  const newFormatData = {...formDatas};
   delete newFormatData.id;
   try {
     // 更新数据
@@ -55,6 +52,19 @@ export const action: ActionFunction = async ({ request }) => {
     return json(DB_ERROR);
   }
 };
+
+// 对数据做些处理
+function handleFormat(formDatas: any) {
+  // 如果传了密码，则进行md5加密
+  if (formDatas.password) {
+    formDatas.password = md5(formDatas.password);
+  }
+  // 如果传了价格，则转为数字
+  const reg = /^\d+$/;
+  if (formDatas.price && reg.test(formDatas.price)) {
+    formDatas.price = +formDatas.price;
+  }
+}
 
 export default function UserInfo() {
   return <InfoIndex />;
