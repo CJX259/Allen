@@ -28,6 +28,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       targetId: +userData.id,
     },
     skip: (+page - 1) * USER_PAGESIZE,
+    take: USER_PAGESIZE,
     include: {
       author: {
         select: {
@@ -46,6 +47,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       authorId: +userData.id,
     },
     skip: (+page - 1) * USER_PAGESIZE,
+    take: USER_PAGESIZE,
     include: {
       author: {
         select: {
@@ -73,24 +75,24 @@ export const loader: LoaderFunction = async ({ request }) => {
   const [targetOrders, authorOrders] = await Promise.all(proms);
   const [targetTotal, authorTotal] = await Promise.all(promsTotal);
 
-  // 判断每个签约是否为等待中
-  // 如果target为自己，则看taegetNext是否为true，为true则为等待中
-  // 如果author为自己，则看author是否为true，为true则为等待中
-  const resTargetOrders = targetOrders.map((item) => {
-    return {
-      ...item,
-      pendding: !!item.targetNext,
-    };
-  });
-  const resAuthorOrders = authorOrders.map((item) => {
-    return {
-      ...item,
-      pendding: !!item.authorNext,
-    };
-  });
+  // // 判断每个签约是否为等待中
+  // // 如果target为自己，则看taegetNext是否为true，为true则为等待中
+  // // 如果author为自己，则看author是否为true，为true则为等待中
+  // const resTargetOrders = targetOrders.map((item) => {
+  //   return {
+  //     ...item,
+  //     pendding: !!item.targetNext,
+  //   };
+  // });
+  // const resAuthorOrders = authorOrders.map((item) => {
+  //   return {
+  //     ...item,
+  //     pendding: !!item.authorNext,
+  //   };
+  // });
   const resData: OrderHistoryLoaderData = {
-    targetOrders: resTargetOrders,
-    authorOrders: resAuthorOrders,
+    targetOrders,
+    authorOrders,
     page: +page,
     targetTotal: targetTotal,
     authorTotal: authorTotal,

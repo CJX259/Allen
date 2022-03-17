@@ -12,7 +12,7 @@ const { TabPane } = Tabs;
 
 export default function HistoryComp() {
   const loaderData: OrderHistoryLoaderData = useLoaderData();
-  const { targetOrders, authorOrders, page, targetTotal, authorTotal, user } = loaderData;
+  const { targetOrders, authorOrders, page, targetTotal, authorTotal } = loaderData;
   const transition = useTransition();
   const submit = useSubmit();
   console.log('data', targetOrders, authorOrders);
@@ -52,8 +52,8 @@ export default function HistoryComp() {
       // render: (v, record: OrderJoinUserAndComment) => <TableActions curUser={user} page={'1'} status={record.status} orderData={record} />,
     },
   ];
-  function sendSearch() {
-    submit({ page: '1' }, { method: 'get' });
+  function sendSearch(page: number, pageSize: number) {
+    submit({ page: '' + page }, { method: 'get' });
   }
   return (
     <div className='history-wrapper'>

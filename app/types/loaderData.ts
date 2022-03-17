@@ -57,13 +57,13 @@ export type OrderJoinUserAndComment = {
     role?: Role;
     name: string;
   }
-  userComment: {
+  userComment?: {
     orderId: number;
     fromId: number;
     toId: number;
     rating: number;
     comment: string;
-}[];
+  }[];
 } & Order;
 
 export interface OrderDetailLoaderData{

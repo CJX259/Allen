@@ -133,7 +133,6 @@ async function findQualityUser(users: User[]) {
       return prev + cur.rating;
     }, 0);
     const avgRating = (totalRating / comment.length);
-    console.log('avg', avgRating);
     res[i] = {
       ...user,
       avgRating: avgRating || 0,
