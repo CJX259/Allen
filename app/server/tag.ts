@@ -16,12 +16,14 @@ export async function getAllTags() {
   });
 };
 
-// 给用户贴标签
-// 先查出该用户的所有标签（all）
-// all有，ids没有，为删除
-// all没有，ids有，为新增，
-// 综合起来看就是，去掉公共部分，all剩下的就是被删的，ids剩下的就是新增的
-// 其余不变
+
+/**
+ * 给用户贴标签,先查出该用户的所有标签（all）去掉公共部分，all剩下的就是被删的，ids剩下的就是新增的
+ *
+ * @export
+ * @param {number} userId
+ * @param {number[]} tagIds
+ */
 export async function userConnectTag(userId: number, tagIds: number[]) {
   // 找出该用户所有Tag
   const allTagsOnUser = await db.tagsOnUsers.findMany({
@@ -37,36 +39,11 @@ export async function userConnectTag(userId: number, tagIds: number[]) {
   // all数组删除map里的元素，即删除的标签
   const deleteTags = findDifferencesSet(allTagsOnUser.map((item) => item.tagId), map);
   const delRes = await delTagsOnUser(userId, deleteTags);
-  console.log('delRes', delRes);
 
   // 新增的标签
   const createTags = findDifferencesSet(tagIds, map);
   const createRes = await createTagsOnUser(userId, createTags);
-  console.log('createRes', createRes);
-
-  const proms = [];
-  console.log('userConnectTag', userConnectTag);
-  for (let i = 0; i < tagIds.length; i++) {
-    const ele = tagIds[i];
-    proms.push(await db.tagsOnUsers.upsert({
-      where: {
-        tagId_userId: {
-          tagId: ele,
-          userId,
-        },
-      },
-      update: {
-        userId,
-        tagId: ele,
-      },
-      create: {
-        userId,
-        tagId: ele,
-      },
-    }));
-  };
-  const res = await Promise.all(proms);
-  console.log('更新tag成功', res);
+  console.log('标签更新 create del', createRes, delRes);
 };
 
 // 找出差集
@@ -81,6 +58,14 @@ function findDifferencesSet(findArr: number[], map: number[]) {
   return res;
 };
 
+
+/**
+ * 批量新建某些用户的标签（map表）
+ *
+ * @param {number} userId
+ * @param {number[]} tagIds
+ * @return {*}
+ */
 async function createTagsOnUser(userId: number, tagIds: number[]) {
   const datas = [] as any[];
   tagIds.forEach((item) => {
@@ -94,6 +79,14 @@ async function createTagsOnUser(userId: number, tagIds: number[]) {
   });
 };
 
+
+/**
+ * 批量删除某用户的某些标签（删除map表）
+ *
+ * @param {number} userId
+ * @param {number[]} tagIds
+ * @return {*}
+ */
 async function delTagsOnUser(userId: number, tagIds: number[]) {
   const proms = [] as Promise<any>[];
   tagIds.forEach((item) => {
