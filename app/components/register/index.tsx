@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useLoaderData, useActionData, useSubmit, useTransition } from 'remix';
-import { Form, Input, Button, Radio, message } from 'antd';
+import { Form, Input, Button, Radio, message, Select } from 'antd';
 import type { FormInstance } from 'antd';
 import type { SubmitFunction } from 'remix';
 import BaseFormItem from './BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from './const';
 import UploadImg from '../UploadImg';
-import { Role } from '@prisma/client';
+import { Role, Tag } from '@prisma/client';
 import { FormRenderInfo } from '~/types';
-import { formatFormData, validateRepeat } from '~/utils/client.index';
+import { formatFormData, formatTags, validateRepeat } from '~/utils/client.index';
 import { LOAD_STATE } from '~/const';
 
+const { Option } = Select;
+
 export default function RegisterCmp() {
-  const phone = useLoaderData();
+  const { phone, allTags } = useLoaderData() || {};
   const errorData = useActionData();
   const [form] = Form.useForm();
   const submit = useSubmit();
@@ -152,6 +154,21 @@ export default function RegisterCmp() {
       render: () => <Input.Password placeholder='(选填，不填仅能用验证码登录)'/>,
     },
     {
+      name: 'tags',
+      label: {
+        all: '标签类别',
+      },
+      render: (data) => (
+        <Select
+          mode="multiple"
+          allowClear
+          optionFilterProp="children"
+        >
+          {allTags.map((item: Tag) => <Option key={item.id}>{item.name}</Option>)}
+        </Select>
+      ),
+    },
+    {
       name: 'introduce',
       label: {
         all: '简介',
@@ -192,6 +209,7 @@ function changeRole(form: FormInstance, setIsAnchor: Function) {
 }
 
 function onFinish(values: any, form: FormInstance, submit: SubmitFunction) {
+  values.tags = formatTags(values.tags);
   const formatValues = formatFormData(values);
   // if (fileObj) {
   //   uploadImage(formatValues.avatarKey, fileObj);

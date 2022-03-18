@@ -29,6 +29,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export const action: ActionFunction = async ({ request }) => {
   const rawFormData = await request.formData();
   const requiredKeys = updateUserKeys.filter((key) => userUnRequireKeys.indexOf(key) === -1);
+  // 全拿出来，可能会有null
   const formDatas = getFromDatas(updateUserKeys, rawFormData);
   // 是否传了必传的参数
   if (!validateFormDatas(requiredKeys, formDatas)) {
@@ -39,13 +40,11 @@ export const action: ActionFunction = async ({ request }) => {
   const newFormatData = {...formDatas};
   delete newFormatData.id;
   try {
-    // 传了tags，就处理tag与user的映射表
-    if (newFormatData.tags) {
-      // 解析tags
-      const tags = newFormatData.tags.split(',').map((item: string) => +item);
-      await userConnectTag(id, tags);
-      delete newFormatData.tags;
-    }
+    // 解析tags,处理user与tag的映射表
+    const tags = newFormatData.tags?.split(',')?.map((item: string) => +item) || [];
+    await userConnectTag(id, tags);
+    delete newFormatData.tags;
+    console.log('newformatData', newFormatData);
     // 更新数据
     const updateUser = await db.user.update({
       where: {

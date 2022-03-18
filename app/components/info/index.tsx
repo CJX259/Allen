@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { LOAD_STATE } from '~/const';
 import { ERROR, FormRenderInfo, InfoLoaderData } from '~/types';
-import { formatFormData, sendOrder, validateRepeat } from '~/utils/client.index';
+import { formatTags, sendOrder, validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
 import BaseFormItem from '../register/BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from '../register/const';
@@ -46,21 +46,10 @@ export default function InfoIndex() {
 
   // 提交数据
   function onFinish(v: any) {
-    // 将tagId转为number
     // submit貌似传不了数组类型，用字符代替，服务端再解析如'1,2,3'
-    v.tags = v.tags?.reduce((prev: string, cur: string, index: number) => {
-      if (index === v.tags.length - 1) {
-        return prev + cur;
-      }
-      return prev + cur + ',';
-    }, '');
-    const params = formatFormData(v);
-    console.log('params', params);
-    // // 先不传图片到云端
-    // if (avatarFileObj) {
-    //   uploadImage(params.avatarKey, avatarFileObj);
-    // }
-    submit(params, {
+    v.tags = formatTags(v.tags);
+    console.log('v', v);
+    submit(v, {
       method: 'post',
     });
   }
@@ -101,6 +90,7 @@ export default function InfoIndex() {
       label: {
         all: '头像',
       },
+      initialValue: (data) => data?.avatarKey,
       render: (data) => {
         return isVisitor ?
           <img src={avatarimgUrl} style={{ width: 150, height: 150, borderRadius: '50%' }} alt="avatar" /> :
@@ -151,19 +141,12 @@ export default function InfoIndex() {
       render: (data) => (isVisitor ? <span>{data?.vx}</span> : <Input />),
     },
     {
-      name: 'password',
-      label: {
-        all: '登录密码',
-      },
-      style: isVisitor ? { display: 'none' } : {},
-      render: () => <Input.Password disabled={isVisitor} placeholder='(选填，不填仅能用验证码登录)'/>,
-    },
-    {
       name: 'realName',
       label: {
         anchor: '真实姓名',
         company: '公司法人姓名',
       },
+      rules: [RULE_REQUIRED],
       style: isVisitor ? { display: 'none' } : {},
       initialValue: (data) => data?.realName,
       render: (data) => <Input disabled={isVisitor} placeholder='请填写真实姓名' />,

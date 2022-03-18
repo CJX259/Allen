@@ -17,7 +17,7 @@ export function formatFormData(data: { [key: string]: any}) {
   const obj = {} as { [key: string]: any };
   Object.keys(data).map((key) => {
     const ele = data[key];
-    if (ele || ele === '' || ele === 0) {
+    if (ele !== null && ele !== undefined) {
       obj[key] =ele;
     }
   });
@@ -140,4 +140,21 @@ export function isPendding(curUser: SessionUserData, orderInfo: Order) {
  */
 export function isAuthor(curUserId: number, authorId: number) {
   return curUserId === authorId ? true : false;
+};
+
+
+/**
+ * 处理用户上传tags时的格式
+ *
+ * @export
+ * @param {string[]} tagIds
+ * @return {*}
+ */
+export function formatTags(tagIds: string[]) {
+  return tagIds?.reduce((prev: string, cur: string, index: number) => {
+    if (index === tagIds.length - 1) {
+      return prev + cur;
+    }
+    return prev + cur + ',';
+  }, '');
 };

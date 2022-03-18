@@ -207,9 +207,9 @@ export const infoRenderInfo: FormRenderInfo[] = [
 ];
 
 // 用户所需信息字段
-export const userBaseKeys = ['phone', 'name', 'address', 'mail', 'idCard', 'realName', 'introduce', 'password', 'vx', 'avatarKey', 'price', 'tags'];
+export const userBaseKeys = ['phone', 'name', 'address', 'mail', 'idCard', 'realName', 'introduce', 'vx', 'avatarKey', 'price', 'tags'];
 // 仅新建用户时传role
-export const userKeys = [...userBaseKeys, 'role'];
+export const userKeys = [...userBaseKeys, 'role', 'password'];
 // 非必须的字段
 export const userUnRequireKeys = ['introduce', 'password', 'avatarKey', 'price', 'tags'];
 // 更新所需字段

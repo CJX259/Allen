@@ -11,6 +11,7 @@ import { db } from '~/utils/db.server';
 
 import RegisterCmp from '../components/register';
 import registerCss from '../styles/css/register.css';
+import { getAllTags, userConnectTag } from '~/server/tag';
 
 export const links: LinksFunction = () => {
   return [
@@ -24,30 +25,31 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       request.headers.get('Cookie'),
   );
   const data = session.get(RegisterKey) as SessionRegisterData;
-  return data ? data.phone : redirect('/login');
+  const allTags = await getAllTags();
+  return data ? { phone: data.phone, allTags } : redirect('/login');
 };
 
 export const action: ActionFunction = async ({ request, params }) => {
   const rawFormData = await request.formData();
   const requiredKeys = userKeys.filter((key) => userUnRequireKeys.indexOf(key) === -1);
-  const formatData = getFromDatas(userKeys, rawFormData);
+  const formDatas = getFromDatas(userKeys, rawFormData);
   // 是否传了必传的参数
-  if (!validateFormDatas(requiredKeys, formatData)) {
+  if (!validateFormDatas(requiredKeys, formDatas)) {
     return json(PARAMS_ERROR);
   }
-  // 如果传了密码，则进行md5加密
-  if (formatData.password) {
-    formatData.password = md5(formatData.password);
-  }
-  // 注册时没传头像的，设置默认头像
-  if (!formatData.avatarKey) {
-    formatData.avatarKey = DEFAULT_AVATAR_KEY;
-  }
+  // 解析tags
+  const tags = formDatas.tags?.split(',')?.map((item: string) => +item) || [];
+  delete formDatas.tags;
+  console.log('formDatas', formDatas);
+  const newFormData = formatFormData(formDatas);
+  console.log('newFormData', newFormData);
   try {
     // 插入新数据
     const newUser = await db.user.create({
-      data: {...formatData},
+      data: {...newFormData},
     });
+    // 给该user设置tags
+    await userConnectTag(newUser.id, tags);
     console.log('newUser', newUser);
     // 设置login session
     const session = await getSession(
@@ -67,6 +69,25 @@ export const action: ActionFunction = async ({ request, params }) => {
     return json(DB_ERROR);
   }
 };
+
+/**
+ * 对特殊字段进行处理
+ *
+ * @param {*} formDatas
+ * @return {*}
+ */
+function formatFormData(formDatas: any) {
+  const newFormData = {...formDatas} as any;
+  // 注册时没传头像的，设置默认头像
+  if (!formDatas.avatarKey) {
+    newFormData.avatarKey = DEFAULT_AVATAR_KEY;
+  }
+  // 如果传了密码，则进行md5加密
+  if (formDatas.password) {
+    newFormData.password = md5(formDatas.password);
+  }
+  return newFormData;
+}
 
 export default function Register() {
   return <RegisterCmp />;
