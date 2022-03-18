@@ -238,3 +238,6 @@ export const ORDER_COMMNET = {
 
 
 export const TIME_FORMAT = 'YYYY-MM-DD hh-mm';
+
+// 匹配用户的最多条数
+export const MATCH_COUNT = 6;

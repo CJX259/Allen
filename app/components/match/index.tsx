@@ -1,24 +1,36 @@
-import { Button, Spin } from 'antd';
+import { Button, Spin, Tabs } from 'antd';
 import React from 'react';
-import { useActionData, useSubmit, useTransition } from 'remix';
-import { MatchActionData, MATCH_TYPES } from '~/types';
+import { useLoaderData, useSubmit, useTransition } from 'remix';
+import { MatchLoaderData } from '~/types';
+import UserCardItem from '../UserCardItem';
+
+const { TabPane } = Tabs;
 
 export default function MatchIndex() {
   const transition = useTransition();
+  const loaderData: MatchLoaderData | undefined = useLoaderData();
   const submit = useSubmit();
-  const actionData: MatchActionData | undefined = useActionData();
-  console.log('actionData', actionData);
-  function startMatch(type: MATCH_TYPES) {
-    submit({
-      type: MATCH_TYPES.COST_EFFECTIVE,
-    }, { method: 'post' });
+  console.log('loaderData', loaderData);
+  const { count, quality } = loaderData || {};
+  function refresh() {
+    submit({}, { method: 'get' });
   }
   return (
     <Spin tip="匹配中..." spinning={transition.state !== 'idle'}>
-      <div className="match-wrapper">
-        <Button
-          onClick={() => startMatch(MATCH_TYPES.DEFAULT)}
-        >开始匹配</Button>
+      <Button onClick={refresh}>刷新</Button>
+      <div className="user-card-wrapper">
+        <Tabs style={{ width: '100%' }} defaultActiveKey="1" onChange={() => console.log('cahnge')}>
+          <TabPane tab="签约数最高用户" key="1">
+            <div className="user-card-content">
+              {count?.map((item) => <UserCardItem key={`count_${item.id}`} data={item} />)}
+            </div>
+          </TabPane>
+          <TabPane tab="评分最高用户" key="2">
+            <div className="user-card-content">
+              {quality?.map((item) => <UserCardItem key={`quality_${item.id}`} data={item} />)}
+            </div>
+          </TabPane>
+        </Tabs>
       </div>
     </Spin>
   );

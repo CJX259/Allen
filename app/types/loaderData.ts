@@ -73,9 +73,9 @@ export interface OrderDetailLoaderData{
   orderInfo: OrderJoinUserAndComment;
 };
 
-export interface MatchActionData{
-  count: User[] & { orderCount: number}[];
-  quality: User[] & { avgRating: number }[];
+export interface MatchLoaderData{
+  count: UserJoinTag[] & { orderCount: number}[];
+  quality: UserJoinTag[] & { avgRating: number }[];
 };
 
 export interface InfoLoaderData{

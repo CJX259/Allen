@@ -1,3 +1,92 @@
+@charset "UTF-8";
+.item-user {
+  width: 45%;
+  padding: 30px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  transition: transform 0.2s;
+  box-shadow: gray 2px 2px 10px;
+  overflow: hidden;
+  border-radius: 5px;
+  height: 180px;
+}
+.item-user a {
+  text-decoration: none;
+  /* 去除默认的下划线 */
+  outline: none;
+  /* 去除旧版浏览器的点击后的外虚线框 */
+  color: #000;
+  /* 去除默认的颜色和点击后变化的颜色 */
+}
+.item-user:hover {
+  transform: scale(1.02);
+}
+.item-header {
+  overflow: hidden;
+  display: flex;
+}
+.item-header img {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+}
+.item-name {
+  flex: 1;
+  margin-left: 20px;
+  height: 60px;
+  line-height: 60px;
+  font-weight: bold;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-experience {
+  position: absolute;
+  top: -20px;
+  font-size: 10px;
+  font-weight: 200;
+}
+.item-id {
+  position: absolute;
+  top: 20px;
+  font-size: 10px;
+  font-weight: 200;
+}
+.item-tag {
+  width: 150px;
+  font-size: 8px;
+  color: gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.item-tag span {
+  max-width: 75px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-info {
+  margin-top: 10px;
+  height: 30px;
+  line-height: 15px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-detail {
+  height: 20px;
+  font-size: 8px;
+  color: gray;
+}
 
+.user-card-content {
+  flex-wrap: wrap;
+  display: flex;
+  padding: 20px;
+}
 
 /*# sourceMappingURL=match.css.map */

@@ -1,2 +1,8 @@
-.match-wrapper{
+@import './UserCardItem.scss';
+.user-card{
+  &-content{
+    flex-wrap: wrap;
+    display: flex;
+    padding: 20px;
+  }
 }

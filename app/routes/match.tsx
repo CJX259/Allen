@@ -1,12 +1,12 @@
-import { ActionFunction, json, LinksFunction } from 'remix';
+import { json, LinksFunction, LoaderFunction } from 'remix';
 import React from 'react';
 import MatchIndex from '~/components/match';
 import { needLogined } from '~/utils/loginUtils';
 import { getSession } from '~/sessions';
-import { LoginKey } from '~/const';
+import { LoginKey, MATCH_COUNT } from '~/const';
 import { db } from '~/utils/db.server';
 import styles from '~/styles/css/match.css';
-import { MatchActionData, SessionUserData } from '~/types';
+import { MatchLoaderData, SessionUserData, UserJoinTag } from '~/types';
 import { Role, User } from '@prisma/client';
 import { calcAvgRating } from '~/server/comment';
 import { calcOrderCount } from '~/server/order';
@@ -17,7 +17,7 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   // 需要登录
   const redirect = await needLogined(request);
   if (redirect) {
@@ -48,18 +48,20 @@ export const action: ActionFunction = async ({ request }) => {
     sameTagUsers.push(...users);
   }
   // 再在同标签的供应商中，找出签约数量最多和好评率最高的
-  // const maxCountCompany = findMaxCountCompany(sameTagUsers.map((item) => item.id));
 
-  const maxCountUser = await findMaxCountUser(sameTagUsers);
-  const maxQualityUser = await findQualityUser(sameTagUsers);
+  const moreInfoUsers = await getRatingAndCountByUsers(sameTagUsers);
+  // 按订单数排序，拿前几个
+  const maxCountUser = moreInfoUsers.sort((a, b) => b.orderCount - a.orderCount).slice(0, MATCH_COUNT);
+  // 按评分高低排序，拿前几个
+  const maxQualityUser = moreInfoUsers.sort((a, b) => b.avgRating - a.avgRating).slice(0, MATCH_COUNT);
   return json({
     count: maxCountUser,
     quality: maxQualityUser,
-  } as MatchActionData);
+  } as MatchLoaderData);
 };
 
 // 匹配同类标签的用户（供应商则返回主播，主播则返回供应商）
-async function matchSameTagUser(tagId: number, curRole?: Role): Promise<User[]> {
+async function matchSameTagUser(tagId: number, curRole?: Role): Promise<UserJoinTag[]> {
   // 这里不能加take，因为没有字段可以用作order，需全量拉出来后再计算排序
   return db.user.findMany({
     where: {
@@ -71,6 +73,16 @@ async function matchSameTagUser(tagId: number, curRole?: Role): Promise<User[]> 
       role: curRole === Role.COMPANY ? Role.ANCHOR : Role.COMPANY,
     },
     include: {
+      tags: {
+        include: {
+          tag: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      },
       // 连接order表，用于计算签约数最多的用户
       author: {
         select: {
@@ -87,36 +99,23 @@ async function matchSameTagUser(tagId: number, curRole?: Role): Promise<User[]> 
 }
 
 // 找出这些id中，签约数最多的用户
-async function findMaxCountUser(users: User[]) {
+async function getRatingAndCountByUsers(users: User[]) {
   const res = [];
   for (let i = 0; i < users.length; i++) {
     const user = users[i];
     // 该用户的签约总数量
     const count = await calcOrderCount(user.id);
+    // 该用户的平均评分
+    const avgRating = await calcAvgRating(user.id);
     res[i] = {
       ...user,
       orderCount: count,
+      avgRating: avgRating || 0,
     };
   }
   // 针对orderCount字段排序，降序排序
   // 只拿前5个出来
-  return res.sort((a, b) => b.orderCount - a.orderCount).slice(0, 5);
-}
-
-// 找出这些id中，按好评评分均值高低筛选
-async function findQualityUser(users: User[]) {
-  const res = [];
-  // 找出对该用户的所有评论
-  for (let i = 0; i < users.length; i++) {
-    const user = users[i];
-    const avgRating = await calcAvgRating(user.id);
-    res[i] = {
-      ...user,
-      avgRating: avgRating || 0,
-    };
-  }
-  // 按照平均评分值，从高到低排序，后筛选出前5位用户
-  return res.sort((a, b) => b.avgRating - a.avgRating).slice(0, 5);
+  return res;
 }
 
 export default function Match() {

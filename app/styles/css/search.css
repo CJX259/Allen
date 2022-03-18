@@ -20,7 +20,7 @@
   /* 去除默认的颜色和点击后变化的颜色 */
 }
 .item-user:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 .item-header {
   overflow: hidden;

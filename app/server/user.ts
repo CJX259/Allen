@@ -143,7 +143,6 @@ export async function searchUser(searchKey: any, page: number, limit: number, st
  * @return {*}
  */
 export async function searchUserByTag(tagId: number, page: number, limit: number) {
-  console.log('tagId', tagId);
   const users = await db.user.findMany({
     where: {
       tags: {
