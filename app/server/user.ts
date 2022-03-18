@@ -10,7 +10,7 @@ import { calcOrderCount } from './order';
  *
  * @param {UserJoinTag[]} data
  */
-async function calcAvgRatingAndOrderCount(data: UserJoinTag[]) {
+export async function calcAvgRatingAndOrderCount(data: UserJoinTag[]) {
   // 每个数据设置
   for (let i = 0; i < data.length; i++) {
     const ele = data[i];
@@ -143,34 +143,42 @@ export async function searchUser(searchKey: any, page: number, limit: number, st
  * @return {*}
  */
 export async function searchUserByTag(tagId: number, page: number, limit: number) {
-  // 这里连接表时不能再嵌套where操作，导致只能将数据拿出来后再进行筛选，会导致每页实际渲染数据数不同
-  // 直接全量拿？
-  const data = await db.tagsOnUsers.findMany({
+  console.log('tagId', tagId);
+  const users = await db.user.findMany({
     where: {
-      tagId,
+      tags: {
+        some: {
+          tagId,
+        },
+      },
+      // 仅拿出已上架的
+      status: Status.RESOLVE,
     },
-    take: limit,
-    skip: (page - 1) * limit,
     include: {
-      user: {
+      tags: {
         include: {
-          tags: {
-            include: {
-              tag: {
-                select: {
-                  name: true,
-                  id: true,
-                },
-              },
+          tag: {
+            select: {
+              name: true,
+              id: true,
             },
           },
         },
       },
     },
+    take: limit,
+    skip: (page - 1) * limit,
   });
-  const total = await db.tagsOnUsers.count({
+  // 查出用户的平均评分与总签约数
+  await calcAvgRatingAndOrderCount(users);
+  const total = await db.user.count({
     where: {
-      tagId,
+      tags: {
+        every: {
+          tagId,
+        },
+      },
+      status: Status.RESOLVE,
     },
   });
   const tag = await db.tag.findUnique({
@@ -182,9 +190,7 @@ export async function searchUserByTag(tagId: number, page: number, limit: number
       id: true,
     },
   });
-  // 仅筛选出已上架的用户
-  const userData = data?.map((item) => item.user);
-  return { data: userData, total, tag };
+  return { data: users, total, tag };
 };
 
 
