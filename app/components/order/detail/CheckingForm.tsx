@@ -1,18 +1,17 @@
 import { Input, Radio } from 'antd';
 import React from 'react';
 import { ORDER_EXPRESS_PARAMS } from '~/const';
-import { OrderCheckingOpts, SessionUserData } from '~/types';
+import { OrderCheckingOpts } from '~/types';
 
 export default function CheckingForm(props: {
     disable: boolean;
     opts: OrderCheckingOpts;
-    setOpts: Function;
-    curUser: SessionUserData;
+    setOpts?: Function;
   }) {
   // 把数据传递到父级，父级调用api
   const { setOpts, opts, disable } = props;
   const handleChange = (key: string, value: string) => {
-    setOpts({
+    setOpts && setOpts({
       ...opts,
       [key]: value,
     });
@@ -20,7 +19,7 @@ export default function CheckingForm(props: {
   return (
     <div className='checking-form'>
       <div className="form-item">
-        <span className='label'>请选择快递公司: </span>
+        <span className='label'>{disable ? '本次选用的' : '请填写'}快递公司: </span>
         <Radio.Group
           disabled={disable}
           defaultValue={opts.expressType}
@@ -44,7 +43,7 @@ export default function CheckingForm(props: {
         </Radio.Group>
       </div>
       <div className="form-item">
-        <span className='label'>请输入快递单号: </span>
+        <span className='label'>{disable ? '本次' : '请填写'}快递单号: </span>
         <Input
           className='num-input'
           defaultValue={opts.expressNum}

@@ -49,7 +49,7 @@ export default function OrderDetail() {
       key: OrderStatus.CHECKING,
       tips: '请仔细检验货物质量',
       // 主播不能填写表单，所以如果当前角色为主播，则也禁止填写
-      content: <CheckingForm disable={pendding || curUser.role === Role.ANCHOR} opts={opts} setOpts={setOpts} curUser={curUser} />,
+      content: <CheckingForm disable={pendding || curUser.role === Role.ANCHOR} opts={opts} setOpts={setOpts} />,
     },
     {
       title: '直播中',
@@ -57,7 +57,6 @@ export default function OrderDetail() {
       tips: '请主播',
       content: <DoingForm
         setOpts={setOpts}
-        curUser={curUser}
         opts={opts}
         disable={pendding || curUser.role === Role.COMPANY} />,
     },

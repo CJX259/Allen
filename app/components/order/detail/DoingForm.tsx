@@ -1,12 +1,11 @@
 import { DatePicker, Input } from 'antd';
 import React from 'react';
-import { OrderDoingOpts, SessionUserData } from '~/types';
+import { OrderDoingOpts } from '~/types';
 import moment from 'moment';
 import { ORDER_LIVE_INFO, TIME_FORMAT } from '~/const';
 
 export default function DoingForm(props: {
-    setOpts: Function;
-    curUser: SessionUserData;
+    setOpts?: Function;
     opts: OrderDoingOpts;
     disable: boolean;
   }) {
@@ -20,7 +19,7 @@ export default function DoingForm(props: {
   };
 
   const handleChange = (key: string, value: string) => {
-    setOpts({
+    setOpts && setOpts({
       ...opts,
       [key]: value,
     });
@@ -28,7 +27,7 @@ export default function DoingForm(props: {
   return (
     <div className='doing-form'>
       <div className="form-item">
-        <span className="label">填写直播时间: </span>
+        <span className="label">{disable ? '本次' : '填写'}直播时间: </span>
         <DatePicker
           className='time-picker'
           showTime={{
@@ -40,7 +39,7 @@ export default function DoingForm(props: {
         />
       </div>
       <div className="form-item">
-        <span className="label">填写直播间地址: </span>
+        <span className="label">{disable ? '本次' : '填写'}填写直播间地址: </span>
         <Input
           onChange={(e) => handleChange(ORDER_LIVE_INFO.liveUrl, e.target.value)}
           className='url-input'

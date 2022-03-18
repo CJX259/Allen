@@ -1,14 +1,16 @@
 import { Input, Rate } from 'antd';
 import React from 'react';
 import { ORDER_COMMNET } from '~/const';
-import { OrderDoneOpts } from '~/types';
+import { OrderOpts } from '~/types';
+import CheckingForm from './CheckingForm';
+import DoingForm from './DoingForm';
 
 const desc = ['糟糕', '还行', '不错', '良好', '优秀'];
 
 export default function DoneForm(props:
   {
     setOpts: Function;
-    opts: OrderDoneOpts;
+    opts: OrderOpts;
     disable: boolean;
   }) {
   const { setOpts, opts, disable } = props;
@@ -20,6 +22,11 @@ export default function DoneForm(props:
   };
   return (
     <div className='done-form'>
+      <CheckingForm
+        disable={true}
+        opts={opts}
+      />
+      <DoingForm opts={opts} disable={true} />
       <div className="form-item">
         <span className="label">请给对方打分: </span>
         <Rate

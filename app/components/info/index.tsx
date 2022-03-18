@@ -64,6 +64,7 @@ export default function InfoIndex() {
           title="确定发起签约吗？"
           onConfirm={() => sendOrder(user.id, user.role, submit)}
           okText="确定"
+          disabled={user.role === loginRole || !loginRole}
           cancelText="取消"
         >
           <Button
