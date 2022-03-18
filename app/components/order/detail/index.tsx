@@ -30,8 +30,8 @@ export default function OrderDetail() {
     time: orderInfo?.time || '',
     liveUrl: orderInfo?.liveUrl || '',
     // 已完成
-    comment: orderInfo.userComment[0]?.comment || '',
-    rating: orderInfo.userComment[0]?.rating || null,
+    comment: orderInfo.userComment ? orderInfo.userComment[0].comment : '',
+    rating: orderInfo.userComment ? orderInfo.userComment[0].rating : null,
     // 是发起人，那么fromId就是发起人的id，否则就是接收人的id
     fromId: isAuthor(curUser.id, orderInfo.authorId) ? orderInfo.authorId : orderInfo.targetId,
     // 是发起人，那么toId就是接收人的id，否则就是发起人的id
