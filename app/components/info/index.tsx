@@ -209,7 +209,6 @@ export default function InfoIndex() {
           disabled={isVisitor}
           optionFilterProp="children"
         >
-          {/* 应该是全部tag才对 */}
           {allTags.map((item, index) => <Option key={item.id}>{item.name}</Option>)}
         </Select>
       ),

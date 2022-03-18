@@ -1,6 +1,23 @@
 import { Status, User } from '@prisma/client';
 import { UserJoinTag } from '~/types';
 import { db } from '~/utils/db.server';
+import { calcAvgRating } from './comment';
+import { calcOrderCount } from './order';
+
+
+/**
+ * 为传入的user数组每个元素都添加平均评分与总签约数字段
+ *
+ * @param {UserJoinTag[]} data
+ */
+async function calcAvgRatingAndOrderCount(data: UserJoinTag[]) {
+  // 每个数据设置
+  for (let i = 0; i < data.length; i++) {
+    const ele = data[i];
+    ele.avgRating = await calcAvgRating(ele.id);
+    ele.orderCount = await calcOrderCount(ele.id);
+  }
+}
 
 /**
  * key可以为id或name，id精确匹配，name模糊匹配，订单表的信息也返回，status状态筛选，不传则返回全部status
@@ -46,6 +63,7 @@ export async function searchUser(searchKey: any, page: number, limit: number, st
       take: limit,
       skip: (page - 1) * limit,
     });
+    await calcAvgRatingAndOrderCount(res.data);
     res.total = await db.user.count({
       where: {
         role: {
@@ -75,6 +93,7 @@ export async function searchUser(searchKey: any, page: number, limit: number, st
     });
     if (temp) {
       res.data = [temp];
+      await calcAvgRatingAndOrderCount(res.data);
       res.total = 1;
       return res;
     }
@@ -96,6 +115,7 @@ export async function searchUser(searchKey: any, page: number, limit: number, st
     take: limit,
     skip: (page - 1) * limit,
   });
+  await calcAvgRatingAndOrderCount(res.data);
   res.total = await db.user.count({
     where: {
       name: {

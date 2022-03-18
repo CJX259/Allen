@@ -20,6 +20,8 @@ export interface SearchLoaderData{
 
 export type UserJoinTag = {
   tags: Array<{userId: number; tagId: number; tag: { name: string }}>
+  avgRating?: number;
+  orderCount?: number;
 } & User;
 
 export interface ClassifyLoaderData{

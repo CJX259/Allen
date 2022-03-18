@@ -1,4 +1,4 @@
-import { Tag } from 'antd';
+import { Space, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { LEVEL_VAR } from '~/const';
 import Cos from 'cos-js-sdk-v5';
@@ -44,6 +44,12 @@ export default function UserCardItem(props: { data: UserJoinTag}) {
           </div>
         </div>
         <div className='item-info'>{data.introduce || '暂无简介'}</div>
+        <div className="item-detail">
+          <Space>
+            <div className="item-detail-comment">平均评分: {data.avgRating || '无'}</div>
+            <div className="item-detail-count">总签约数: {data.orderCount || '无'}</div>
+          </Space>
+        </div>
       </Link>
     </div>
   );

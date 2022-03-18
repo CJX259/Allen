@@ -7,7 +7,9 @@ import { LoginKey } from '~/const';
 import { db } from '~/utils/db.server';
 import styles from '~/styles/css/match.css';
 import { MatchActionData, SessionUserData } from '~/types';
-import { OrderStatus, Role, User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
+import { calcAvgRating } from '~/server/comment';
+import { calcOrderCount } from '~/server/order';
 
 export const links: LinksFunction = () => {
   return [
@@ -90,21 +92,7 @@ async function findMaxCountUser(users: User[]) {
   for (let i = 0; i < users.length; i++) {
     const user = users[i];
     // 该用户的签约总数量
-    const count = await db.order.count({
-      where: {
-        OR: [
-          {
-            authorId: user.id,
-          },
-          {
-            targetId: user.id,
-          },
-        ],
-        status: {
-          not: OrderStatus.REJECTED,
-        },
-      },
-    });
+    const count = await calcOrderCount(user.id);
     res[i] = {
       ...user,
       orderCount: count,
@@ -121,18 +109,7 @@ async function findQualityUser(users: User[]) {
   // 找出对该用户的所有评论
   for (let i = 0; i < users.length; i++) {
     const user = users[i];
-    const comment = await db.userComment.findMany({
-      where: {
-        toId: user.id,
-      },
-      select: {
-        rating: true,
-      },
-    });
-    const totalRating = comment.reduce((prev, cur) => {
-      return prev + cur.rating;
-    }, 0);
-    const avgRating = (totalRating / comment.length);
+    const avgRating = await calcAvgRating(user.id);
     res[i] = {
       ...user,
       avgRating: avgRating || 0,

@@ -29,6 +29,7 @@ export const loader: ActionFunction = async ({ request, params }) => {
     case SearchType.user: {
       // 默认只搜索已上架的
       const { data, total } = await searchUser(searchKey, page, pageSize, status as Status || Status.RESOLVE);
+      // 还要搜索该user的所有评论与订单数，得出平均评分与总签约数
       res.data = data;
       res.total = total;
       break;

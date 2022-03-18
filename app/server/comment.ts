@@ -32,3 +32,26 @@ export async function handleComment(id: number, opts: OrderOpts) {
     },
   });
 };
+
+
+/**
+ * 计算某个用户的平均评分
+ *
+ * @export
+ * @param {number} userId
+ * @return {*}
+ */
+export async function calcAvgRating(userId: number) {
+  const comment = await db.userComment.findMany({
+    where: {
+      toId: userId,
+    },
+    select: {
+      rating: true,
+    },
+  });
+  const totalRating = comment.reduce((prev, cur) => {
+    return prev + cur.rating;
+  }, 0);
+  return (totalRating / comment.length);
+};
