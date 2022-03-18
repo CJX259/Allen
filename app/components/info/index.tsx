@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { LOAD_STATE } from '~/const';
 import { ERROR, FormRenderInfo, InfoLoaderData } from '~/types';
-import { formatTags, sendOrder, validateRepeat } from '~/utils/client.index';
+import { formatFormData, formatTags, sendOrder, validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
 import BaseFormItem from '../register/BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from '../register/const';
@@ -48,8 +48,10 @@ export default function InfoIndex() {
   function onFinish(v: any) {
     // submit貌似传不了数组类型，用字符代替，服务端再解析如'1,2,3'
     v.tags = formatTags(v.tags);
-    console.log('v', v);
-    submit(v, {
+    // 防止传null与undefined（后台拿会变成字符'null'，难以处理。此处''不会被删掉）
+    const params = formatFormData(v);
+    console.log('params', params);
+    submit(params, {
       method: 'post',
     });
   }
