@@ -48,7 +48,6 @@ export const loader: LoaderFunction = async ({ request }) => {
     sameTagUsers.push(...users);
   }
   // 再在同标签的供应商中，找出签约数量最多和好评率最高的
-
   const moreInfoUsers = await getRatingAndCountByUsers(sameTagUsers);
   // 按订单数排序，拿前几个
   const maxCountUser = moreInfoUsers.sort((a, b) => b.orderCount - a.orderCount).slice(0, MATCH_COUNT);
@@ -66,7 +65,7 @@ async function matchSameTagUser(tagId: number, curRole?: Role): Promise<UserJoin
   return db.user.findMany({
     where: {
       tags: {
-        every: {
+        some: {
           tagId,
         },
       },

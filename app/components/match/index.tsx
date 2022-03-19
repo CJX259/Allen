@@ -10,7 +10,6 @@ export default function MatchIndex() {
   const transition = useTransition();
   const loaderData: MatchLoaderData | undefined = useLoaderData();
   const submit = useSubmit();
-  console.log('loaderData', loaderData);
   const { count, quality } = loaderData || {};
   function refresh() {
     submit({}, { method: 'get' });

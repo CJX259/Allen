@@ -22,9 +22,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const session = await getSession(request.headers.get('Cookie'));
   // const { id, role } = session.get(LoginKey) || {};
   const userId = params.userId;
-  if (!userId) {
+  const reg = /^\d+$/;
+  if (!userId || !reg.test(userId)) {
     return json(PARAMS_ERROR);
   }
+  console.log('userId', userId);
   const user = await searchUserById(+userId);
   const allTags = await getAllTags();
   const { avgRating, comments } = await getUserComment(+userId);

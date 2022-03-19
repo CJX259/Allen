@@ -20,17 +20,13 @@ export default function InfoIndex() {
   const {
     user,
     allTags,
-    loginUser: {
-      id: loginId = -1,
-      role: loginRole,
-    },
-    commentData: {
-      comments,
-      avgRating,
-    },
+    loginUser,
+    commentData,
   } = loaderData;
+  const { id: loginId = -1, role: loginRole } = loginUser || {};
+  const { comments, avgRating } = commentData || {};
   console.log('laoderData', loaderData);
-  let isVisitor = user.id !== loginId;
+  let isVisitor = user?.id !== loginId;
   // 上传图片组件传回的头像图片数据
   const [avatarimgUrl, setAvatarImgUrl] = useState('');
   const submit = useSubmit();
@@ -44,7 +40,7 @@ export default function InfoIndex() {
         setAvatarImgUrl(data.Url);
       });
     }
-    isVisitor = user.id !== loginId;
+    isVisitor = user?.id !== loginId;
   }, [loaderData]);
 
   // 显示出错信息
