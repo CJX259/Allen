@@ -1,5 +1,5 @@
 import { Role } from '@prisma/client';
-import { Button, Form, Input, InputNumber, message, Popconfirm, Select } from 'antd';
+import { Button, Form, Input, InputNumber, message, Popconfirm, Select, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { LOAD_STATE } from '~/const';
@@ -10,13 +10,26 @@ import BaseFormItem from '../register/BaseFormItem';
 import { FORM_COL, RULE_REQUIRED } from '../register/const';
 import RoleTag from '../RoleTag';
 import UploadImg from '../UploadImg';
+import CommentComp from './Comment';
 
 const { Option } = Select;
 
 export default function InfoIndex() {
   const actionData: ERROR & { id: number } | undefined = useActionData();
   const loaderData: InfoLoaderData= useLoaderData();
-  const { user, allTags, loginUser: { id: loginId = -1, role: loginRole } } = loaderData;
+  const {
+    user,
+    allTags,
+    loginUser: {
+      id: loginId = -1,
+      role: loginRole,
+    },
+    commentData: {
+      comments,
+      avgRating,
+    },
+  } = loaderData;
+  console.log('laoderData', loaderData);
   let isVisitor = user.id !== loginId;
   // 上传图片组件传回的头像图片数据
   const [avatarimgUrl, setAvatarImgUrl] = useState('');
@@ -247,23 +260,26 @@ export default function InfoIndex() {
   ];
   return (
     <div className="info-wrapper">
-      <Form
-        form={form}
-        onFinish={onFinish}
-        className='form-content'
-        labelCol={{ span: FORM_COL.label }}
-        wrapperCol={{ span: FORM_COL.wrapper }}
-      >
-        <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
-          <h2>个人信息表</h2>
-        </Form.Item>
-        <Form.Item style={{ display: 'none'}} initialValue={user.id} name='id'>
-        </Form.Item>
-        <BaseFormItem data={user} infos={infoRenderInfo} isAnchor={user.role === Role.ANCHOR} />
-        <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
-          {renderButton()}
-        </Form.Item>
-      </Form>
+      <div className="form-content">
+        <Form
+          form={form}
+          onFinish={onFinish}
+          labelCol={{ span: FORM_COL.label }}
+          wrapperCol={{ span: FORM_COL.wrapper }}
+        >
+          <h2>用户信息</h2>
+          <Form.Item style={{ display: 'none'}} initialValue={user.id} name='id'>
+          </Form.Item>
+          <BaseFormItem data={user} infos={infoRenderInfo} isAnchor={user.role === Role.ANCHOR} />
+          <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
+            {renderButton()}
+          </Form.Item>
+        </Form>
+      </div>
+      <div className="comment-content">
+        <h2>用户评价 <Tag color="green">平均评分: {avgRating}</Tag></h2>
+        <CommentComp data={comments} />
+      </div>
     </div>
   );
 }

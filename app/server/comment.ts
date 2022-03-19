@@ -55,3 +55,32 @@ export async function calcAvgRating(userId: number) {
   }, 0);
   return (totalRating / comment.length);
 };
+
+
+/**
+ * 获得用户的评论数据和平均评分
+ *
+ * @export
+ * @param {number} userId
+ * @return {*}
+ */
+export async function getUserComment(userId: number) {
+  const comments = await db.userComment.findMany({
+    where: {
+      toId: userId,
+    },
+    include: {
+      from: {
+        select: {
+          name: true,
+          avatarKey: true,
+        },
+      },
+    },
+  });
+  const avgRating = await calcAvgRating(userId);
+  return {
+    comments,
+    avgRating,
+  };
+};

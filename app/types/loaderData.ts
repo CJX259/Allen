@@ -1,4 +1,4 @@
-import { Goods, Status, User, Order, Role } from '@prisma/client';
+import { Goods, Status, User, Order, Role, UserComment } from '@prisma/client';
 import { SearchType, SessionUserData } from '.';
 // import { MenuData } from './menu';
 
@@ -82,4 +82,16 @@ export interface InfoLoaderData{
   user: UserJoinTag;
   loginUser: { id: number; role: Role };
   allTags: { name: string; id: number; }[];
+  commentData: {
+    // 外接user表
+    comments: CommentJoinUser[];
+    avgRating: number;
+  }
 };
+
+export type CommentJoinUser = {
+  from: {
+      name: string;
+      avatarKey: string | null;
+  };
+} & UserComment;

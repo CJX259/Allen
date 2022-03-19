@@ -1,16 +1,21 @@
 import md5 from 'md5';
 import React from 'react';
-import { ActionFunction, json, LoaderFunction } from 'remix';
+import { ActionFunction, json, LinksFunction, LoaderFunction } from 'remix';
 import InfoIndex from '~/components/info/index';
 import { LoginKey, updateUserKeys, userUnRequireKeys } from '~/const';
 import { DB_ERROR, PARAMS_ERROR } from '~/error';
+import { getUserComment } from '~/server/comment';
 import { getAllTags, userConnectTag } from '~/server/tag';
 import { searchUserById } from '~/server/user';
 import { getSession } from '~/sessions';
 import { InfoLoaderData } from '~/types';
 import { db } from '~/utils/db.server';
 import { getFromDatas, validateFormDatas } from '~/utils/server.index';
+import styles from '~/styles/css/info.css';
 
+export const links: LinksFunction = () => {
+  return [{ rel: 'stylesheet', href: styles }];
+};
 
 // 处理查询页的搜索请求，返回数据列表
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -22,7 +27,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
   const user = await searchUserById(+userId);
   const allTags = await getAllTags();
-  return { user, loginUser: session.get(LoginKey) || {}, allTags } as InfoLoaderData;
+  const { avgRating, comments } = await getUserComment(+userId);
+  return {
+    user,
+    loginUser: session.get(LoginKey) || {},
+    allTags,
+    commentData: {
+      comments,
+      avgRating,
+    },
+  } as InfoLoaderData;
 };
 
 // 更新用户数据
