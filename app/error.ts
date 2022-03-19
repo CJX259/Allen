@@ -39,3 +39,8 @@ export const NO_PERMISSION: ERROR = {
   retcode: 10008,
   msg: '账号没有权限',
 };
+
+export const PASSWORD_ERROR: ERROR = {
+  retcode: 10009,
+  msg: '密码校验错误',
+};

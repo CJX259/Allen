@@ -24,6 +24,12 @@ export default function MenuCmp(props: { data: RootLoaderData }) {
           prefetch='intent'
         >主页</Link>
       </Menu.Item>
+      <Menu.Item key='/editPassword'>
+        <Link
+          to='/editPassword'
+          prefetch='intent'
+        >修改密码</Link>
+      </Menu.Item>
       {renderMenu(renderMenuList)}
     </Menu>
   );

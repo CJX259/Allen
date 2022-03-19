@@ -13,7 +13,6 @@ export default function CommentComp(props: { data: CommentJoinUser[]}) {
       if (item.from.avatarKey) {
         getImgUrl(item.from.avatarKey, (result) => {
           item.from.avatarKey = result.Url;
-          console.log('item.from.avatarKey', item.from.avatarKey);
         });
       }
     });
