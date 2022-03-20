@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Input, InputNumber, Form, Typography, Space, message, Spin, Popconfirm } from 'antd';
+import { Table, Input, InputNumber, Form, Typography, Space, message, Spin, Popconfirm, Button, Modal } from 'antd';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { ERROR, SUCCESS, TagManagerLoader } from '~/types';
 import { Tag } from '@prisma/client';
@@ -41,17 +41,21 @@ export default function TagManagerComp() {
   const [form] = Form.useForm();
   // 修改的行key，这里用key而不用id是因为string是方便初始化，以及后续submit也只能传string(key与id值相同，只是key为string，id为number，table必须要我有key，加rowKey也不管用)
   const [editingKey, setEditingKey] = useState<string>('');
-
+  const [createVisible, setCreateVisible] = useState(false);
+  const [createData, setCreateData] = useState<{name?: string}>({});
   const isEditing = (record: { key: string; }) => record.key === editingKey;
 
   useEffect(() => {
     if (actionData?.msg) {
       message.error(actionData.msg);
+      return;
     } else if (actionData?.success) {
       message.success('操作成功');
     }
     if (transition.type === 'actionReload') {
       setEditingKey('');
+      setCreateVisible(false);
+      setCreateData({});
     }
   }, [actionData]);
 
@@ -85,6 +89,15 @@ export default function TagManagerComp() {
       console.log('Validate Failed:', errInfo);
       message.error('参数校验错误');
     }
+  };
+
+  const create = async () => {
+    if (!createData.name) {
+      message.error('参数校验错误');
+      return;
+    }
+    console.log('createData', createData);
+    submit({ ...createData }, { method: 'put' });
   };
 
   const columns = [
@@ -155,6 +168,7 @@ export default function TagManagerComp() {
   });
   return (
     <Spin spinning={transition.state !== 'idle'}>
+      <Button type='primary' onClick={() => setCreateVisible(true)}>新增标签</Button>
       <Form form={form} component={false}>
         <Table
           components={{
@@ -163,6 +177,7 @@ export default function TagManagerComp() {
             },
           }}
           bordered
+          style={{ marginTop: 20 }}
           dataSource={data}
           columns={mergedColumns}
           rowClassName="editable-row"
@@ -172,6 +187,20 @@ export default function TagManagerComp() {
           }}
         />
       </Form>
+      <Modal
+        onCancel={() => setCreateVisible(false)}
+        onOk={create}
+        title='新增标签'
+        visible={createVisible}
+        okText='新增'
+        cancelText='取消'
+      >
+        <Space>
+          <label htmlFor="name">标签名:</label>
+          {/* 后续属性多了可以抽成一个组件 */}
+          <Input value={createData.name} onChange={(e) => setCreateData({ name: e.target.value })} />
+        </Space>
+      </Modal>
     </Spin>
   );
 };

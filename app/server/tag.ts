@@ -1,5 +1,14 @@
 import { db } from '~/utils/db.server';
 
+export async function createTag(data: { name: string }) {
+  const { name } = data;
+  return db.tag.create({
+    data: {
+      name,
+    },
+  });
+};
+
 /**
  * 删除单个标签
  *
