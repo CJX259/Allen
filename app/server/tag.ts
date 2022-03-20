@@ -1,5 +1,23 @@
 import { db } from '~/utils/db.server';
 
+/**
+ * 更新单个tag
+ *
+ * @export
+ * @param {number} id
+ * @param {string} name
+ * @return {*}
+ */
+export async function updateTag(id: number, name: string) {
+  return db.tag.update({
+    where: {
+      id,
+    },
+    data: {
+      name,
+    },
+  });
+}
 
 /**
  * 一次获取所有标签，懒得分页了

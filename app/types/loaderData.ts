@@ -1,4 +1,4 @@
-import { Goods, Status, User, Order, Role, UserComment } from '@prisma/client';
+import { Goods, Status, User, Order, Role, UserComment, Tag } from '@prisma/client';
 import { SearchType, SessionUserData } from '.';
 // import { MenuData } from './menu';
 
@@ -95,3 +95,7 @@ export type CommentJoinUser = {
       avatarKey: string | null;
   };
 } & UserComment;
+
+export interface TagManagerLoader{
+  data: ({ key: string; } & Tag)[];
+};

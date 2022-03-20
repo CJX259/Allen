@@ -5,7 +5,7 @@ import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { SearchOutlined } from '@ant-design/icons';
 import { AuditUserLoaderData, ERROR } from '~/types';
 import { ColumnsType } from 'antd/lib/table';
-import { AUDIT_STATUS_MAP, ROLE_MAP, USER_PAGESIZE } from '~/const';
+import { AUDIT_STATUS_MAP, USER_PAGESIZE } from '~/const';
 import { formatFormData } from '~/utils/client.index';
 import InfoModalContent from './InfoModalContent';
 import RejectModalContent from './RejectModalContent';
@@ -196,6 +196,7 @@ export default function AuditUserComp() {
               current: page,
               pageSize: USER_PAGESIZE,
               onChange: sendSearch,
+              showSizeChanger: false,
             }}
             dataSource={data as any}
           />

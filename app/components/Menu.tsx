@@ -42,10 +42,6 @@ function calcMenuList(role: Role | undefined): MenuData[] {
       subTitle: '查询系统',
       children: [
         {
-          title: '商品查询',
-          to: '/search/goods',
-        },
-        {
           title: '用户查询',
           to: '/search/user',
         },
@@ -65,8 +61,8 @@ function calcMenuList(role: Role | undefined): MenuData[] {
           to: '/auditUser',
         },
         {
-          title: '商品审核',
-          to: '/auditGoods',
+          title: '标签管理',
+          to: '/tagManager',
         },
       ],
     });
