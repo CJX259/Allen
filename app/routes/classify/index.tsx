@@ -1,6 +1,6 @@
 import { LoaderFunction, useLoaderData, useTransition } from 'remix';
 import React from 'react';
-import ClassifyCard from '~/components/classify/classifyCard';
+import ClassifyCard from '~/components/classify/ClassifyCard';
 import { getAllTags } from '~/server/tag';
 import { Space, Spin } from 'antd';
 
