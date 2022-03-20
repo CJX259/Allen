@@ -2,8 +2,8 @@ import React from 'react';
 import { ActionFunction, json, LoaderFunction } from 'remix';
 import TagManagerComp from '~/components/tagManager';
 import { DB_ERROR, PARAMS_ERROR } from '~/error';
-import { updateTag } from '~/server/tag';
-import { TagManagerLoader } from '~/types';
+import { deleteTag, updateTag } from '~/server/tag';
+import { SUCCESS, TagManagerLoader } from '~/types';
 import { db } from '~/utils/db.server';
 import { needLogined } from '~/utils/loginUtils';
 
@@ -34,27 +34,25 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const id = formData.get('id');
   const name = formData.get('name');
-  console.log('id, name', id, name);
   const reg = /^\d+$/;
-  if (id === null || name === null || !reg.test(id as string)) {
+  if (id === null || !reg.test(id as string)) {
     return json(PARAMS_ERROR);
   }
   const method = request.method;
+  let res;
   try {
     switch (method) {
       case 'POST': {
-        await updateTag(+id, name as string);
+        res = await handleUpdate(+id, name?.toString());
         break;
+      }
+      case 'DELETE': {
+        res = await handleDelete(+id);
       }
       default:
         break;
     }
-    await new Promise((res) => {
-      setTimeout(() => {
-        res(1);
-      }, 1000);
-    });
-    return json({ success: true });
+    return json({ success: true, data: res } as SUCCESS);
   } catch (error) {
     return json(DB_ERROR);
   }
@@ -62,4 +60,15 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function TagManager() {
   return <TagManagerComp />;
+};
+
+async function handleUpdate(id: number, name?: string) {
+  if (name === null) {
+    return json(PARAMS_ERROR);
+  }
+  await updateTag(+id, name as string);
+};
+
+async function handleDelete(id: number) {
+  return await deleteTag(id);
 };

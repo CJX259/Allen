@@ -18,7 +18,7 @@ function EditableCell(params: { inputType: any; editing: any; dataIndex: any; ti
           rules={[
             {
               required: true,
-              message: `Please Input ${title}!`,
+              message: `${title}不能为空!`,
             },
           ]}
         >
@@ -61,8 +61,9 @@ export default function TagManagerComp() {
     });
     setEditingKey(record.key);
   };
-  const delTag = (record: { key: React.SetStateAction<string>; }) => {
-    console.log('delete');
+  const delTag = (record: { key: string; }) => {
+    // key是string版的id
+    submit({ id: record.key }, { method: 'delete' });
   };
 
   const cancel = () => {

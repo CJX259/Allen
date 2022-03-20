@@ -1,6 +1,28 @@
 import { db } from '~/utils/db.server';
 
 /**
+ * 删除单个标签
+ *
+ * @export
+ * @param {number} id
+ * @return {*}
+ */
+export async function deleteTag(id: number) {
+  // 先删除改标签的map表中记录
+  await db.tagsOnUsers.deleteMany({
+    where: {
+      tagId: id,
+    },
+  });
+  // 再删除标签本身
+  return db.tag.delete({
+    where: {
+      id,
+    },
+  });
+}
+
+/**
  * 更新单个tag
  *
  * @export
