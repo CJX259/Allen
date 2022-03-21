@@ -4,6 +4,7 @@ import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { ERROR, SUCCESS, TagManagerLoader } from '~/types';
 import { Tag } from '@prisma/client';
 import { USER_PAGESIZE } from '~/const';
+import SearchInput from '~/components/SearchInput';
 
 function EditableCell(params: { inputType: any; editing: any; dataIndex: any; title: any; children: any; }) {
   const { inputType, editing, dataIndex, title, children } = params;
@@ -36,7 +37,7 @@ export default function TagManagerComp() {
   const submit = useSubmit();
   const actionData: ERROR & SUCCESS | undefined = useActionData();
   const loaderData: TagManagerLoader = useLoaderData();
-  const { data = [], page, total } = loaderData || {};
+  const { data = [], page, total, searchKey } = loaderData || {};
   const transition = useTransition();
   console.log('loaderData', loaderData);
   const [form] = Form.useForm();
@@ -44,6 +45,8 @@ export default function TagManagerComp() {
   const [editingKey, setEditingKey] = useState<string>('');
   const [createVisible, setCreateVisible] = useState(false);
   const [createData, setCreateData] = useState<{name?: string}>({});
+  // key是前端维护的搜索key，searchKey是服务端返回的，可用作初始化
+  const [key, setSearchKey] = useState(searchKey || '');
   const isEditing = (record: { key: string; }) => record.key === editingKey;
 
   useEffect(() => {
@@ -102,7 +105,7 @@ export default function TagManagerComp() {
   };
 
   const changePage = (page: number, pageSize: number) => {
-    submit({ page: page.toString() }, { method: 'get' });
+    submit({ page: page.toString(), key }, { method: 'get' });
   };
 
   const columns = [
@@ -176,7 +179,8 @@ export default function TagManagerComp() {
   });
   return (
     <Spin spinning={transition.state !== 'idle'}>
-      <Button type='primary' onClick={() => setCreateVisible(true)}>新增标签</Button>
+      <Button type='primary' className="add-btn" onClick={() => setCreateVisible(true)}>新增标签</Button>
+      <SearchInput defaultKey={key} sendSearch={() => changePage(1, USER_PAGESIZE)} setSearchKey={setSearchKey} />
       <Form form={form} component={false}>
         <Table
           components={{
@@ -189,6 +193,7 @@ export default function TagManagerComp() {
           dataSource={data}
           columns={mergedColumns}
           rowClassName="editable-row"
+          size='small'
           pagination={{
             showSizeChanger: false,
             current: +page || 1,

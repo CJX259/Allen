@@ -100,4 +100,5 @@ export interface TagManagerLoader{
   data: ({ key: string; } & Tag)[];
   page: string;
   total: number;
+  searchKey: string;
 };

@@ -1,11 +1,18 @@
 import React from 'react';
-import { ActionFunction, json, LoaderFunction } from 'remix';
+import { ActionFunction, json, LinksFunction, LoaderFunction } from 'remix';
 import TagManagerComp from '~/components/tagManager';
 import { USER_PAGESIZE } from '~/const';
 import { DB_ERROR, PARAMS_ERROR } from '~/error';
 import { createTag, deleteTag, getTagsByPage, updateTag } from '~/server/tag';
 import { SUCCESS, TagManagerLoader } from '~/types';
 import { needLogined } from '~/utils/loginUtils';
+import styles from '~/styles/css/tagManager.css';
+
+export const links: LinksFunction = () => {
+  return [
+    { rel: 'stylesheet', href: styles},
+  ];
+};
 
 export const loader: LoaderFunction = async ({request}) => {
   const redirect = await needLogined(request, ['ADMIN']);

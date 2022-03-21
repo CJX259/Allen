@@ -1,36 +1,35 @@
 import React, { useState } from 'react';
-import { Spin, Pagination, Input, Button } from 'antd';
-import { SubmitFunction, useLoaderData, useSubmit, useTransition } from 'remix';
-import { SearchOutlined } from '@ant-design/icons';
+import { Spin, Pagination } from 'antd';
+import { useLoaderData, useSubmit, useTransition } from 'remix';
 import { SearchLoaderData, SearchType, UserJoinTag } from '~/types';
 import GoodsCardItem from './GoodsCardItem';
 import { Goods } from '@prisma/client';
 import UserCardItem from '../UserCardItem';
 import { USER_PAGESIZE } from '~/const';
+import SearchInput from '../SearchInput';
 
 export default function SearchComp() {
   const loaderData: SearchLoaderData = useLoaderData();
   const { searchKey, data, searchType, page, total } = loaderData;
+  // key是前端维护的搜索key，searchKey是服务端返回的，可用作初始化
   const [key, setSearchKey] = useState(searchKey || '');
   const submit = useSubmit();
   const transition = useTransition();
+  function sendSearch(page: number) {
+    // 重置分页器
+    const params = {
+      searchKey: key || '',
+      page: page.toString(),
+    };
+    submit(params, {
+      method: 'get',
+    });
+  };
   return (
     <div className='search-wrapper'>
       <Spin spinning={transition.state !== 'idle'}>
         {/* 搜索框区域 */}
-        <div className='search-input'>
-          <Input
-            value={key}
-            placeholder='可通过id与昵称搜索'
-            onKeyPress={(e) => e.key === 'Enter' && sendSearch(key, submit) }
-            onChange={(e) => setSearchKey(e.target.value)}
-          />
-          <Button
-            type='primary'
-            onClick={() => sendSearch(key, submit)}
-            icon={<SearchOutlined />}
-          >搜索</Button>
-        </div>
+        <SearchInput defaultKey={key} sendSearch={() => sendSearch(1)} setSearchKey={setSearchKey} />
         {/* 搜索结果展示区 */}
         <div className="search-content">
           {data?.map((item) => searchType === SearchType.goods ?
@@ -43,7 +42,7 @@ export default function SearchComp() {
             current={page}
             total={total || 0}
             disabled={!data?.length}
-            onChange={(page) => sendSearch(searchKey || '', submit, page)}
+            onChange={(page) => sendSearch(page)}
             pageSize={USER_PAGESIZE}
           />
         </div>
@@ -60,18 +59,3 @@ export default function SearchComp() {
  * @param {number} [page]
  * @param {number} [pageSize]
  */
-function sendSearch(searchKey: string, submit: SubmitFunction, page?: number, pageSize?: number) {
-  // 重置分页器
-  const params = {
-    searchKey,
-  } as any;
-  if (page) {
-    params.page = page;
-  };
-  if (pageSize) {
-    params.pageSize = pageSize;
-  };
-  submit(params, {
-    method: 'get',
-  });
-};
