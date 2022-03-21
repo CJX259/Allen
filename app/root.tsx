@@ -19,13 +19,16 @@ import { RootLoaderData } from './types/loaderData';
 import { db } from './utils/db.server';
 
 export const meta: MetaFunction = () => {
-  return { title: 'ALLEN 电商直播配对平台' };
+  return {
+    title: 'ALLEN 电商直播配对平台',
+  };
 };
 
 export const links: LinksFunction = () => {
   return [
     { rel: 'stylesheet', href: antdStyle },
     { rel: 'stylesheet', href: rootStyles },
+    { rel: 'shortcut icon', href: '/assets/images/logo.svg'},
   ];
 };
 
