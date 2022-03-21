@@ -48,7 +48,7 @@ export const LOAD_TYPE = {
 // 升级所需经验值
 export const LEVEL_VAR = 2;
 
-export const USER_PAGESIZE = 1;
+export const USER_PAGESIZE = 6;
 
 export const AUDIT_STATUS_MAP = {
   [Status.ALL]: '全部',
@@ -88,7 +88,7 @@ export const ORDER_STATUS_SEQUENCE = {
 export const ORDER_STATUS_MAP = {
   [OrderStatus.CONTRACTING]: {
     text: '签约中',
-    explain: '请双方私下沟通好合同事宜, 完成签约（供应商可对主播带货能力进行测试, 确认无误后进入下一步）',
+    explain: '请双方私下沟通好合同事宜, 完成签约（供应商可对主播带货能力及专业能力进行测试, 确认无误后进入下一步）',
   },
   [OrderStatus.CHECKING]: {
     text: '检验中',
@@ -96,7 +96,7 @@ export const ORDER_STATUS_MAP = {
   },
   [OrderStatus.DOING]: {
     text: '完成中',
-    explain: '主播开始直播——直播结束7天内, 一直保持此状态。7天后, 供应商确认销售额达到合同目标后即可进入下一步',
+    explain: '主播开始直播, 直到供应商确认销售额达到合同目标后即可进入下一步',
   },
   [OrderStatus.DONE]: {
     text: '已完成',
