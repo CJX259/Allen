@@ -3,22 +3,49 @@ import { db } from '~/utils/db.server';
 
 
 /**
- * 分页获取标签数据
+ * 分页获取标签
  *
  * @export
+ * @param {string} searchKey
  * @param {number} page
- * @param {number} pageSize
+ * @param {number} [pageSize]
  * @return {*}
  */
-export async function getTagsByPage(page: number, pageSize?: number) {
+export async function getTagsByPage(searchKey: string, page: number, pageSize?: number) {
+  console.log('searchKey', searchKey);
   if (!pageSize) {
     pageSize = USER_PAGESIZE;
   }
   const data = await db.tag.findMany({
+    where: {
+      OR: [
+        {
+          id: +searchKey,
+        },
+        {
+          name: {
+            contains: searchKey,
+          },
+        },
+      ],
+    },
     take: pageSize,
     skip: (page - 1) * pageSize,
   });
-  const total = await db.tag.count({});
+  const total = await db.tag.count({
+    where: {
+      OR: [
+        {
+          id: +searchKey,
+        },
+        {
+          name: {
+            contains: searchKey,
+          },
+        },
+      ],
+    },
+  });
   return {
     data,
     total,

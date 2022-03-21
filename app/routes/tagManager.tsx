@@ -21,8 +21,10 @@ export const loader: LoaderFunction = async ({request}) => {
   }
   const searchParams = new URL(request.url).searchParams;
   const page = searchParams.get('page') || '1';
+  const searchKey = searchParams.get('searchKey') || '';
+
   // 分页拉标签
-  const { data, total } = await getTagsByPage(+page, USER_PAGESIZE);
+  const { data, total } = await getTagsByPage(searchKey, +page, USER_PAGESIZE);
   // 增加key属性
   const keyTags = data.map((item) => {
     return {

@@ -105,7 +105,7 @@ export default function TagManagerComp() {
   };
 
   const changePage = (page: number, pageSize: number) => {
-    submit({ page: page.toString(), key }, { method: 'get' });
+    submit({ page: page.toString(), searchKey: key }, { method: 'get' });
   };
 
   const columns = [
