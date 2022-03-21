@@ -71,14 +71,14 @@ export default function InfoIndex() {
       return (
         <Popconfirm
           title="确定发起签约吗？"
-          onConfirm={() => sendOrder(user.id, user.role, submit)}
+          onConfirm={() => sendOrder(user?.id, user?.role, submit)}
           okText="确定"
-          disabled={user.role === loginRole || !loginRole}
+          disabled={user?.role === loginRole || !loginRole}
           cancelText="取消"
         >
           <Button
             type='primary'
-            disabled={user.role === loginRole || !loginRole}
+            disabled={user?.role === loginRole || !loginRole}
           >
             发起签约
           </Button>
@@ -211,7 +211,7 @@ export default function InfoIndex() {
       label: {
         all: '标签类别',
       },
-      initialValue: (data) => data?.tags.map((item) => '' + item.tagId),
+      initialValue: (data) => data?.tags?.map((item) => '' + item.tagId),
       render: (data) => (
         <Select
           mode="multiple"
@@ -219,7 +219,7 @@ export default function InfoIndex() {
           disabled={isVisitor}
           optionFilterProp="children"
         >
-          {allTags.map((item, index) => <Option key={item.id}>{item.name}</Option>)}
+          {allTags?.map((item, index) => <Option key={item.id}>{item.name}</Option>)}
         </Select>
       ),
     },
@@ -264,16 +264,16 @@ export default function InfoIndex() {
           wrapperCol={{ span: FORM_COL.wrapper }}
         >
           <h2>用户信息</h2>
-          <Form.Item style={{ display: 'none'}} initialValue={user.id} name='id'>
+          <Form.Item style={{ display: 'none'}} initialValue={user?.id} name='id'>
           </Form.Item>
-          <BaseFormItem data={user} infos={infoRenderInfo} isAnchor={user.role === Role.ANCHOR} />
+          <BaseFormItem data={user} infos={infoRenderInfo} isAnchor={user?.role === Role.ANCHOR} />
           <Form.Item wrapperCol={{ offset: FORM_COL.label, span: FORM_COL.wrapper }}>
             {renderButton()}
           </Form.Item>
         </Form>
       </div>
       <div className="comment-content">
-        <h2>用户评价 <Tag color="green">平均评分: {avgRating}</Tag></h2>
+        <h2>用户评价 <Tag color="green">平均评分: {avgRating?.toFixed(1)}</Tag></h2>
         <CommentComp data={comments} />
       </div>
     </div>

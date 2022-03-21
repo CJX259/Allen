@@ -88,28 +88,23 @@ export const ORDER_STATUS_SEQUENCE = {
 export const ORDER_STATUS_MAP = {
   [OrderStatus.CONTRACTING]: {
     text: '签约中',
-    explain: '请双方私下沟通好合同事宜，完成签约（供应商可对主播带货能力进行测试，确认无误后进入下一步）',
+    explain: '请双方私下沟通好合同事宜, 完成签约（供应商可对主播带货能力进行测试, 确认无误后进入下一步）',
   },
-  // [OrderStatus.CONTRACTED]:{
-  //   text: '已签约',
-  //   explain: ''
-  // },
   [OrderStatus.CHECKING]: {
     text: '检验中',
-    explain: '请 供应商 发货给 主播、平台 检验，待双方确认完货物质量后，进入下一步。平台收件地址xxxx，主播地址请联系主播确认。（注: 若直播时售出货物质量与检验的货物质量不符，后果仅由供应商承担）',
+    explain: '请 供应商 发货给 主播、平台 进行质量检验, 待双方确认完货物质量后, 进入下一步。平台收件地址xxxx, 主播地址请联系主播确认。（注: 若直播时售出货物质量与检验的货物质量不符, 后果仅由供应商承担）',
   },
-  // [OrderStatus.CHECKED]: '已检验',
   [OrderStatus.DOING]: {
     text: '完成中',
-    explain: '主播开始直播——直播结束7天内，一直保持此状态。7天后，供应商需提交7天内的总成交额（需减去退货单），达到合同目标后即可进入下一步',
+    explain: '主播开始直播——直播结束7天内, 一直保持此状态。7天后, 供应商确认销售额达到合同目标后即可进入下一步',
   },
   [OrderStatus.DONE]: {
     text: '已完成',
-    explain: '双方已完成本次签约任务，已结算经验，可给对方评价',
+    explain: '双方已完成本次签约任务, 已结算经验, 可给对方评价',
   },
   [OrderStatus.REJECTING]: {
     text: '取消中',
-    explain: '订单取消，若签约完成则需要双方同意',
+    explain: '订单取消, 若签约完成则需要双方同意',
   },
   [OrderStatus.REJECTED]: {
     text: '已取消',

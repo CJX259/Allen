@@ -19,6 +19,10 @@ export default function HistoryComp() {
   // 表格列
   const columns: ColumnsType<any> = [
     {
+      title: '订单ID',
+      dataIndex: 'id',
+    },
+    {
       title: '发起人',
       dataIndex: ['author', 'name'],
       render: (v, record: OrderJoinUserAndComment) => <>

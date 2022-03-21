@@ -21,7 +21,7 @@ export default function CommentComp(props: { data: CommentJoinUser[]}) {
     <div className='comment-wrapper'>
       <List
         className="comment-list"
-        header={`${data.length} replies`}
+        header={`${data?.length} replies`}
         itemLayout="horizontal"
         dataSource={data}
         renderItem={(item) => (

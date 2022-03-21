@@ -7,7 +7,7 @@ import { infoRenderInfo } from '~/const';
 import { getImgUrl } from '~/utils/cos';
 
 const FORM_COL = {
-  label: 6,
+  label: 8,
   wrapper: 10,
 };
 

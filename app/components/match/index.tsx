@@ -22,11 +22,13 @@ export default function MatchIndex() {
           <TabPane tab="签约数最高用户" key="1">
             <div className="user-card-content">
               {count?.map((item) => <UserCardItem key={`count_${item.id}`} data={item} />)}
+              {!count?.length && <h2>暂无同类标签用户数据</h2>}
             </div>
           </TabPane>
           <TabPane tab="评分最高用户" key="2">
             <div className="user-card-content">
               {quality?.map((item) => <UserCardItem key={`quality_${item.id}`} data={item} />)}
+              {!quality?.length && <h2>暂无同类标签用户数据</h2>}
             </div>
           </TabPane>
         </Tabs>

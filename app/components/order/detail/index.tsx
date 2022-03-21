@@ -3,6 +3,7 @@ import { Button, message, Popconfirm, Steps } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useLoaderData, useSubmit } from 'remix';
+import { ORDER_STATUS_MAP } from '~/const';
 import { ERROR, OrderDetailLoaderData, OrderOpts, SUCCESS } from '~/types';
 import { isAuthor, isPendding } from '~/utils/client.index';
 import CheckingForm from './CheckingForm';
@@ -30,8 +31,8 @@ export default function OrderDetail() {
     time: orderInfo?.time || '',
     liveUrl: orderInfo?.liveUrl || '',
     // 已完成
-    comment: orderInfo.userComment ? orderInfo.userComment[0].comment : '',
-    rating: orderInfo.userComment ? orderInfo.userComment[0].rating : null,
+    comment: orderInfo.userComment ? orderInfo.userComment[0]?.comment : '',
+    rating: orderInfo.userComment ? orderInfo.userComment[0]?.rating : null,
     // 是发起人，那么fromId就是发起人的id，否则就是接收人的id
     fromId: isAuthor(curUser.id, orderInfo.authorId) ? orderInfo.authorId : orderInfo.targetId,
     // 是发起人，那么toId就是接收人的id，否则就是发起人的id
@@ -114,7 +115,10 @@ export default function OrderDetail() {
           <Step key={item.title} title={item.title} />
         ))}
       </Steps>
-      <div className="steps-content">{steps[current].content}</div>
+      <div className="steps-content">
+        <p className='tips'>{ORDER_STATUS_MAP[steps[current].key].explain}</p>
+        {steps[current].content}
+      </div>
       <div className="steps-action">
         {current < steps.length - 1 && (
           <Popconfirm
