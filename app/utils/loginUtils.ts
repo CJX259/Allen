@@ -6,6 +6,7 @@ import { commitSession, destroySession, getSession } from '~/sessions';
 import { SessionCodeData, SessionRegisterData, SessionUserData } from '~/types';
 import { CodeKey, CODE_WAITING, LoginKey, RegisterKey } from '../const';
 import { db } from './db.server';
+import { sendVerCode } from './sendMessage';
 
 
 /**
@@ -113,7 +114,7 @@ export async function handleCodeSend(session: Session, phone: string) {
     sendTime: curTime,
   });
   // 调用api发送短信，先注释掉，短信有次数
-  // sendVerCode([phone as string], [random]);
+  sendVerCode([phone as string], [random]);
   // return '发送成功';
   return new Response('发送成功', {
     headers: {
