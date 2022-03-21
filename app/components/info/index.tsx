@@ -11,6 +11,7 @@ import { FORM_COL, RULE_REQUIRED } from '../register/const';
 import RoleTag from '../RoleTag';
 import UploadImg from '../UploadImg';
 import CommentComp from './Comment';
+import LiveTable from './LiveTable';
 
 const { Option } = Select;
 
@@ -22,6 +23,7 @@ export default function InfoIndex() {
     allTags,
     loginUser,
     commentData,
+    liveData,
   } = loaderData;
   const { id: loginId = -1, role: loginRole } = loginUser || {};
   const { comments, avgRating } = commentData || {};
@@ -272,6 +274,8 @@ export default function InfoIndex() {
           </Form.Item>
         </Form>
       </div>
+      {/* 直播排表 */}
+      <LiveTable data={liveData} />
       <div className="comment-content">
         <h2>用户评价 <Tag color="green">平均评分: {avgRating?.toFixed(1)}</Tag></h2>
         <CommentComp data={comments} />

@@ -2,7 +2,12 @@
   border-bottom: 1px solid gray;
   margin-bottom: 20px;
 }
+.info-wrapper .live-table-wrapper {
+  border-bottom: 1px solid gray;
+  padding-bottom: 10px;
+}
 .info-wrapper .comment-content {
+  margin-top: 20px;
   margin-bottom: 60px;
 }
 

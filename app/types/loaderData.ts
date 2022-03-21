@@ -86,8 +86,24 @@ export interface InfoLoaderData{
     // 外接user表
     comments: CommentJoinUser[];
     avgRating: number;
-  }
+  };
+  liveData: LiveDataItem[];
 };
+
+export type LiveDataItem = {
+  target: {
+    name: string;
+    role: Role;
+    id: number;
+  };
+  author: {
+    name: string;
+    id: number;
+    role: Role;
+  };
+  companyId: number;
+  anchorId: number;
+} & Order;
 
 export type CommentJoinUser = {
   from: {

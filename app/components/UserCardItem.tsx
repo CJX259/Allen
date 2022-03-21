@@ -46,7 +46,7 @@ export default function UserCardItem(props: { data: UserJoinTag}) {
         <div className='item-info'>{data.introduce || '暂无简介'}</div>
         <div className="item-detail">
           <Space>
-            <div className="item-detail-comment">平均评分: {data.avgRating || '无'}</div>
+            <div className="item-detail-comment">平均评分: {data.avgRating?.toFixed(1) || '无'}</div>
             <div className="item-detail-count">总签约数: {data.orderCount || '无'}</div>
           </Space>
         </div>

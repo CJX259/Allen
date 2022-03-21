@@ -12,6 +12,7 @@ import { InfoLoaderData } from '~/types';
 import { db } from '~/utils/db.server';
 import { getFromDatas, validateFormDatas } from '~/utils/server.index';
 import styles from '~/styles/css/info.css';
+import { getLiveData } from '~/server/order';
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: styles }];
@@ -26,10 +27,15 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!userId || !reg.test(userId)) {
     return json(PARAMS_ERROR);
   }
-  console.log('userId', userId);
+  // 获取用户
   const user = await searchUserById(+userId);
+  // 获取标签信息(全量是为了修改用)
   const allTags = await getAllTags();
+  // 获取评论数据
   const { avgRating, comments } = await getUserComment(+userId);
+  // 获取直播数据
+  const liveData = await getLiveData(+userId);
+  console.log('live', liveData);
   return {
     user,
     loginUser: session.get(LoginKey) || {},
@@ -38,6 +44,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       comments,
       avgRating,
     },
+    liveData,
   } as InfoLoaderData;
 };
 
