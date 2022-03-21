@@ -12,39 +12,28 @@ import { db } from '~/utils/db.server';
  * @return {*}
  */
 export async function getTagsByPage(searchKey: string, page: number, pageSize?: number) {
-  console.log('searchKey', searchKey);
   if (!pageSize) {
     pageSize = USER_PAGESIZE;
   }
+  const searchWhereConfig = {
+    OR: [
+      {
+        id: +searchKey || -1,
+      },
+      {
+        name: {
+          contains: searchKey,
+        },
+      },
+    ],
+  };
   const data = await db.tag.findMany({
-    where: {
-      OR: [
-        {
-          id: +searchKey,
-        },
-        {
-          name: {
-            contains: searchKey,
-          },
-        },
-      ],
-    },
+    where: searchWhereConfig,
     take: pageSize,
     skip: (page - 1) * pageSize,
   });
   const total = await db.tag.count({
-    where: {
-      OR: [
-        {
-          id: +searchKey,
-        },
-        {
-          name: {
-            contains: searchKey,
-          },
-        },
-      ],
-    },
+    where: searchWhereConfig,
   });
   return {
     data,

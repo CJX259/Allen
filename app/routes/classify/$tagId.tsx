@@ -26,6 +26,7 @@ export const loader: ActionFunction = async ({ request, params }) => {
     return res;
   }
   const { data, total, tag } = await searchUserByTag(tagId, page, pageSize);
+  console.log('data', data, total);
   res.data = data;
   res.total = total;
   res.tag = tag;
@@ -44,12 +45,15 @@ export default function ClassifyComp() {
       <div className="show-content">
         {data?.map((item: any) => <UserCardItem key={item.id} data={item} />)}
       </div>
-      <Pagination
-        current={page}
-        total={total || 0}
-        onChange={(page) => sendSearch(submit, page)}
-        pageSize={USER_PAGESIZE}
-      />
+      {!data?.length ?
+        <h2>暂无数据</h2> :
+        <Pagination
+          current={page}
+          total={total || 0}
+          onChange={(page) => sendSearch(submit, page)}
+          pageSize={USER_PAGESIZE}
+        />
+      }
     </Spin>
   );
 };

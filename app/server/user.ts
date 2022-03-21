@@ -28,7 +28,7 @@ export async function calcAvgRatingAndOrderCount(data: UserJoinTag[]) {
  * @param {Status} status
  * @return {*} user
  */
-export async function searchUser(searchKey: any, page: number, limit: number, status: Status) {
+export async function searchUser(searchKey: string, page: number, limit: number, status: Status) {
   // status状态筛选，不传则返回全部status
   const statusConfig = status !== Status.ALL ? [status] : [Status.PENDING, Status.RESOLVE, Status.REJECT];
   // 连接外表（user -> tagOnUser -> tag -> tag.name）
@@ -43,68 +43,24 @@ export async function searchUser(searchKey: any, page: number, limit: number, st
       },
     },
   };
+  const ORConfig = [
+    {
+      id: +searchKey || -1,
+    },
+    {
+      name: {
+        contains: searchKey || '',
+      },
+    },
+  ];
   const res = {
     data: [] as UserJoinTag[],
     total: 0,
   };
   // 后续需要外接订单表
-  if (!searchKey) {
-    // 无key搜索,只看页码
-    res.data = await db.user.findMany({
-      where: {
-        role: {
-          not: 'ADMIN',
-        },
-        status: {
-          in: statusConfig,
-        },
-      },
-      include: includeConfig,
-      take: limit,
-      skip: (page - 1) * limit,
-    });
-    await calcAvgRatingAndOrderCount(res.data);
-    res.total = await db.user.count({
-      where: {
-        role: {
-          not: 'ADMIN',
-        },
-        status: {
-          in: statusConfig,
-        },
-      },
-    });
-    return res;
-  }
-  const numberReg = /^\d+$/;
-  // 如果传的key全为number，则先试下id精确匹配
-  if (numberReg.test(searchKey)) {
-    const temp = await db.user.findFirst({
-      include: includeConfig,
-      where: {
-        id: +searchKey,
-        role: {
-          not: 'ADMIN',
-        },
-        status: {
-          in: statusConfig,
-        },
-      },
-    });
-    if (temp) {
-      res.data = [temp];
-      await calcAvgRatingAndOrderCount(res.data);
-      res.total = 1;
-      return res;
-    }
-  }
-  // 根据昵称模糊匹配
   res.data = await db.user.findMany({
-    include: includeConfig,
     where: {
-      name: {
-        contains: searchKey,
-      },
+      OR: ORConfig,
       role: {
         not: 'ADMIN',
       },
@@ -112,15 +68,14 @@ export async function searchUser(searchKey: any, page: number, limit: number, st
         in: statusConfig,
       },
     },
+    include: includeConfig,
     take: limit,
     skip: (page - 1) * limit,
   });
   await calcAvgRatingAndOrderCount(res.data);
   res.total = await db.user.count({
     where: {
-      name: {
-        contains: searchKey,
-      },
+      OR: ORConfig,
       role: {
         not: 'ADMIN',
       },
@@ -173,7 +128,7 @@ export async function searchUserByTag(tagId: number, page: number, limit: number
   const total = await db.user.count({
     where: {
       tags: {
-        every: {
+        some: {
           tagId,
         },
       },
