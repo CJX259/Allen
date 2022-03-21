@@ -1,5 +1,37 @@
+import { USER_PAGESIZE } from '~/const';
 import { db } from '~/utils/db.server';
 
+
+/**
+ * 分页获取标签数据
+ *
+ * @export
+ * @param {number} page
+ * @param {number} pageSize
+ * @return {*}
+ */
+export async function getTagsByPage(page: number, pageSize?: number) {
+  if (!pageSize) {
+    pageSize = USER_PAGESIZE;
+  }
+  const data = await db.tag.findMany({
+    take: pageSize,
+    skip: (page - 1) * pageSize,
+  });
+  const total = await db.tag.count({});
+  return {
+    data,
+    total,
+  };
+}
+
+/**
+ * 新建单个标签
+ *
+ * @export
+ * @param {{ name: string }} data
+ * @return {*}
+ */
 export async function createTag(data: { name: string }) {
   const { name } = data;
   return db.tag.create({

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Input, InputNumber, Form, Typography, Space, message, Spin, Popconfirm, Button, Modal } from 'antd';
+import { Table, Input, InputNumber, Form, Space, message, Spin, Popconfirm, Button, Modal } from 'antd';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
 import { ERROR, SUCCESS, TagManagerLoader } from '~/types';
 import { Tag } from '@prisma/client';
+import { USER_PAGESIZE } from '~/const';
 
 function EditableCell(params: { inputType: any; editing: any; dataIndex: any; title: any; children: any; }) {
   const { inputType, editing, dataIndex, title, children } = params;
@@ -35,9 +36,9 @@ export default function TagManagerComp() {
   const submit = useSubmit();
   const actionData: ERROR & SUCCESS | undefined = useActionData();
   const loaderData: TagManagerLoader = useLoaderData();
-  const { data = [] } = loaderData || {};
+  const { data = [], page, total } = loaderData || {};
   const transition = useTransition();
-  console.log('data', data);
+  console.log('loaderData', loaderData);
   const [form] = Form.useForm();
   // 修改的行key，这里用key而不用id是因为string是方便初始化，以及后续submit也只能传string(key与id值相同，只是key为string，id为number，table必须要我有key，加rowKey也不管用)
   const [editingKey, setEditingKey] = useState<string>('');
@@ -100,6 +101,10 @@ export default function TagManagerComp() {
     submit({ ...createData }, { method: 'put' });
   };
 
+  const changePage = (page: number, pageSize: number) => {
+    submit({ page: page.toString() }, { method: 'get' });
+  };
+
   const columns = [
     {
       title: '标签ID',
@@ -120,30 +125,33 @@ export default function TagManagerComp() {
         const editable = isEditing(record);
         return editable ? (
           <span>
-            <Typography.Link
+            <Button
+              type='link'
               onClick={() => save(record.id)}
               style={{
                 marginRight: 8,
               }}
             >
               保存
-            </Typography.Link>
+            </Button>
             <a onClick={cancel}>取消</a>
           </span>
         ) : (
           <Space>
-            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+            <Button type='link' disabled={editingKey !== ''} onClick={() => edit(record)}>
               修改
-            </Typography.Link>
+            </Button>
             <Popconfirm
               okText='确定'
               cancelText='取消'
               disabled={editingKey !== ''}
               onConfirm={() => delTag(record)} title="确定删除该标签吗？"
             >
-              <Typography.Link>
+              <Button
+                type='link'
+              >
                 删除
-              </Typography.Link>
+              </Button>
             </Popconfirm>
           </Space>
         );
@@ -183,7 +191,10 @@ export default function TagManagerComp() {
           rowClassName="editable-row"
           pagination={{
             showSizeChanger: false,
-            onChange: cancel,
+            current: +page || 1,
+            total,
+            pageSize: USER_PAGESIZE,
+            onChange: changePage,
           }}
         />
       </Form>

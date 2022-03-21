@@ -98,4 +98,6 @@ export type CommentJoinUser = {
 
 export interface TagManagerLoader{
   data: ({ key: string; } & Tag)[];
+  page: string;
+  total: number;
 };

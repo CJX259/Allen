@@ -1,10 +1,10 @@
 import React from 'react';
 import { ActionFunction, json, LoaderFunction } from 'remix';
 import TagManagerComp from '~/components/tagManager';
+import { USER_PAGESIZE } from '~/const';
 import { DB_ERROR, PARAMS_ERROR } from '~/error';
-import { createTag, deleteTag, updateTag } from '~/server/tag';
+import { createTag, deleteTag, getTagsByPage, updateTag } from '~/server/tag';
 import { SUCCESS, TagManagerLoader } from '~/types';
-import { db } from '~/utils/db.server';
 import { needLogined } from '~/utils/loginUtils';
 
 export const loader: LoaderFunction = async ({request}) => {
@@ -12,9 +12,12 @@ export const loader: LoaderFunction = async ({request}) => {
   if (redirect) {
     return redirect;
   }
-  // 先直接拉全量，调试页面
-  const tags = await db.tag.findMany();
-  const keyTags = tags.map((item) => {
+  const searchParams = new URL(request.url).searchParams;
+  const page = searchParams.get('page') || '1';
+  // 分页拉标签
+  const { data, total } = await getTagsByPage(+page, USER_PAGESIZE);
+  // 增加key属性
+  const keyTags = data.map((item) => {
     return {
       ...item,
       key: item.id.toString(),
@@ -22,8 +25,9 @@ export const loader: LoaderFunction = async ({request}) => {
   });
   return json({
     data: keyTags,
+    page,
+    total,
   } as TagManagerLoader);
-  return null;
 };
 
 export const action: ActionFunction = async ({ request }) => {
