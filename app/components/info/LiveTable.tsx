@@ -2,6 +2,8 @@ import { ColumnsType } from 'antd/lib/table';
 import { Table } from 'antd';
 import React from 'react';
 import { LiveDataItem } from '~/types';
+import moment from 'moment';
+import { TIME_FORMAT } from '~/const';
 
 export default function liveTable(props: { data: LiveDataItem[]}) {
   const { data } = props;
@@ -25,7 +27,8 @@ export default function liveTable(props: { data: LiveDataItem[]}) {
       title: '直播时间',
       dataIndex: 'time',
       render(v: string) {
-        return <span>{v}</span>;
+        console.log('moment', moment(+v).format(TIME_FORMAT));
+        return <span>{moment(+v).format(TIME_FORMAT)}</span>;
       },
     },
     {

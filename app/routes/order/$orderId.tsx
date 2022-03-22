@@ -116,6 +116,7 @@ export const action: ActionFunction = async ({request, params}) => {
     return await handleCancel(+orderId);
   } else {
     // next为true则按着流程走，无论是取消中还是正常流程(因为取消中也是传next=true同意的)
+    console.log('opts', opts);
     return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts, authorId, targetId });
   }
 };

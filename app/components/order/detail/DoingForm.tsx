@@ -2,7 +2,7 @@ import { DatePicker, Input } from 'antd';
 import React from 'react';
 import { OrderDoingOpts } from '~/types';
 import moment from 'moment';
-import { ORDER_LIVE_INFO, TIME_FORMAT } from '~/const';
+import { ORDER_LIVE_INFO } from '~/const';
 
 export default function DoingForm(props: {
     setOpts?: Function;
@@ -10,12 +10,15 @@ export default function DoingForm(props: {
     disable: boolean;
   }) {
   const { setOpts, opts, disable } = props;
-  const defaultTime = opts.time ? moment(opts.time) : undefined;
+  const defaultTime = opts.time ? moment(+opts.time) : undefined;
+  console.log('default', defaultTime);
   const changeTime = (e: moment.Moment | null) => {
-    const formatTime = e?.format(TIME_FORMAT);
-    if (formatTime) {
-      handleChange(ORDER_LIVE_INFO.time, formatTime);
+    // const formatTime = e?.format(TIME_FORMAT);
+    // if (formatTime) {
+    if (e) {
+      handleChange(ORDER_LIVE_INFO.time, e?.valueOf().toString());
     }
+    // }
   };
 
   const handleChange = (key: string, value: string) => {
