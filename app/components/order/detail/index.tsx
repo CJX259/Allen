@@ -109,6 +109,7 @@ export default function OrderDetail() {
   }
   return (
     <>
+      <h2>订单id: {orderInfo.id}</h2>
       <h2>{author.name} 向 {target.name} 发起的签约记录</h2>
       <Steps current={current} status={stepStatus as any}>
         {steps.map((item) => (
