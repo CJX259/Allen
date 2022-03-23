@@ -77,6 +77,9 @@ export async function getUserComment(userId: number) {
         },
       },
     },
+    orderBy: {
+      ctime: 'desc',
+    },
   });
   const avgRating = await calcAvgRating(userId);
   return {

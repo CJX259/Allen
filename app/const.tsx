@@ -46,7 +46,7 @@ export const LOAD_TYPE = {
 };
 
 // 升级所需经验值
-export const LEVEL_VAR = 2;
+export const LEVEL_VAR = 10;
 
 export const USER_PAGESIZE = 6;
 

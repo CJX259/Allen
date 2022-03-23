@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Role, Status } from '@prisma/client';
 import { Button, Form, Input, InputNumber, message, Popconfirm, Select, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
@@ -75,12 +75,12 @@ export default function InfoIndex() {
           title="确定发起签约吗？"
           onConfirm={() => sendOrder(user?.id, user?.role, submit)}
           okText="确定"
-          disabled={user?.role === loginRole || !loginRole}
+          disabled={user?.role === loginRole || user?.status !== Status.RESOLVE || !loginRole}
           cancelText="取消"
         >
           <Button
             type='primary'
-            disabled={user?.role === loginRole || !loginRole}
+            disabled={user?.role === loginRole || user?.status !== Status.RESOLVE || !loginRole}
           >
             发起签约
           </Button>

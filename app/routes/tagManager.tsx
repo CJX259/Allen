@@ -67,6 +67,7 @@ export const action: ActionFunction = async ({ request }) => {
           return json(PARAMS_ERROR);
         }
         res = await handleDelete(+id);
+        break;
       }
       case 'PUT': {
         // 新增，需要name
@@ -74,6 +75,7 @@ export const action: ActionFunction = async ({ request }) => {
           return json(PARAMS_ERROR);
         }
         res = await handleCreate({ name: name?.toString() });
+        break;
       }
       default:
         break;

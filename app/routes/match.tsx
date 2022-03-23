@@ -7,7 +7,7 @@ import { LoginKey, MATCH_COUNT } from '~/const';
 import { db } from '~/utils/db.server';
 import styles from '~/styles/css/match.css';
 import { MatchLoaderData, SessionUserData, UserJoinTag } from '~/types';
-import { Role, User } from '@prisma/client';
+import { Role, Status, User } from '@prisma/client';
 import { calcAvgRating } from '~/server/comment';
 import { calcOrderCount } from '~/server/order';
 
@@ -69,6 +69,7 @@ async function matchSameTagUser(tagId: number, curRole?: Role): Promise<UserJoin
           tagId,
         },
       },
+      status: Status.RESOLVE,
       role: curRole === Role.COMPANY ? Role.ANCHOR : Role.COMPANY,
     },
     include: {
