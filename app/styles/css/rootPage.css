@@ -29,6 +29,7 @@
 }
 .page-content-main {
   flex: 1;
+  width: calc(100% - 275px);
   padding: 20px;
 }
 .page-footer {
