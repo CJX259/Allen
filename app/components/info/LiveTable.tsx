@@ -18,7 +18,7 @@ export default function liveTable(props: { data: LiveDataItem[]}) {
     },
     {
       title: '供应商',
-      dataIndex: 'companId',
+      dataIndex: 'companyId',
       render(v: number, record: LiveDataItem) {
         return <span>{record.targetId === v ? record.target.name : record.author.name}</span>;
       },
