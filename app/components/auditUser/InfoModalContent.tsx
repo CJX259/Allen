@@ -1,10 +1,11 @@
-import React, { useLayoutEffect } from 'react';
+import React from 'react';
 import { UserJoinTag } from '~/types';
 import { Form } from 'antd';
 import BaseFormItem from '~/components/register/BaseFormItem';
 import { Role } from '@prisma/client';
 import { infoRenderInfo } from '~/const';
 import { getImgUrl } from '~/utils/cos';
+import useIsomorphicLayoutEffect from '~/utils';
 
 const FORM_COL = {
   label: 8,
@@ -20,7 +21,7 @@ export default function ModalContent(props: { data?: UserJoinTag }) {
   function finish(value: any) {
     console.log('value', value);
   }
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (data?.avatarKey) {
       getImgUrl(data.avatarKey, (data) => {
         const imgDom = document.getElementById('avatar') as any;

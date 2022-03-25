@@ -6,10 +6,10 @@ import moment from 'moment';
 import { TIME_FORMAT } from '~/const';
 import { User } from '@prisma/client';
 import { getRandom } from '~/utils';
+import CloudConfig from '~/../cloudConfig.json';
 
 export default function liveTable(props: { data: LiveDataItem[], user: UserJoinTag, loginUser: User; dev: boolean}) {
   const { data, user, loginUser, dev } = props;
-
   const columns: ColumnsType<any> = [
     {
       title: '主播',
@@ -40,7 +40,7 @@ export default function liveTable(props: { data: LiveDataItem[], user: UserJoinT
       render(v: any) {
         const random = getRandom(4);
         return <a
-          href={`/player/index.html?sdkAppId=1400509104&secretKey=f200c81949c32392f6e43ebccf3d7f41a919fa9bb287375cc8909591745be5f7&expireTime=604800&roomId=${user.id}&roomName=${user.name}的直播间&anchorId=${user.id}&userId=${loginUser.id || random}&userName=${loginUser.name || ('游客' + random)}&playerDomain=${dev ? 'http://127.0.0.1' : 'webrtc.jessyblog.cn'}`}
+          href={`/player/index.html?secretKey=${CloudConfig.secretKey}&sdkAppId=${CloudConfig.sdkAppId}&expireTime=${CloudConfig.expireTime}&roomId=${user.id}&roomName=${user.name}的直播间&anchorId=${user.id}&userId=${loginUser.id || random}&userName=${loginUser.name || ('游客' + random)}&playerDomain=${dev ? 'http://127.0.0.1' : CloudConfig.playerDomain}`}
           target="_blank" rel="noreferrer" >直播间</a>;
       },
     },
