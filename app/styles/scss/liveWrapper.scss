@@ -1,0 +1,11 @@
+@import './livePage.scss';
+$menuWidth: 275px;
+
+.live-wrapper{
+  width: 100%;
+  display: flex;
+  .chat-wrapper{
+    width: 200px;
+    border: 1px solid gray;
+  }
+}

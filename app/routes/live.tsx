@@ -1,5 +1,12 @@
 import React from 'react';
+import { LinksFunction, Outlet } from 'remix';
+import Chat from '~/components/live/Chat';
 
+import style from '../styles/css/liveWrapper.css';
+
+export const links: LinksFunction = () => {
+  return [{ rel: 'stylesheet', href: style }];
+};
 
 /**
  * 直播间页面，内嵌静态html，通过cookie传递加密后的url数据
@@ -9,7 +16,10 @@ import React from 'react';
  */
 export default function livePage() {
   return (
-    <iframe src="../live.html"></iframe>
+    <div className='live-wrapper'>
+      <Outlet />
+      <Chat />
+    </div>
   );
 }
 

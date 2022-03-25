@@ -1,0 +1,17 @@
+.live-page {
+  border: medium none;
+  border: 1px solid gray;
+  width: calc(100% - 200px);
+  height: 550px;
+}
+
+.live-wrapper {
+  width: 100%;
+  display: flex;
+}
+.live-wrapper .chat-wrapper {
+  width: 200px;
+  border: 1px solid gray;
+}
+
+/*# sourceMappingURL=liveWrapper.css.map */
