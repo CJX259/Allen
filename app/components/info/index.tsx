@@ -276,7 +276,7 @@ export default function InfoIndex() {
         </Form>
       </div>
       {/* 直播排表 */}
-      <LiveTable dev={dev} loginUser={loginUser} user={user} data={liveData} />
+      <LiveTable dev={dev} loginUser={loginUser} data={liveData} />
       <div className="comment-content">
         <h2>用户评价 <Tag color="green">平均评分: {avgRating?.toFixed(1)}</Tag></h2>
         <CommentComp data={comments} />

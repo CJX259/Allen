@@ -1,4 +1,4 @@
-import { OrderStatus, Role } from '@prisma/client';
+import { OrderStatus } from '@prisma/client';
 import { db } from '~/utils/db.server';
 
 
@@ -58,22 +58,5 @@ export async function getLiveData(userId: number) {
     },
   });
   // order增加Role.xxx，在这里进行判断
-  return orders.map((item) => {
-    // isCompany = true的就是供应商角色
-    let companyId;
-    let anchorId;
-    // 发起者为供应商，那么就是供应商id就是authorId
-    if (item.author.role === Role.COMPANY) {
-      companyId = item.authorId;
-      anchorId = item.targetId;
-    } else {
-      companyId = item.targetId;
-      anchorId = item.authorId;
-    }
-    return {
-      ...item,
-      companyId,
-      anchorId,
-    };
-  });
+  return orders;
 };

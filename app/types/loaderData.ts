@@ -102,8 +102,6 @@ export type LiveDataItem = {
     id: number;
     role: Role;
   };
-  companyId: number;
-  anchorId: number;
 } & Order;
 
 export type CommentJoinUser = {
