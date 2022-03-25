@@ -80,13 +80,14 @@ export interface MatchLoaderData{
 
 export interface InfoLoaderData{
   user: UserJoinTag;
-  loginUser: { id: number; role: Role };
+  loginUser: User;
   allTags: { name: string; id: number; }[];
   commentData: {
     // 外接user表
     comments: CommentJoinUser[];
     avgRating: number;
   };
+  dev: boolean;
   liveData: LiveDataItem[];
 };
 

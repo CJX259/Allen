@@ -2,7 +2,7 @@ import { PrismaClient, Role } from '@prisma/client';
 const db = new PrismaClient();
 import md5 from 'md5';
 import { ROLE_MAP } from '~/const';
-import { getRandom } from '~/utils/server.index';
+import { getRandom } from '~/utils/index';
 
 /**
  * 初始化数据库的数据

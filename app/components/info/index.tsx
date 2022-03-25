@@ -24,6 +24,7 @@ export default function InfoIndex() {
     loginUser,
     commentData,
     liveData,
+    dev,
   } = loaderData;
   const { id: loginId = -1, role: loginRole } = loginUser || {};
   const { comments, avgRating } = commentData || {};
@@ -275,7 +276,7 @@ export default function InfoIndex() {
         </Form>
       </div>
       {/* 直播排表 */}
-      <LiveTable data={liveData} />
+      <LiveTable dev={dev} loginUser={loginUser} user={user} data={liveData} />
       <div className="comment-content">
         <h2>用户评价 <Tag color="green">平均评分: {avgRating?.toFixed(1)}</Tag></h2>
         <CommentComp data={comments} />

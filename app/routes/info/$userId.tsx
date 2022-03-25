@@ -20,6 +20,7 @@ export const links: LinksFunction = () => {
 
 // 处理查询页的搜索请求，返回数据列表
 export const loader: LoaderFunction = async ({ request, params }) => {
+  const hostname = new URL(request.url).hostname;
   const session = await getSession(request.headers.get('Cookie'));
   // const { id, role } = session.get(LoginKey) || {};
   const userId = params.userId;
@@ -29,6 +30,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
   // 获取用户
   const user = await searchUserById(+userId);
+  // 获取登录用户
+  const loginInfo = session.get(LoginKey);
+  let loginUser;
+  if (loginInfo) {
+    loginUser = await searchUserById(loginInfo.id);
+  }
   // 获取标签信息(全量是为了修改用)
   const allTags = await getAllTags();
   // 获取评论数据
@@ -38,13 +45,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   console.log('live', liveData);
   return {
     user,
-    loginUser: session.get(LoginKey) || {},
+    loginUser: loginUser || {},
     allTags,
     commentData: {
       comments,
       avgRating,
     },
     liveData,
+    dev: hostname === '127.0.0.1',
   } as InfoLoaderData;
 };
 

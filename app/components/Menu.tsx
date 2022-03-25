@@ -32,6 +32,14 @@ export default function MenuCmp(props: { data: RootLoaderData }) {
           >修改密码</Link>
         </Menu.Item>
       }
+      {user?.role === Role.ANCHOR &&
+        <Menu.Item key='/pusher/index.html'>
+          <a
+            target="_blank" rel="noreferrer"
+            href={`/pusher/index.html?sdkAppId=1400509104&secretKey=f200c81949c32392f6e43ebccf3d7f41a919fa9bb287375cc8909591745be5f7&expireTime=604800&roomId=${user.id}&roomName=${user.name}的直播间&userId=${user.id}&userName=${user.name}`}
+          >我的直播间</a>
+        </Menu.Item>
+      }
       {renderMenu(renderMenuList)}
     </Menu>
   );
