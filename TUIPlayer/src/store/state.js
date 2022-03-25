@@ -29,7 +29,7 @@ export default {
   // 直播间阶段
   liveStage: LIVE_STAGE.NOT_STARTED,
   // 线路选择-rtc|cdn|leb
-  lineType: LINE_TYPE.LEB,
+  lineType: LINE_TYPE.RTC,
   // 播放状态-playing|paused
   playState: 'paused',
   // horizontal｜vertical
