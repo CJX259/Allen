@@ -28,9 +28,8 @@ export default function liveTable(props: { data: LiveDataItem[], loginUser: User
     {
       title: '直播时间',
       dataIndex: 'time',
-      render(v: string) {
-        console.log('moment', moment(+v).format(TIME_FORMAT));
-        return <span>{moment(+v).format(TIME_FORMAT)}</span>;
+      render(v: number) {
+        return <span>{moment(v * 1000).format(TIME_FORMAT)}</span>;
       },
     },
     {

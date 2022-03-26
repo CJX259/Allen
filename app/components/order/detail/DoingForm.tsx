@@ -10,18 +10,15 @@ export default function DoingForm(props: {
     disable: boolean;
   }) {
   const { setOpts, opts, disable } = props;
-  const defaultTime = opts.time ? moment(+opts.time) : undefined;
+  const defaultTime = opts.time ? moment(opts.time * 1000) : undefined;
   console.log('default', defaultTime);
   const changeTime = (e: moment.Moment | null) => {
-    // const formatTime = e?.format(TIME_FORMAT);
-    // if (formatTime) {
     if (e) {
-      handleChange(ORDER_LIVE_INFO.time, e?.valueOf().toString());
+      handleChange(ORDER_LIVE_INFO.time, Math.floor(e?.valueOf() / 1000));
     }
-    // }
   };
 
-  const handleChange = (key: string, value: string) => {
+  const handleChange = (key: string, value: string | number) => {
     setOpts && setOpts({
       ...opts,
       [key]: value,

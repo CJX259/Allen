@@ -28,7 +28,7 @@ export default function OrderDetail() {
     expressType: orderInfo?.expressType || '',
     tips: orderInfo?.tips || '',
     // 直播中
-    time: orderInfo?.time || '',
+    time: orderInfo?.time || null,
     liveUrl: orderInfo?.liveUrl || '',
     // 已完成
     comment: orderInfo.userComment ? orderInfo.userComment[0]?.comment : '',

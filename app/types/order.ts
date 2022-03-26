@@ -13,7 +13,7 @@ export interface NextStepParams {
 export type OrderOpts = OrderCheckingOpts & OrderDoingOpts & OrderDoneOpts;
 
 export type OrderDoingOpts = {
-  time: string;
+  time: number;
   liveUrl: string;
 }
 

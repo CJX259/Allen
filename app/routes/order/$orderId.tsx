@@ -109,14 +109,11 @@ export const action: ActionFunction = async ({request, params}) => {
   if (isAuthor === null) {
     return json(NO_PERMISSION);
   }
-  // return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts });
-
   // 没有next，就是拒绝/取消
   if (payload.next === false) {
     return await handleCancel(+orderId);
   } else {
     // next为true则按着流程走，无论是取消中还是正常流程(因为取消中也是传next=true同意的)
-    console.log('opts', opts);
     return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts, authorId, targetId });
   }
 };

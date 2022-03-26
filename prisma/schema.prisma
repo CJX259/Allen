@@ -109,7 +109,7 @@ model Order {
   status      OrderStatus
   prevStatus  OrderStatus?
   liveUrl     String?
-  time        String?
+  time        Float?
   // times       Int?
   // goodsId     Int
   // goods       Goods @relation(fields: [goodsId], references: [id])
