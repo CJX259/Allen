@@ -222,7 +222,7 @@ export const ORDER_EXPRESS_PARAMS = {
 // 签约的完成中参数
 export const ORDER_LIVE_INFO = {
   time: 'time',
-  liveUrl: 'liveUrl',
+  // liveUrl: 'liveUrl',
 };
 
 // 签约的已完成参数

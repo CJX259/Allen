@@ -14,7 +14,7 @@ export type OrderOpts = OrderCheckingOpts & OrderDoingOpts & OrderDoneOpts;
 
 export type OrderDoingOpts = {
   time: number;
-  liveUrl: string;
+  // liveUrl: string;
 }
 
 export type OrderCheckingOpts = {

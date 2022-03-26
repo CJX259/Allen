@@ -34,7 +34,7 @@ export default function liveTable(props: { data: LiveDataItem[], loginUser: User
     },
     {
       title: '直播地址',
-      dataIndex: 'liveUrl',
+      // dataIndex: 'liveUrl',
       render(v: any, record: LiveDataItem) {
         const random = getRandom(4);
         const targetIsAnchor = record.target.role === Role.ANCHOR;

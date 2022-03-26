@@ -108,7 +108,7 @@ model Order {
   id          Int @id @default(autoincrement())
   status      OrderStatus
   prevStatus  OrderStatus?
-  liveUrl     String?
+  // liveUrl     String?
   time        Float?
   // times       Int?
   // goodsId     Int

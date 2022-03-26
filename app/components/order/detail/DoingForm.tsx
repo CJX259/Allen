@@ -1,4 +1,4 @@
-import { DatePicker, Input } from 'antd';
+import { DatePicker } from 'antd';
 import React from 'react';
 import { OrderDoingOpts } from '~/types';
 import moment from 'moment';
@@ -38,7 +38,7 @@ export default function DoingForm(props: {
           disabled={disable}
         />
       </div>
-      <div className="form-item">
+      {/* <div className="form-item">
         <span className="label">{disable ? '本次' : '填写'}填写直播间地址: </span>
         <Input
           onChange={(e) => handleChange(ORDER_LIVE_INFO.liveUrl, e.target.value)}
@@ -46,7 +46,7 @@ export default function DoingForm(props: {
           defaultValue={opts.liveUrl}
           disabled={disable}
         />
-      </div>
+      </div> */}
     </div>
   );
 }

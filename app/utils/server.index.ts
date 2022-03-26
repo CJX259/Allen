@@ -58,7 +58,7 @@ export function formatOpts(opts: OrderOpts) {
     ORDER_EXPRESS_PARAMS.expressNum,
     ORDER_EXPRESS_PARAMS.expressType,
     ORDER_EXPRESS_PARAMS.tips,
-    ORDER_LIVE_INFO.liveUrl,
+    // ORDER_LIVE_INFO.liveUrl,
     ORDER_LIVE_INFO.time,
   ];
   return Object.keys(opts).reduce((prev, cur) => {
