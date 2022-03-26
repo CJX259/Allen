@@ -17,6 +17,7 @@ export default function HomeCmop() {
           {/* 搜索结果展示区 */}
           <div className="live-content">
             {data?.map((item) => <UserCardItem curUser={curUser} jumpRoom={true} key={item.id} data={item} />)}
+            {!data.length && <h2>最近没有主播在直播</h2>}
           </div>
         </Spin>
       </div>
