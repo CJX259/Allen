@@ -1,3 +1,7 @@
 @import './UserCardItem.scss';
 .home-wrapper{
+  .live-content{
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
