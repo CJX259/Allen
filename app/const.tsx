@@ -233,6 +233,8 @@ export const ORDER_COMMNET = {
 
 
 export const TIME_FORMAT = 'YYYY-MM-DD——HH时mm分';
+// 简要版
+export const TIME_FORMAT_CARD = 'MM/DD HH:mm';
 
 // 匹配用户的最多条数
 export const MATCH_COUNT = 6;

@@ -1,14 +1,17 @@
 import { Space, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { LEVEL_VAR } from '~/const';
+import { LEVEL_VAR, TIME_FORMAT_CARD } from '~/const';
 import Cos from 'cos-js-sdk-v5';
 import { UserJoinTag } from '~/types';
 import config from '~/../cloudConfig.json';
 import { Link } from 'remix';
 import RoleTag from './RoleTag';
+import moment from 'moment';
+import { renderPlayerUrl } from '~/utils';
+import { User } from '@prisma/client';
 
-export default function UserCardItem(props: { data: UserJoinTag}) {
-  const { data } = props;
+export default function UserCardItem(props: { data: UserJoinTag & { time?: number }; jumpRoom?: boolean; curUser?: User | null; dev?: boolean}) {
+  const { data, jumpRoom, curUser, dev = true } = props;
   const [avatarUrl, setAvatarUrl] = useState(null as any);
   useEffect(() => {
     const cos = new Cos({
@@ -27,9 +30,9 @@ export default function UserCardItem(props: { data: UserJoinTag}) {
       setAvatarUrl(data.Url);
     });
   }, [data.avatarKey]);
-  return (
-    <div className="item-user">
-      <Link to={`/info/${data.id}`}>
+  function renderContent() {
+    return (
+      <>
         <div className="item-header">
           <img src={avatarUrl} alt="avatar" />
           <div className='item-name'>
@@ -44,13 +47,42 @@ export default function UserCardItem(props: { data: UserJoinTag}) {
           </div>
         </div>
         <div className='item-info'>{data.introduce || '暂无简介'}</div>
+        {data.time &&
+          <div className='item-time'>
+            <span>开播时间: {moment(data.time * 1000).format(TIME_FORMAT_CARD)}</span>
+          </div>
+        }
         <div className="item-detail">
           <Space>
             <div className="item-detail-comment">平均评分: {data.avgRating?.toFixed(1) || '无'}</div>
             <div className="item-detail-count">总签约数: {data.orderCount || '无'}</div>
           </Space>
         </div>
-      </Link>
+      </>
+    );
+  }
+  return (
+    <div className="item-user">
+      {jumpRoom ?
+        <a
+          target="_blank" rel="noreferrer"
+          href={renderPlayerUrl({
+            secretKey: config.secretKey,
+            sdkAppId: config.sdkAppId,
+            playerDomain: config.playerDomain,
+            expireTime: config.expireTime,
+            anchorId: data.id,
+            anchorName: data.name,
+            userId: curUser?.id,
+            userName: curUser?.name,
+            dev,
+          })}>
+          {renderContent()}
+        </a>:
+        <Link to={`/info/${data.id}`}>
+          {renderContent()}
+        </Link>
+      }
     </div>
   );
 };

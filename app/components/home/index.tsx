@@ -1,12 +1,24 @@
+import { Spin } from 'antd';
 import React from 'react';
+import { useLoaderData, useTransition } from 'remix';
+import { HomeLoaderData } from '~/types';
+import UserCardItem from '../UserCardItem';
 
 export default function HomeCmop() {
+  const loaderData: HomeLoaderData = useLoaderData();
+  const transition = useTransition();
+  const { data, curUser } = loaderData || {};
+  console.log('HomeCmopdata', data);
   return (
     <>
       <div className='home-wrapper'>
-        <h1>欢迎访问Allen电商配对平台</h1>
-        <h4>如果你是带货主播，在这里你可以找到最适合你的商品</h4>
-        <h4>如果你是供应商，在这里你可以找到最能推广你们商品的主播</h4>
+        <h1>直播间: </h1>
+        <Spin spinning={transition.state !== 'idle'}>
+          {/* 搜索结果展示区 */}
+          <div className="search-content">
+            {data?.map((item) => <UserCardItem curUser={curUser} jumpRoom={true} key={item.id} data={item} />)}
+          </div>
+        </Spin>
       </div>
     </>
   );

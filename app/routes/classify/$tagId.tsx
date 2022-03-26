@@ -1,12 +1,10 @@
 import { Pagination, Spin } from 'antd';
-import moment from 'moment';
 import React from 'react';
 import { ActionFunction, SubmitFunction, useLoaderData, useSubmit, useTransition } from 'remix';
 import UserCardItem from '~/components/UserCardItem';
 import { USER_PAGESIZE } from '~/const';
 import { searchUserByTag } from '~/server/user';
 import { ClassifyLoaderData } from '~/types';
-import { db } from '~/utils/db.server';
 
 // 处理查询页的搜索请求，返回数据列表
 export const loader: ActionFunction = async ({ request, params }) => {
@@ -28,14 +26,6 @@ export const loader: ActionFunction = async ({ request, params }) => {
     return res;
   }
   const { data, total, tag } = await searchUserByTag(tagId, page, pageSize);
-  const order = await db.order.findMany({
-    where: {
-      time: {
-        gte: moment().valueOf(),
-      },
-    },
-  });
-  console.log('order', order);
   // console.log('data', data, total);
   res.data = data;
   res.total = total;

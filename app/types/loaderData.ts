@@ -117,3 +117,8 @@ export interface TagManagerLoader{
   total: number;
   searchKey: string;
 };
+
+export interface HomeLoaderData{
+  data: (UserJoinTag & { time: number; })[];
+  curUser: UserJoinTag | null;
+};

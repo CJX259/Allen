@@ -2,6 +2,7 @@
 .item-user {
   width: 48%;
   padding: 30px;
+  padding-bottom: 10px;
   box-sizing: border-box;
   margin-bottom: 20px;
   margin-right: 20px;
@@ -77,10 +78,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.item-detail {
+.item-detail, .item-time {
   height: 20px;
   font-size: 8px;
   color: gray;
+}
+.item-time {
+  font-size: 10px;
 }
 
 /*# sourceMappingURL=UserCardItem.css.map */

@@ -1,16 +1,72 @@
 import {
   LoaderFunction,
   ActionFunction,
+  json,
 } from 'remix';
 import React from 'react';
 import HomeComp from '../../components/home';
+import { Order, Role, User } from '@prisma/client';
+import { calcOrderCount, getOrderOrderByTime } from '~/server/order';
+import { deduplication } from '~/utils';
+import { calcAvgRating } from '~/server/comment';
+import { getSessionUserData } from '~/utils/loginUtils';
+import { searchUserById } from '~/server/user';
+import { HomeLoaderData } from '~/types';
 
 export const loader: LoaderFunction = async ({ request }) => {
-  return null;
+  const sessionUser = await getSessionUserData(request);
+  let curUser;
+  if (sessionUser.id) {
+    curUser = await searchUserById(sessionUser.id);
+  }
+  // 展示直播间排表，只选出未开始，或者开播时间在两小时前的记录
+  // 有时间限制了，全量拿即可，拿出来再对传出去的用户去重
+
+  const orders = await getOrderOrderByTime();
+  // console.log('order', orders);
+  // 对每个order，拿出主播信息，然后对主播信息进行去重处理
+  const anchors = orderToUser(orders);
+  // 数组去重处理
+  const dedupAnchors = deduplication('id', anchors);
+  // 放到for循环内
+  for (let i = 0; i < dedupAnchors.length; i++) {
+    const item = dedupAnchors[i];
+    // 拿平均评分和总签约数
+    const orderCount = await calcOrderCount(item.id);
+    // 该用户的平均评分
+    const avgRating = await calcAvgRating(item.id);
+    dedupAnchors[i] = {
+      ...dedupAnchors[i],
+      orderCount,
+      avgRating,
+    };
+  };
+  return json({
+    data: dedupAnchors,
+    curUser,
+  } as HomeLoaderData);
 };
+
 export const action: ActionFunction = async ({ request }) => {
   return null;
 };
+
+function orderToUser(orders: (Order & { target: User; author: User; })[]) {
+  return orders.map((item) => {
+    const time = item.time;
+    let key: 'author' | 'target' = 'author';
+    if (item.author.role === Role.ANCHOR) {
+      key = 'author';
+    } else {
+      key = 'target';
+    }
+    return {
+      ...item[key],
+      time,
+    };
+  });
+}
+
 
 export default function HomePageCmp() {
   return (
