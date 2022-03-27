@@ -16,7 +16,7 @@ import { HomeLoaderData } from '~/types';
 export const loader: LoaderFunction = async ({ request }) => {
   const sessionUser = await getSessionUserData(request);
   let curUser;
-  if (sessionUser.id) {
+  if (sessionUser?.id) {
     curUser = await searchUserById(sessionUser.id);
   }
   // 展示直播间排表，只选出未开始，或者开播时间在两小时前的记录
