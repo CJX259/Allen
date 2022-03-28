@@ -42,7 +42,7 @@ model Tag {
   ctime       DateTime @default(now())
   utime       DateTime @updatedAt
   users       TagsOnUsers[]
-  goods       TagsOnGoods[]
+  // goods       TagsOnGoods[]
 }
 
 model User {
@@ -65,26 +65,26 @@ model User {
   utime        DateTime @updatedAt
   role         Role
   tags         TagsOnUsers[]
-  goods        Goods?
+  // goods        Goods?
   author       Order[] @relation(name: "author")
   target       Order[] @relation(name: "target")
   commentFrom  UserComment[] @relation("from")
   commentTo    UserComment[] @relation("to")
 }
 
-model Goods {
-  id          Int   @id @default(autoincrement())
-  name        String
-  introduce        String
-  price       Int
-  companyId   Int
-  company     User @relation(fields: [companyId], references: [id])
-  // order       Order?
-  tags        TagsOnGoods[]
-  // tag         Tag @relation(fields: [tagId], references: [id])
-  ctime       DateTime @default(now())
-  utime       DateTime @updatedAt
-}
+// model Goods {
+//   id          Int   @id @default(autoincrement())
+//   name        String
+//   introduce        String
+//   price       Int
+//   companyId   Int
+//   company     User @relation(fields: [companyId], references: [id])
+//   // order       Order?
+//   tags        TagsOnGoods[]
+//   // tag         Tag @relation(fields: [tagId], references: [id])
+//   ctime       DateTime @default(now())
+//   utime       DateTime @updatedAt
+// }
 
 model TagsOnUsers {
   user        User @relation(fields: [userId], references: [id])
@@ -95,14 +95,14 @@ model TagsOnUsers {
   @@id([tagId, userId])
 }
 
-model TagsOnGoods {
-  goods       Goods @relation(fields: [goodsId], references: [id])
-  goodsId     Int
-  tag         Tag @relation(fields: [tagId], references: [id])
-  tagId       Int
+// model TagsOnGoods {
+//   goods       Goods @relation(fields: [goodsId], references: [id])
+//   goodsId     Int
+//   tag         Tag @relation(fields: [tagId], references: [id])
+//   tagId       Int
 
-  @@id([tagId, goodsId])
-}
+//   @@id([tagId, goodsId])
+// }
 
 model Order {
   id          Int @id @default(autoincrement())
