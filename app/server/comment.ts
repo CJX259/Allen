@@ -42,18 +42,26 @@ export async function handleComment(id: number, opts: OrderOpts) {
  * @return {*}
  */
 export async function calcAvgRating(userId: number) {
-  const comment = await db.userComment.findMany({
+  return await db.userComment.aggregate({
+    _avg: {
+      rating: true,
+    },
     where: {
       toId: userId,
     },
-    select: {
-      rating: true,
-    },
   });
-  const totalRating = comment.reduce((prev, cur) => {
-    return prev + cur.rating;
-  }, 0);
-  return (totalRating / comment.length);
+  // const comment = await db.userComment.findMany({
+  //   where: {
+  //     toId: userId,
+  //   },
+  //   select: {
+  //     rating: true,
+  //   },
+  // });
+  // const totalRating = comment.reduce((prev, cur) => {
+  //   return prev + cur.rating;
+  // }, 0);
+  // return (totalRating / comment.length);
 };
 
 
