@@ -1,6 +1,7 @@
-import { Status, User } from '@prisma/client';
+import { Role, Status, User } from '@prisma/client';
 import { UserJoinTag } from '~/types';
 import { db } from '~/utils/db.server';
+import { getSamekeyAndDifKey } from '~/utils/server.index';
 import { calcAvgRating } from './comment';
 import { calcOrderCount } from './order';
 
@@ -178,7 +179,7 @@ export async function updateUser(id: number, params: User) {
  * @return {*}
  */
 export async function searchUserById(id: number) {
-  return db.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       id,
     },
@@ -195,6 +196,8 @@ export async function searchUserById(id: number) {
       },
     },
   });
+  await calcAvgRatingAndOrderCount([user as UserJoinTag]);
+  return user;
 };
 
 
@@ -247,4 +250,44 @@ export async function addExperience(authorId: number, targetId: number) {
     },
   }));
   return Promise.all(promsUpdate);
+};
+
+// 查找某用户签约过的用户
+export async function findOrderedUsers(curUser: { id: number; role: Role; [key: string]: any;}) {
+  const { sameKey, difKey } = getSamekeyAndDifKey(curUser);
+  // 本用户签约过的订单
+  const orders = await db.order.findMany({
+    where: {
+      status: {
+        not: 'REJECTED',
+      },
+      [sameKey]: curUser.id,
+    },
+    // select: {
+    //   companyId: true,
+    //   anchorId: true,
+    // },
+    include: {
+      company: {
+        select: {
+          role: true,
+        },
+      },
+      anchor: {
+        select: {
+          role: true,
+        },
+      },
+    },
+    distinct: [difKey as any],
+  });
+  // 从中拿出合作过的用户
+  return orders.map((item) => {
+    if (curUser.role === Role.ANCHOR) {
+      // 主播则返回供应商id
+      return item.companyId;
+    } else {
+      return item.anchorId;
+    }
+  });
 };

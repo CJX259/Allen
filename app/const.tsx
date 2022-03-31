@@ -246,3 +246,6 @@ export const IMConfig = {
   expireTime: 'expireTime',
   playerDomain: 'playerDomain',
 };
+
+// 相似用户，最多拿3个
+export const MAX_SIMILAR = 3;

@@ -4,7 +4,7 @@ import { LoginKey, REQ_METHOD } from '~/const';
 import { getFromDatas, validateFormDatas } from '~/utils/server.index';
 import { PARAMS_ERROR } from '~/error';
 import { db } from '~/utils/db.server';
-import { OrderStatus } from '@prisma/client';
+import { OrderStatus, Role } from '@prisma/client';
 import { needLogined } from '~/utils/loginUtils';
 import { getSession } from '~/sessions';
 import { SessionUserData } from '~/types';
@@ -55,11 +55,13 @@ async function handleCreateOrder(rowFormData: FormData, loginUser: SessionUserDa
   const { targetId } = formData;
   const newOrder = await db.order.create({
     data: {
+      // 主播id，如果发起者是主播，则为主播id，否则为接收者id
+      anchorId: loginUser.role === Role.ANCHOR ? loginUser.id : +targetId,
+      // 供应商id，同理
+      companyId: loginUser.role === Role.COMPANY ? loginUser.id : +targetId,
       authorId: loginUser.id,
-      // authorRole: loginUser.role,
       authorNext: true,
       targetId: +targetId,
-      // targetRole,
       status: OrderStatus.CONTRACTING,
     },
   });

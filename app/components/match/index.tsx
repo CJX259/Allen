@@ -10,7 +10,7 @@ export default function MatchIndex() {
   const transition = useTransition();
   const loaderData: MatchLoaderData | undefined = useLoaderData();
   const submit = useSubmit();
-  const { count, quality } = loaderData || {};
+  const { count, quality, likeUsers } = loaderData || {};
   function refresh() {
     submit({}, { method: 'get' });
   }
@@ -29,6 +29,12 @@ export default function MatchIndex() {
             <div className="user-card-content">
               {quality?.map((item) => <UserCardItem key={`quality_${item.id}`} data={item} />)}
               {!quality?.length && <h2>暂无同类标签用户数据</h2>}
+            </div>
+          </TabPane>
+          <TabPane tab="猜你喜欢" key="3">
+            <div className="user-card-content">
+              {likeUsers?.map((item) => <UserCardItem key={`like_${item.id}`} data={item} />)}
+              {!quality?.length && <h2>暂无推荐用户数据</h2>}
             </div>
           </TabPane>
         </Tabs>

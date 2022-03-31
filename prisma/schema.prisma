@@ -68,6 +68,8 @@ model User {
   // goods        Goods?
   author       Order[] @relation(name: "author")
   target       Order[] @relation(name: "target")
+  company      Order[] @relation(name: "company")
+  anchor       Order[] @relation(name: "anchor")
   commentFrom  UserComment[] @relation("from")
   commentTo    UserComment[] @relation("to")
 }
@@ -121,6 +123,10 @@ model Order {
   authorNext  Boolean?
   targetId    Int
   target      User @relation(name: "target", fields: [targetId], references: [id])
+  companyId   Int
+  anchorId    Int
+  company     User @relation(name: "company", fields: [companyId], references: [id])
+  anchor    User @relation(name: "anchor", fields: [anchorId], references: [id])
   // targetRole  Role
   // 接收人准备进入下一状态
   targetNext  Boolean?

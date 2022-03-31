@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { ORDER_EXPRESS_PARAMS, ORDER_LIVE_INFO } from '~/const';
 import { OrderOpts } from '~/types';
 
@@ -67,4 +68,15 @@ export function formatOpts(opts: OrderOpts) {
     };
     return prev;
   }, {} as { [key: string]: any});
+};
+
+export function getSamekeyAndDifKey(curUser: { id: number; role: Role; [key: string]: any}) {
+  // 同类角色的属性名
+  const sameKey = curUser.role === Role.ANCHOR ? 'anchorId' : 'companyId';
+  // 不同类角色的属性名
+  const difKey = curUser.role === Role.ANCHOR ? 'companyId' : 'anchorId';
+  return {
+    sameKey,
+    difKey,
+  };
 };

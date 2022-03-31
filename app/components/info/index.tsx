@@ -28,7 +28,6 @@ export default function InfoIndex() {
   } = loaderData;
   const { id: loginId = -1, role: loginRole } = loginUser || {};
   const { comments, avgRating } = commentData || {};
-  console.log('laoderData', loaderData);
   let isVisitor = user?.id !== loginId;
   // 上传图片组件传回的头像图片数据
   const [avatarimgUrl, setAvatarImgUrl] = useState('');
@@ -62,7 +61,6 @@ export default function InfoIndex() {
     v.tags = formatTags(v.tags);
     // 防止传null与undefined（后台拿会变成字符'null'，难以处理。此处''不会被删掉）
     const params = formatFormData(v);
-    console.log('params', params);
     submit(params, {
       method: 'post',
     });

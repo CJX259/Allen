@@ -42,7 +42,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { avgRating, comments } = await getUserComment(+userId);
   // 获取直播数据
   const liveData = await getLiveData(+userId);
-  console.log('live', liveData);
   return {
     user,
     loginUser: loginUser || {},

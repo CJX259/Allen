@@ -1,4 +1,4 @@
-import { Goods, Status, User, Order, Role, UserComment, Tag } from '@prisma/client';
+import { Status, User, Order, Role, UserComment, Tag } from '@prisma/client';
 import { SearchType, SessionUserData } from '.';
 // import { MenuData } from './menu';
 
@@ -11,7 +11,7 @@ export interface RootLoaderData {
 
 export interface SearchLoaderData{
   searchKey: string | null;
-  data: UserJoinTag[] | Goods[] | null;
+  data: UserJoinTag[] | null;
   searchType: SearchType;
   total: number;
   page: number;
@@ -20,8 +20,8 @@ export interface SearchLoaderData{
 
 export type UserJoinTag = {
   tags: Array<{userId: number; tagId: number; tag: { name: string }}>
-  avgRating?: number;
-  orderCount?: number;
+  avgRating?: number | null;
+  orderCount?: number | null;
 } & User;
 
 export interface ClassifyLoaderData{
@@ -76,6 +76,7 @@ export interface OrderDetailLoaderData{
 export interface MatchLoaderData{
   count: UserJoinTag[] & { orderCount: number}[];
   quality: UserJoinTag[] & { avgRating: number }[];
+  likeUsers: UserJoinTag[];
 };
 
 export interface InfoLoaderData{

@@ -44,3 +44,15 @@ export function renderPlayerUrl(data: {
   const { secretKey, sdkAppId, expireTime, anchorId, anchorName, userId, userName, dev, playerDomain } = data;
   return `/player/index.html?secretKey=${secretKey}&sdkAppId=${sdkAppId}&expireTime=${expireTime}&roomId=${anchorId}&roomName=${anchorName}的直播间&anchorId=${anchorId}&userId=${userId || random}&userName=${userName || ('游客' + random)}&playerDomain=${dev ? 'http://127.0.0.1' : playerDomain}`;
 };
+
+// 简单求交集（不支持对象）
+export function findUnion(a: any[], b: any[]) {
+  const a1 = new Set(a);
+  const a2 = new Set(b);
+  return [...a1].filter((item) => a2.has(item));
+};
+
+// 简单求并集（不支持对象）
+export function findIntersection(a: any[], b: any[]) {
+  return [...new Set([...a, ...b])];
+};
