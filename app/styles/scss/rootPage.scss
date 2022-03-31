@@ -3,6 +3,7 @@ $menuWidth: 275px;
 .page{
   &-wrapper{
     width: 100vw;
+    min-width: 1200px;
     position: relative;
   }
   &-header{

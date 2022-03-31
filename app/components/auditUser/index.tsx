@@ -196,6 +196,7 @@ export default function AuditUserComp() {
         visible={infoVisible}
         onCancel={() => setInfoVisible(false)}
         footer={null}
+        width={1000}
       >
         <InfoModalContent data={data ? data[curIndex] : undefined} />
       </Modal>

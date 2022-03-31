@@ -30,15 +30,29 @@ export default function ModalContent(props: { data?: UserJoinTag }) {
     }
   }, [data?.avatarKey]);
 
+  const renderIframe = () => {
+    return (
+      <>
+        <h2>公司信息核实: </h2>
+        <div className='iframe-wrapper'>
+          <iframe src={`https://www.tianyancha.com/search?key=${data.name}`} />
+        </div>
+      </>
+    );
+  };
+
   return (
-    <Form
-      form={form}
-      className='audit-form'
-      labelCol={{ span: FORM_COL.label }}
-      wrapperCol={{ span: FORM_COL.wrapper }}
-      onFinish={finish}
-    >
-      <BaseFormItem data={data} infos={infoRenderInfo} isAnchor={data?.role === Role.ANCHOR} />
-    </Form>
+    <div className='modal-wrapper'>
+      <Form
+        form={form}
+        className='audit-form'
+        labelCol={{ span: FORM_COL.label }}
+        wrapperCol={{ span: FORM_COL.wrapper }}
+        onFinish={finish}
+      >
+        <BaseFormItem data={data} infos={infoRenderInfo} isAnchor={data?.role === Role.ANCHOR} />
+      </Form>
+      {data.role === Role.COMPANY && renderIframe()}
+    </div>
   );
 }

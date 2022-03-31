@@ -42,7 +42,7 @@ export async function handleComment(id: number, opts: OrderOpts) {
  * @return {*}
  */
 export async function calcAvgRating(userId: number) {
-  return await db.userComment.aggregate({
+  const { _avg: { rating } } = await db.userComment.aggregate({
     _avg: {
       rating: true,
     },
@@ -50,6 +50,7 @@ export async function calcAvgRating(userId: number) {
       toId: userId,
     },
   });
+  return rating;
   // const comment = await db.userComment.findMany({
   //   where: {
   //     toId: userId,
