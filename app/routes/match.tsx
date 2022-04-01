@@ -73,8 +73,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 async function guestYouLike(curUser: UserJoinTag) {
   // 相似用户
   const similarUsers = await findSimilarUsers(curUser);
+  console.log('similarUsers', similarUsers);
   // 最相似的几个用户
   const topSimilarUsers = await findTopSimilar(curUser, similarUsers);
+  console.log('topSimilarUsers', topSimilarUsers);
   // 使用基于用户的协同推荐算法计算，得出TOP N（暂定6个）用户
   return collaborativeFiltering(curUser, topSimilarUsers);
 };
@@ -179,7 +181,7 @@ async function collaborativeFiltering(curUser: UserJoinTag, topSimilarUsers: { i
           [difKey]: recommendId,
         },
       });
-      if (count > 1) {
+      if (count >= 1) {
         userWeight += weight;
       }
     }
@@ -194,6 +196,7 @@ async function collaborativeFiltering(curUser: UserJoinTag, topSimilarUsers: { i
     const user = await searchUserById(id);
     resUsers.push(user);
   }
+  console.log('resWeights', resWeights);
   return resUsers;
 };
 
