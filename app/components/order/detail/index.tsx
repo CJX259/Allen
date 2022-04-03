@@ -82,6 +82,15 @@ export default function OrderDetail() {
   // 发送请求，进入下一步骤
   async function next(next: boolean) {
     setResLoading(true);
+    // 先看下当前签约记录的状态有没有变，变了就提示刷新
+    const checkRes: { data: OrderDetailLoaderData } = await axios.get(`/order/${id}?_data=routes/order/$orderId`);
+    const { data: { orderInfo: checkOrderInfo } } = checkRes;
+    if (checkOrderInfo.status !== status) {
+      message.warn('签约状态有变更，页面刷新后再重新提交');
+      submit({}, { method: 'get' });
+      setResLoading(false);
+      return;
+    }
     const baseParams = {
       status,
       // next为true代表进入下一阶段，false代表取消或拒绝取消

@@ -2,7 +2,7 @@ import { Role, Status } from '@prisma/client';
 import { Button, Form, Input, InputNumber, message, Popconfirm, Select, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useActionData, useLoaderData, useSubmit, useTransition } from 'remix';
-import { LOAD_STATE } from '~/const';
+import { AUDIT_STATUS_MAP, LOAD_STATE } from '~/const';
 import { ERROR, FormRenderInfo, InfoLoaderData } from '~/types';
 import { formatFormData, formatTags, sendOrder, validateRepeat } from '~/utils/client.index';
 import { getImgUrl } from '~/utils/cos';
@@ -26,7 +26,7 @@ export default function InfoIndex() {
     liveData,
     dev,
   } = loaderData;
-  const { id: loginId = -1, role: loginRole } = loginUser || {};
+  const { id: loginId = -1, role: loginRole, status } = loginUser || {};
   const { comments, avgRating } = commentData || {};
   let isVisitor = user?.id !== loginId;
   // 上传图片组件传回的头像图片数据
@@ -74,12 +74,12 @@ export default function InfoIndex() {
           title="确定发起签约吗？"
           onConfirm={() => sendOrder(user?.id, user?.role, submit)}
           okText="确定"
-          disabled={user?.role === loginRole || user?.status !== Status.RESOLVE || !loginRole}
+          disabled={user?.role === loginRole || user?.status !== Status.RESOLVE || !loginRole || status === 'REJECT'}
           cancelText="取消"
         >
           <Button
             type='primary'
-            disabled={user?.role === loginRole || user?.status !== Status.RESOLVE || !loginRole}
+            disabled={user?.role === loginRole || user?.status !== Status.RESOLVE || !loginRole || status === 'REJECT'}
           >
             发起签约
           </Button>
@@ -134,6 +134,27 @@ export default function InfoIndex() {
         <span>{data?.name} <RoleTag role={data?.role}/></span> :
         <Input placeholder='请填写昵称(小于12个字符)' />
       ),
+    },
+    {
+      name: 'status',
+      label: {
+        all: '状态',
+      },
+      initialValue: (data) => data?.status,
+      render: (data) => {
+        const { status } = data || {};
+        let color = 'green';
+        if (status === 'REJECT') {
+          color = 'red';
+        } else if (status === 'PENDING') {
+          color = 'orange';
+        }
+        return (
+          <>
+            {status && <Tag color={color}>{AUDIT_STATUS_MAP[status]}</Tag>}
+          </>
+        );
+      },
     },
     {
       name: 'phone',
