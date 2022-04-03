@@ -182,7 +182,7 @@ export default function RegisterCmp() {
         <h1 className='title'>欢迎入驻Allen电商直播平台</h1>
         <h3 className='title-sub'>请告诉我们一些基本信息</h3>
         <div className="form-wrapper">
-          <div className="form-left"></div>
+          <div className="form-left"><img width={'100%'} src="/assets/images/smail.jpeg" alt="客服图片" /></div>
           <Form
             form={form}
             onFinish={(v) => onFinish(v, form, submit)}
