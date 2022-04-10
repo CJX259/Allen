@@ -42,7 +42,7 @@ export function renderPlayerUrl(data: {
 }) {
   const random = getRandom(4);
   const { secretKey, sdkAppId, expireTime, anchorId, anchorName, userId, userName, dev, playerDomain } = data;
-  return `/player/index.html?secretKey=${secretKey}&sdkAppId=${sdkAppId}&expireTime=${expireTime}&roomId=${anchorId}&roomName=${anchorName}的直播间&anchorId=${anchorId}&userId=${userId || random}&userName=${userName || ('游客' + random)}&playerDomain=${dev ? 'http://127.0.0.1' : playerDomain}`;
+  return `/player/index.html?expireTime=${expireTime}&roomId=${anchorId}&roomName=${anchorName}的直播间&anchorId=${anchorId}&userId=${userId || random}&userName=${userName || ('游客' + random)}&playerDomain=${dev ? 'http://127.0.0.1' : playerDomain}&secretKey=${secretKey}&sdkAppId=${sdkAppId}`;
 };
 
 // 简单求交集（不支持对象）

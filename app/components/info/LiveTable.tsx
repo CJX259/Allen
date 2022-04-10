@@ -5,7 +5,7 @@ import { LiveDataItem } from '~/types';
 import moment from 'moment';
 import { TIME_FORMAT } from '~/const';
 import { Role, User } from '@prisma/client';
-import { getRandom } from '~/utils';
+import { getRandom, renderPlayerUrl } from '~/utils';
 import CloudConfig from '~/../cloudConfig.json';
 
 export default function liveTable(props: { data: LiveDataItem[], loginUser: User; dev: boolean}) {
@@ -39,7 +39,17 @@ export default function liveTable(props: { data: LiveDataItem[], loginUser: User
         const random = getRandom(4);
         const targetIsAnchor = record.target.role === Role.ANCHOR;
         return <a
-          href={`/player/index.html?secretKey=${CloudConfig.secretKey}&sdkAppId=${CloudConfig.sdkAppId}&expireTime=${CloudConfig.expireTime}&roomId=${targetIsAnchor ? record.targetId : record.authorId}&roomName=${targetIsAnchor ? record.target.name : record.author.name}的直播间&anchorId=${targetIsAnchor ? record.targetId : record.authorId}&userId=${loginUser.id || random}&userName=${loginUser.name || ('游客' + random)}&playerDomain=${dev ? 'http://127.0.0.1' : CloudConfig.playerDomain}`}
+          href={renderPlayerUrl({
+            secretKey: CloudConfig.secretKey,
+            sdkAppId: CloudConfig.sdkAppId,
+            playerDomain: CloudConfig.playerDomain,
+            expireTime: CloudConfig.expireTime,
+            anchorId: targetIsAnchor ? record.targetId : record.authorId,
+            anchorName: targetIsAnchor ? record.target.name : record.author.name,
+            userId: loginUser?.id,
+            userName: loginUser?.name,
+            dev,
+          })}
           target="_blank" rel="noreferrer" >直播间</a>;
       },
     },

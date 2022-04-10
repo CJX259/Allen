@@ -37,7 +37,7 @@ export default function MenuCmp(props: { data: RootLoaderData }) {
         <Menu.Item key='/pusher/index.html'>
           <a
             target="_blank" rel="noreferrer"
-            href={`/pusher/index.html?secretKey=${CloudConfig.secretKey}&sdkAppId=${CloudConfig.sdkAppId}&expireTime=${CloudConfig.expireTime}&roomId=${user.id}&roomName=${user.name}的直播间&userId=${user.id}&userName=${user.name}`}
+            href={`/pusher/index.html?expireTime=${CloudConfig.expireTime}&roomId=${user.id}&roomName=${user.name}的直播间&userId=${user.id}&userName=${user.name}&secretKey=${CloudConfig.secretKey}&sdkAppId=${CloudConfig.sdkAppId}`}
           >我的直播间</a>
         </Menu.Item>
       }
