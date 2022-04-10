@@ -33,10 +33,12 @@ export default function ModalContent(props: { data?: UserJoinTag }) {
   const renderIframe = () => {
     return (
       <>
-        <h2>公司信息核实: </h2>
-        <div className='iframe-wrapper'>
+        <h2>
+          <a target="_blank" rel="noreferrer" href={`https://www.tianyancha.com/search?key=${data.name}`}>公司信息核实地址</a>
+        </h2>
+        {/* <div className='iframe-wrapper'>
           <iframe src={`https://www.tianyancha.com/search?key=${data.name}`} />
-        </div>
+        </div> */}
       </>
     );
   };
