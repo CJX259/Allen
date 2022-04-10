@@ -1,8 +1,8 @@
 import { PrismaClient, Role } from '@prisma/client';
 const db = new PrismaClient();
 import md5 from 'md5';
+import Mock from 'mockjs';
 import { ROLE_MAP } from '~/const';
-import { getRandom } from '~/utils/index';
 
 /**
  * 初始化数据库的数据
@@ -55,7 +55,7 @@ async function main() {
     }),
     db.user.create({
       data: {
-        name: '小希希~',
+        name: '建希哥',
         realName: '陈建希',
         idCard: '440902200001230432',
         address: '广东省茂名市茂南区官渡2路248号大院',
@@ -101,13 +101,13 @@ function initSomeUsers() {
     for (let i = 0; i < count; i++) {
       const data = {
         name: `${ROLE_MAP[role]}_${num}_${i}`,
-        realName: '陈建希',
-        idCard: `${getRandom(15)}${num}${i}`,
-        address: '广东省茂名市茂南区官渡2路248号大院',
-        mail: '1049602251@qq.com',
+        realName: Mock.mock('@cname'),
+        idCard: Mock.mock('@id'),
+        address: Mock.mock('@county(true)'),
+        mail: Mock.mock('@email'),
         role,
-        phone: `${getRandom(10)}${num}${i}`,
-        vx: 'sxyyasw',
+        phone: mockPhone(),
+        vx: '1',
         password: md5('123123'),
         tags: {
           create: [
@@ -124,6 +124,13 @@ function initSomeUsers() {
       arr.push(await db.user.create({ data }));
     }
   };
+}
+
+// 生成随机phone
+function mockPhone() {
+  const phonePrefix = ['132', '199', '135', '187', '189'];
+  const index = Math.floor(Math.random() * phonePrefix.length);
+  return phonePrefix[index] + Mock.mock(/\d{8}/);
 }
 
 main()

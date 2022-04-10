@@ -27,7 +27,10 @@ export const action: ActionFunction = async ({ request }) => {
   const method = request.method;
   switch (method) {
     case REQ_METHOD.POST: {
-      validatePhone(phone as string);
+      const validate = validatePhone(phone as string);
+      if (validate) {
+        return validate;
+      }
       const password = form.get('password');
       const code = form.get('code');
       if (!password && !code) {
@@ -43,7 +46,10 @@ export const action: ActionFunction = async ({ request }) => {
       break;
     }
     case REQ_METHOD.PUT: {
-      validatePhone(phone as string);
+      const validate = validatePhone(phone as string);
+      if (validate) {
+        return validate;
+      }
       return handleCodeSend(session, phone as string);
     }
     case REQ_METHOD.DEL: {
