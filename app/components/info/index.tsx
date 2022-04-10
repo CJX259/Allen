@@ -43,6 +43,7 @@ export default function InfoIndex() {
       });
     }
     isVisitor = user?.id !== loginId;
+    form.resetFields();
   }, [loaderData]);
 
   // 显示出错信息
