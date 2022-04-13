@@ -123,3 +123,11 @@ export interface HomeLoaderData{
   data: (UserJoinTag & { time: number; })[];
   curUser: UserJoinTag | null;
 };
+
+export interface AuditOrderLoader{
+  data: (Order & { [key: string]: any })[] | null | undefined;
+  total: number;
+  searchKey: string | null;
+  page: number;
+  status: Status;
+};

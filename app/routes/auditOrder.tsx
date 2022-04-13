@@ -1,13 +1,17 @@
 import { Role, Status } from '@prisma/client';
 import React from 'react';
-import { LoaderFunction } from 'remix';
+import { LinksFunction, LoaderFunction } from 'remix';
 import AuditOrderComp from '~/components/auditOrder';
 import { USER_PAGESIZE } from '~/const';
 import { searchUser } from '~/server/user';
 import { AuditUserLoaderData } from '~/types';
 import { needLogined } from '~/utils/loginUtils';
 import { transformNullAndUndefined } from '~/utils/server.index';
+import style from '~/styles/css/auditOrder.css';
 
+export const links: LinksFunction = () => {
+  return [{ rel: 'stylesheet', href: style }];
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const redirectRes = await needLogined(request, [Role.ADMIN]);
