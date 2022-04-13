@@ -72,6 +72,10 @@ function calcMenuList(role: Role | undefined): MenuData[] {
           to: '/auditUser',
         },
         {
+          title: '订单审核',
+          to: '/auditOrder',
+        },
+        {
           title: '标签管理',
           to: '/tagManager',
         },

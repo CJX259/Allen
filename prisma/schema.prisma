@@ -121,6 +121,7 @@ model Order {
   // authorRole  Role
   // 发起人准备进入下一状态
   authorNext  Boolean?
+  sysNext     Boolean?
   targetId    Int
   target      User @relation(name: "target", fields: [targetId], references: [id])
   companyId   Int
@@ -132,6 +133,8 @@ model Order {
   targetNext  Boolean?
   // 快递单号
   expressNum  String?
+  // 寄给平台的快递单号
+  sysExpressNum String?
   // 快递公司
   expressType String?
   // 备注（其他公司时填写）

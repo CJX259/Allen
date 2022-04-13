@@ -43,11 +43,20 @@ export default function CheckingForm(props: {
         </Radio.Group>
       </div>
       <div className="form-item">
-        <span className='label'>{disable ? '本次' : '请填写'}快递单号: </span>
+        <span className='label'>{disable ? '本次' : '请填写'}寄往主播的快递单号: </span>
         <Input
           className='num-input'
           defaultValue={opts.expressNum}
           onChange={(e) => handleChange(ORDER_EXPRESS_PARAMS.expressNum, e.target.value)}
+          disabled={disable}
+        />
+      </div>
+      <div className="form-item">
+        <span className='label'>{disable ? '本次' : '请填写'}寄往平台的快递单号: </span>
+        <Input
+          className='num-input'
+          defaultValue={opts.sysExpressNum}
+          onChange={(e) => handleChange(ORDER_EXPRESS_PARAMS.sysExpressNum, e.target.value)}
           disabled={disable}
         />
       </div>

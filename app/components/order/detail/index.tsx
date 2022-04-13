@@ -25,6 +25,7 @@ export default function OrderDetail() {
   const [opts, setOpts] = useState({
     // 检验中
     expressNum: orderInfo?.expressNum || '',
+    sysExpressNum: orderInfo?.sysExpressNum || '',
     expressType: orderInfo?.expressType || '',
     tips: orderInfo?.tips || '',
     // 直播中
@@ -126,7 +127,9 @@ export default function OrderDetail() {
         ))}
       </Steps>
       <div className="steps-content">
+        <h2>流程要点明细</h2>
         <p className='tips'>{ORDER_STATUS_MAP[steps[current].key].explain}</p>
+        <h2>当前流程信息</h2>
         {steps[current].content}
       </div>
       <div className="steps-action">

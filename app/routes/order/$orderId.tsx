@@ -1,4 +1,4 @@
-import { ActionFunction, json, LinksFunction, LoaderFunction, redirect } from 'remix';
+import { ActionFunction, json, LinksFunction, LoaderFunction, redirect, useLoaderData } from 'remix';
 import React from 'react';
 import { DB_ERROR, NO_PERMISSION, PARAMS_ERROR } from '~/error';
 import OrderDetail from '~/components/order/detail';
@@ -19,7 +19,9 @@ export const links: LinksFunction = () => {
 
 // 类似步骤条的ui
 export default function Detail() {
-  return <OrderDetail />;
+  const loaderData: OrderDetailLoaderData = useLoaderData();
+  // 状态变，里面的opts需要重新赋予初始值，使用key强制渲染
+  return <OrderDetail key={loaderData.orderInfo.status} />;
 };
 
 
@@ -102,7 +104,7 @@ export const action: ActionFunction = async ({request, params}) => {
   if (!curOrder) {
     return json(PARAMS_ERROR);
   }
-  const { authorId, targetId, authorNext, targetNext } = curOrder;
+  const { authorId, targetId, authorNext, targetNext, sysNext } = curOrder;
   // 判断当前操作者属于发起者还是接受者
   const isAuthor = judgeIsAuthor(sessionUserData.id, targetId, authorId);
   // 无关人员，重定向
@@ -114,7 +116,7 @@ export const action: ActionFunction = async ({request, params}) => {
     return await handleCancel(+orderId);
   } else {
     // next为true则按着流程走，无论是取消中还是正常流程(因为取消中也是传next=true同意的)
-    return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts, authorId, targetId });
+    return await nextStep({ id: +orderId, isAuthor, status, targetNext, authorNext, opts, authorId, targetId, sysNext });
   }
 };
 
@@ -126,7 +128,7 @@ export const action: ActionFunction = async ({request, params}) => {
  * @return {*}
  */
 async function nextStep(data: NextStepParams) {
-  const { isAuthor, id, targetNext, status, authorNext, opts, authorId, targetId } = data;
+  const { isAuthor, id, targetNext, status, authorNext, opts, authorId, targetId, sysNext } = data;
   const nextStatus = ORDER_STATUS_SEQUENCE[status].next;
   if (!nextStatus) {
     try {
@@ -147,14 +149,19 @@ async function nextStep(data: NextStepParams) {
       // 如果是完成中，则双方同意时，需要给双方都加上经验值
       addExperience(authorId, targetId);
     }
-    // 清掉同意记录，进入下一阶段
-    updateData = {
-      authorNext: false,
-      targetNext: false,
-      status: nextStatus,
-      // 再把其他阶段所需信息传入
-      ...newOpts,
-    };
+    if (status === OrderStatus.CHECKING && !sysNext) {
+      // 如果是检验中，还需要平台审核员同意，故仅更新数据，不进行状态流转
+      updateData = isAuthor ? { authorNext: true, ...newOpts} : { targetNext: true, ...newOpts};
+    } else {
+      // 清掉同意记录，进入下一阶段
+      updateData = {
+        authorNext: false,
+        targetNext: false,
+        status: nextStatus,
+        // 再把其他阶段所需信息传入
+        ...newOpts,
+      };
+    }
   } else {
     // 另一方未确认，进入等待状态
     updateData = isAuthor ? { authorNext: true, ...newOpts } : { targetNext: true, ...newOpts };

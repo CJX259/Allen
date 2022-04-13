@@ -92,7 +92,7 @@ export const ORDER_STATUS_MAP = {
   },
   [OrderStatus.CHECKING]: {
     text: '检验中',
-    explain: '请 供应商 发货给 主播、平台 进行质量检验, 待双方确认完货物质量后, 进入下一步。平台收件地址xxxx, 主播地址请联系主播确认。（注: 若直播时售出货物质量与检验的货物质量不符, 后果仅由供应商承担）',
+    explain: '请 供应商 发货给 主播、平台 进行质量检验, 待三方确认完货物质量, 均点击下一步后才能进入下一步。平台收件地址xxxx(请备注好订单ID), 主播地址请联系主播确认。（注: 若直播时售出货物质量与检验的货物质量不符, 后果仅由供应商承担）',
   },
   [OrderStatus.DOING]: {
     text: '完成中',
@@ -217,6 +217,7 @@ export const ORDER_EXPRESS_PARAMS = {
   expressType: 'expressType',
   tips: 'tips',
   expressNum: 'expressNum',
+  sysExpressNum: 'sysExpressNum',
 };
 
 // 签约的完成中参数

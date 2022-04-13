@@ -57,6 +57,7 @@ export function transformNullAndUndefined(value: any) {
 export function formatOpts(opts: OrderOpts) {
   const orderKeys = [
     ORDER_EXPRESS_PARAMS.expressNum,
+    ORDER_EXPRESS_PARAMS.sysExpressNum,
     ORDER_EXPRESS_PARAMS.expressType,
     ORDER_EXPRESS_PARAMS.tips,
     // ORDER_LIVE_INFO.liveUrl,
