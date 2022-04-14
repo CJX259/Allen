@@ -2,14 +2,14 @@ import { Button, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 
-export default function SearchInput(props: { defaultKey: string, sendSearch: Function, setSearchKey: Function }) {
-  const { sendSearch, setSearchKey, defaultKey } = props;
+export default function SearchInput(props: { defaultKey: string, sendSearch: Function, setSearchKey: Function; placehold?: string }) {
+  const { sendSearch, setSearchKey, defaultKey, placehold } = props;
   const [key, setKey] = useState(defaultKey || '');
   return (
     <div className='search-input'>
       <Input
         value={key}
-        placeholder='可通过id与昵称搜索'
+        placeholder={placehold || '可通过id与昵称搜索'}
         onKeyPress={(e) => e.key === 'Enter' && sendSearch() }
         onChange={(e) => {
           setSearchKey(e.target.value);

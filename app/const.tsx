@@ -95,7 +95,7 @@ export const ORDER_STATUS_MAP = {
     explain: '请 供应商 发货给 主播、平台 进行质量检验, 待三方确认完货物质量, 均点击下一步后才能进入下一步。平台收件地址xxxx(请备注好订单ID), 主播地址请联系主播确认。（注: 若直播时售出货物质量与检验的货物质量不符, 后果仅由供应商承担）',
   },
   [OrderStatus.DOING]: {
-    text: '完成中',
+    text: '直播中',
     explain: '主播开始直播, 直到供应商确认销售额达到合同目标后即可进入下一步',
   },
   [OrderStatus.DONE]: {

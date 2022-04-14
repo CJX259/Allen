@@ -43,7 +43,6 @@ export default function OrderDetail() {
     {
       title: '签约中',
       key: OrderStatus.CONTRACTING,
-      tips: '是否已与该用户进行线下签约?',
       content: null,
     },
     {
@@ -56,7 +55,6 @@ export default function OrderDetail() {
     {
       title: '直播中',
       key: OrderStatus.DOING,
-      tips: '请主播',
       content: <DoingForm
         setOpts={setOpts}
         opts={opts}
@@ -65,7 +63,6 @@ export default function OrderDetail() {
     {
       title: '已完成',
       key: OrderStatus.DONE,
-      tips: '双方完成了自己的合同内容',
       content: <DoneForm
         setOpts={setOpts}
         opts={opts}
@@ -75,7 +72,6 @@ export default function OrderDetail() {
     {
       title: '已取消',
       key: OrderStatus.REJECTED,
-      tips: '签约取消',
       content: <h3>签约已取消</h3>,
     },
   ];
@@ -129,7 +125,7 @@ export default function OrderDetail() {
       <div className="steps-content">
         <h2>流程要点明细</h2>
         <p className='tips'>{ORDER_STATUS_MAP[steps[current].key].explain}</p>
-        <h2>当前流程信息</h2>
+        {steps[current].content && <h2>当前流程信息</h2>}
         {steps[current].content}
       </div>
       <div className="steps-action">

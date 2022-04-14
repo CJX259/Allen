@@ -125,9 +125,11 @@ export interface HomeLoaderData{
 };
 
 export interface AuditOrderLoader{
-  data: (Order & { [key: string]: any })[] | null | undefined;
+  data: OrderJoinAnchorAndCompany[] | null | undefined;
   total: number;
   searchKey: string | null;
   page: number;
-  status: Status;
 };
+
+export type OrderJoinAnchorAndCompany = (Order & { anchor: { id: number; name: string; }; company: { id: number; name: string; }; });
+

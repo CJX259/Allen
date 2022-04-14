@@ -29,6 +29,9 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
     skip: (+page - 1) * USER_PAGESIZE,
     take: USER_PAGESIZE,
+    orderBy: {
+      ctime: 'desc',
+    },
     include: {
       author: {
         select: {
@@ -45,6 +48,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   proms.push(db.order.findMany({
     where: {
       authorId: +userData.id,
+    },
+    orderBy: {
+      ctime: 'desc',
     },
     skip: (+page - 1) * USER_PAGESIZE,
     take: USER_PAGESIZE,

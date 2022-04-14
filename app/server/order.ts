@@ -2,6 +2,46 @@ import { OrderStatus } from '@prisma/client';
 import moment from 'moment';
 import { db } from '~/utils/db.server';
 
+export interface SearchParams{
+  id?: number;
+  status?: OrderStatus;
+}
+
+/**
+ *
+ *
+ * @export
+ * @param {SearchParams} params
+ * @param {number} page
+ * @param {number} pageSize
+ * @return {*}
+ */
+export async function searchOrderByPage(params: SearchParams, page: number, pageSize: number) {
+  const data = await db.order.findMany({
+    where: params,
+    include: {
+      anchor: {
+        select: {
+          name: true,
+          id: true,
+        },
+      },
+      company: {
+        select: {
+          name: true,
+          id: true,
+        },
+      },
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+  });
+  const total = await db.order.count({
+    where: params,
+  });
+  return { data, total };
+}
+
 
 /**
  * 计算某用户的签约总数

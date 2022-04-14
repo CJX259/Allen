@@ -186,7 +186,7 @@ async function nextStep(data: NextStepParams) {
 }
 
 // 直接取消
-async function handleCancel(id: number) {
+export async function handleCancel(id: number) {
   try {
     const resOrder = await db.order.update({
       where: {
@@ -202,6 +202,7 @@ async function handleCancel(id: number) {
     } as SUCCESS);
   } catch (error: any) {
     console.log('err', error.message);
+    return json(DB_ERROR);
   }
 }
 
