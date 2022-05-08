@@ -1,0 +1,9 @@
+{
+  "SecretId": "腾讯云用户id(获取位置: 访问管理-访问密钥-API密钥管理)",
+  "SecretKey": "腾讯云用户key(同上)",
+  "prefix": "cos存储桶前缀",
+  "secretKey": "直播流key(获取位置: 实时音视频-应用管理-点击某应用-快速上手-复制UserSig密钥)",
+  "sdkAppId": "IM即时服务应用的sdkAppId(获取位置: 实时音视频-应用管理-某应用的sdkAppId)",
+  "expireTime": "直播间登录态过期时间",
+  "playerDomain": "拉流域名（貌似没有用）"
+}
