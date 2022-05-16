@@ -125,7 +125,6 @@ export default function OrderDetail() {
       <div className="steps-content">
         <h2>流程要点明细</h2>
         <p className='tips'>{ORDER_STATUS_MAP[steps[current].key].explain}</p>
-        {steps[current].content && <h2>当前流程信息</h2>}
         {steps[current].content}
       </div>
       <div className="steps-action">

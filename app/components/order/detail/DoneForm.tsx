@@ -28,7 +28,7 @@ export default function DoneForm(props:
       />
       <DoingForm opts={opts} disable={true} />
       <div className="form-item">
-        <span className="label">请给对方打分: </span>
+        <span className="label"><span className='label-word'>请给对方打分: </span></span>
         <Rate
           className='comment-rate'
           style={{ width: 200 }}
@@ -38,7 +38,7 @@ export default function DoneForm(props:
         />
       </div>
       <div className="form-item comment-wrapper">
-        <span className="label">请给对方评论: </span>
+        <span className="label"><span className='label-word'>请给对方评论: </span></span>
         <Input.TextArea
           onChange={(e) => handleChange(ORDER_COMMNET.comment, e.target.value)}
           className='comment-input'

@@ -27,7 +27,7 @@ export default function DoingForm(props: {
   return (
     <div className='doing-form'>
       <div className="form-item">
-        <span className="label">{disable ? '本次' : '填写'}直播时间: </span>
+        <span className="label"><span className='label-word'>{disable ? '本次' : '填写'}直播时间: </span></span>
         <DatePicker
           className='time-picker'
           showTime={{

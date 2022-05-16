@@ -19,7 +19,7 @@ export default function CheckingForm(props: {
   return (
     <div className='checking-form'>
       <div className="form-item">
-        <span className='label'>{disable ? '本次选用的' : '请填写'}快递公司: </span>
+        <span className='label'><span className='label-word'>{disable ? '本次选用的' : '请填写'}快递公司: </span></span>
         <Radio.Group
           disabled={disable}
           defaultValue={opts.expressType}
@@ -43,7 +43,7 @@ export default function CheckingForm(props: {
         </Radio.Group>
       </div>
       <div className="form-item">
-        <span className='label'>{disable ? '本次' : '请填写'}寄往主播的快递单号: </span>
+        <span className='label'><span className='label-word'>{disable ? '本次' : '请填写'}寄往主播的快递单号: </span></span>
         <Input
           className='num-input'
           defaultValue={opts.expressNum}
@@ -52,7 +52,7 @@ export default function CheckingForm(props: {
         />
       </div>
       <div className="form-item">
-        <span className='label'>{disable ? '本次' : '请填写'}寄往平台的快递单号: </span>
+        <span className='label'><span className='label-word'>{disable ? '本次' : '请填写'}寄往平台的快递单号: </span></span>
         <Input
           className='num-input'
           defaultValue={opts.sysExpressNum}
