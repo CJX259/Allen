@@ -1,3 +1,15 @@
+@charset "UTF-8";
+body {
+  scrollbar-width: none;
+  /* firefox 不生效 */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
 .page-wrapper {
   width: 100vw;
   min-width: 1200px;

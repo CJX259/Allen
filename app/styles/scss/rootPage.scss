@@ -1,4 +1,11 @@
 $menuWidth: 275px;
+body{
+  scrollbar-width: none; /* firefox 不生效 */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+body::-webkit-scrollbar{
+  display:none; // chrome sarfi edge
+}
 
 .page{
   &-wrapper{
