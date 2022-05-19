@@ -238,7 +238,7 @@ export const TIME_FORMAT = 'YYYY-MM-DD——HH时mm分';
 export const TIME_FORMAT_CARD = 'MM/DD HH:mm';
 
 // 匹配用户的最多条数
-export const MATCH_COUNT = 6;
+export const MATCH_COUNT = 50;
 
 // 云直播间的配置字段
 export const IMConfig = {

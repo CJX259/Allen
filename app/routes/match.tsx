@@ -190,7 +190,8 @@ async function collaborativeFiltering(curUser: UserJoinTag, topSimilarUsers: { i
       weight: userWeight,
     });
   }
-  resWeights.sort((a, b) => b.weight - a.weight);
+  // 限制个数
+  resWeights.sort((a, b) => b.weight - a.weight).slice(0, MATCH_COUNT);
   for (let i = 0; i < resWeights.length; i++) {
     const { id } = resWeights[i];
     const user = await searchUserById(id);

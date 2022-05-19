@@ -52,6 +52,7 @@ export default function ClassifyComp() {
           total={total || 0}
           onChange={(page) => sendSearch(submit, page)}
           pageSize={USER_PAGESIZE}
+          showSizeChanger={false}
         />
       }
     </Spin>

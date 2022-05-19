@@ -45,6 +45,7 @@ export default function SearchComp() {
               disabled={!data?.length}
               onChange={(page) => sendSearch(page)}
               pageSize={USER_PAGESIZE}
+              showSizeChanger={false}
             />
           }
         </div>
