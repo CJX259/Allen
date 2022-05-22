@@ -8,11 +8,12 @@ import { getUserComment } from '~/server/comment';
 import { getAllTags, userConnectTag } from '~/server/tag';
 import { searchUserById } from '~/server/user';
 import { getSession } from '~/sessions';
-import { InfoLoaderData } from '~/types';
+import { InfoLoaderData, LiveDataItem } from '~/types';
 import { db } from '~/utils/db.server';
 import { getFromDatas, validateFormDatas } from '~/utils/server.index';
 import styles from '~/styles/css/info.css';
 import { getLiveData } from '~/server/order';
+import { checkRoom } from '~/utils/liveRoomManager';
 
 export const links: LinksFunction = () => {
   return [{ rel: 'stylesheet', href: styles }];
@@ -42,6 +43,21 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { avgRating, comments } = await getUserComment(+userId);
   // 获取直播数据
   const liveData = await getLiveData(+userId);
+  // 查看是否在线
+  const onLineCache = {} as { [key: string]: any };
+  // 拼接了是否在线的直播数据
+  const newLiveData: LiveDataItem[] = [];
+  for (let i = 0; i < liveData.length; i++) {
+    const item = liveData[i];
+    if (onLineCache[item.anchorId]) {
+      return;
+    }
+    const isFinished = await checkRoom(item.anchorId);
+    newLiveData.push({
+      ...item,
+      isFinished,
+    });
+  }
   return {
     user,
     loginUser: loginUser || {},
@@ -50,7 +66,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       comments,
       avgRating,
     },
-    liveData,
+    liveData: newLiveData,
     dev: hostname === '127.0.0.1',
   } as InfoLoaderData;
 };

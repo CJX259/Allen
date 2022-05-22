@@ -38,6 +38,9 @@ export default function liveTable(props: { data: LiveDataItem[], loginUser: User
       render(v: any, record: LiveDataItem) {
         const random = getRandom(4);
         const targetIsAnchor = record.target.role === Role.ANCHOR;
+        if (record.isFinished) {
+          return '直播未开始';
+        }
         return <a
           href={renderPlayerUrl({
             secretKey: CloudConfig.secretKey,

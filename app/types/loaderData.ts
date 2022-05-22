@@ -103,6 +103,7 @@ export type LiveDataItem = {
     id: number;
     role: Role;
   };
+  isFinished?: boolean;
 } & Order;
 
 export type CommentJoinUser = {
