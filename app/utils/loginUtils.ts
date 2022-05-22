@@ -100,7 +100,7 @@ export async function handleCodeSend(session: Session, phone: string) {
   const curTime = new Date().valueOf();
   // 判断session，如果该电话数据的还未过期，则不允许发送
   const codeData: SessionCodeData = session.get(CodeKey);
-  if (curTime - codeData?.sendTime <= CODE_WAITING * 1000) {
+  if (codeData?.phone === phone && curTime - codeData?.sendTime <= CODE_WAITING * 1000) {
     // session里有该手机的数据，且未过60秒
     return json(TIME_OUT);
   }
@@ -113,14 +113,19 @@ export async function handleCodeSend(session: Session, phone: string) {
     code: random,
     sendTime: curTime,
   });
-  // 调用api发送短信，先注释掉，短信有次数
-  sendVerCode([phone as string], [random]);
-  // return '发送成功';
-  return new Response('发送成功', {
-    headers: {
-      'Set-Cookie': await commitSession(session),
-    },
-  });
+  try {
+    // 调用api发送短信，先注释掉，短信有次数
+    sendVerCode([phone as string], [random]);
+    // return '发送成功';
+    return new Response('发送成功', {
+      headers: {
+        'Set-Cookie': await commitSession(session),
+      },
+    });
+  } catch (error: any) {
+    console.log('send Error', error.message);
+    return json('发送失败');
+  };
 }
 
 /**

@@ -46,12 +46,12 @@ export default function RenderCodeOrPassword(props: {loginMethod: LOGIN_METHOD, 
       setLoading(true);
     } else if (fetcher.type === LOAD_TYPE.done) {
       // 没错误则开始倒计时
-      if (!fetcher.data?.msg) {
+      if (fetcher.data === '发送成功') {
         // 当发送完后，开启倒计时
         startTime(latestSecond, setSecond, timer);
       } else {
         // 有错误则打印错误信息
-        message.error(fetcher.data.msg);
+        message.error(fetcher.data.msg || fetcher.data);
       }
     }
     if (fetcher.state === LOAD_STATE.idle) {
