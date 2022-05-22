@@ -34,7 +34,7 @@ export default function MatchIndex() {
           <TabPane tab="猜你喜欢" key="3">
             <div className="user-card-content">
               {likeUsers?.map((item) => <UserCardItem key={`like_${item.id}`} data={item} />)}
-              {!quality?.length && <h2>暂无推荐用户数据</h2>}
+              {!likeUsers?.length && <h2>暂无推荐用户数据</h2>}
             </div>
           </TabPane>
         </Tabs>

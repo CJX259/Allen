@@ -71,23 +71,24 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 // 猜你喜欢计算过程
 async function guestYouLike(curUser: UserJoinTag) {
+  // 当前用户签约过的用户
+  const orderedUsers = await findOrderedUsers(curUser);
   // 相似用户
-  const similarUsers = await findSimilarUsers(curUser);
+  const similarUsers = await findSimilarUsers(curUser, orderedUsers);
   console.log('similarUsers', similarUsers);
   // 最相似的几个用户
   const topSimilarUsers = await findTopSimilar(curUser, similarUsers);
   console.log('topSimilarUsers', topSimilarUsers);
   // 使用基于用户的协同推荐算法计算，得出TOP N（暂定6个）用户
-  return collaborativeFiltering(curUser, topSimilarUsers);
+  return collaborativeFiltering(curUser, topSimilarUsers, orderedUsers);
 };
 
 // 找出相似用户（获取和已签约过的用户（另一类角色），签约的用户（同类角色）
-async function findSimilarUsers(curUser: UserJoinTag) {
+async function findSimilarUsers(curUser: UserJoinTag, orderedUsers: number[]) {
   // 同类角色的属性名
   const sameKey = curUser.role === Role.ANCHOR ? 'anchorId' : 'companyId';
   // 不同类角色的属性名
   const difKey = curUser.role === Role.ANCHOR ? 'companyId' : 'anchorId';
-  const orderedUsers = await findOrderedUsers(curUser);
   // 再找出合作过的用户中，合作的其他用户（不包含本用户），即为相似用户
   const similarUsers: number[] = [];
   for (let i = 0; i < orderedUsers.length; i++) {
@@ -142,7 +143,7 @@ async function findTopSimilar(curUser: UserJoinTag, similarUsers: number[]) {
 }
 
 // 协同过滤算法
-async function collaborativeFiltering(curUser: UserJoinTag, topSimilarUsers: { id: number; weight: number; }[]) {
+async function collaborativeFiltering(curUser: UserJoinTag, topSimilarUsers: { id: number; weight: number; }[], orderedUsers: number[]) {
   const resUsers = [];
   const resWeights = [];
   const { sameKey, difKey } = getSamekeyAndDifKey(curUser);
@@ -153,6 +154,11 @@ async function collaborativeFiltering(curUser: UserJoinTag, topSimilarUsers: { i
         {
           [sameKey]: {
             in: [...topSimilarUsers.map((item) => item.id)],
+          },
+        },
+        {
+          [difKey]: {
+            notIn: [...orderedUsers],
           },
         },
         {
