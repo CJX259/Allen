@@ -37,7 +37,7 @@
     "Failed to dismiss streaming group": "群组解散失败"
   },
   "rtc": {
-    "A user with the same name entered": "同名用户进入房间",
+    "A user with the same name entered": "直播间被关闭",
     "Entered room successfully": "进入音视频房间成功",
     "Failed to enter room": "进入音视频房间失败",
     "Stream publishing successful": "发布流成功",
