@@ -1,5 +1,5 @@
 import { Order, OrderStatus } from '@prisma/client';
-import { Button, message, Popconfirm, Space, Spin, Table, Tag } from 'antd';
+import { Button, message, Popconfirm, Space, Spin, Table, Tag, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -51,14 +51,14 @@ export default function AuditOrderComp() {
       title: '快递单号',
       dataIndex: 'sysExpressNum',
       key: 'sysExpressNum',
-      width: 350,
-      render: (v) => v,
+      // width: 350,
+      render: (v) => <Tooltip title={v}>{v}</Tooltip>,
     },
     {
       title: '操作',
       key: 'action',
       fixed: 'right',
-      width: 350,
+      // width: 350,
       render: (value: Order, record: Order, index: number) => {
         if (!data) {
           return null;
