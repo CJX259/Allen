@@ -23,8 +23,9 @@ export default function UploadImg(props: any) {
   const hoverImage = (
     <Popover
       content={
-        <img src={imageUrl} alt="avatar" style={{ width: '100%', maxWidth: 400 }} />
+        <img src={imageUrl} alt="avatar" style={{ width: 250, height: 250 }} />
       }
+      style={{ width: 250, height: 250 }}
       title="预览图">
       <img src={imageUrl} alt="avatar" style={{ width: '100%', height: '100%' }} />
     </Popover>
