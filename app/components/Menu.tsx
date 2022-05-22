@@ -41,6 +41,12 @@ export default function MenuCmp(props: { data: RootLoaderData }) {
           >我的直播间</a>
         </Menu.Item>
       }
+      {user?.role === Role.ADMIN &&
+        <Menu.Item key='/destoryRoom'>
+          <Link to='/destoryRoom' prefetch='intent'
+          >关闭直播间</Link>
+        </Menu.Item>
+      }
       {renderMenu(renderMenuList)}
     </Menu>
   );
