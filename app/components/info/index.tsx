@@ -223,7 +223,7 @@ export default function InfoIndex() {
     {
       name: 'price',
       label: {
-        all: '单场价格(单位/分)',
+        all: '单场价格(元)',
       },
       initialValue: (data) => data?.price,
       render: (data) => (isVisitor ? <span>{data?.price}</span> : <InputNumber />),
@@ -255,15 +255,15 @@ export default function InfoIndex() {
       style: isVisitor ? { display: 'none' } : {},
       rules: [
         RULE_REQUIRED,
-        // {
-        //   validator: async (rule, value) => {
-        //     if (!value) {
-        //       return Promise.resolve();
-        //     }
-        //     const addressReg = /([^省]+省|.+自治区|[^市]+市)([^自治州]+自治州|[^市]+市|[^盟]+盟|[^地区]+地区|.+区划)([^市]+市|[^县]+县|[^旗]+旗|.+区)/;
-        //     return addressReg.test(value) ? Promise.resolve() : Promise.reject(new Error('地址格式有误'));
-        //   },
-        // },
+        {
+          validator: async (rule, value) => {
+            if (!value) {
+              return Promise.resolve();
+            }
+            const addressReg = /([^省]+省|.+自治区|[^市]+市)([^自治州]+自治州|[^市]+市|[^盟]+盟|[^地区]+地区|.+区划)([^市]+市|[^县]+县|[^旗]+旗|.+区)/;
+            return addressReg.test(value) ? Promise.resolve() : Promise.reject(new Error('地址格式有误'));
+          },
+        },
       ],
       initialValue: (data) => data?.address ? data.address : '',
       render: (data) => (isVisitor ? <span>{data?.address}</span> : <Input.TextArea placeholder='请填写地址（精确到街道）' />),
