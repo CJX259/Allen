@@ -117,6 +117,8 @@ export default function OrderDetail() {
     <>
       <h2>订单id: {orderInfo.id}</h2>
       <h2>{author.name} 向 {target.name} 发起的签约记录</h2>
+      {(isAuthor(curUser.id, orderInfo.authorId) ? orderInfo.targetNext : orderInfo.authorNext) ? <h3>另一方已同意进入下一步</h3> : <h3>等待另一方同意进入下一步</h3>}
+      {orderInfo.status === 'CHECKING' && (orderInfo.sysNext ? <h3>平台已通过</h3> : <h3>平台未通过（仅作用于检验中）</h3>)}
       <Steps current={current} status={stepStatus as any}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} />

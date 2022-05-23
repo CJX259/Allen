@@ -125,7 +125,7 @@ export function getOrderOrderByTime() {
         // 大于当前时间-6小时的开播记录
         gte: moment().subtract(6, 'hour').valueOf() / 1000,
         // 小于当前时间的开播记录
-        lte: moment().valueOf() / 1000,
+        lte: moment().add(6, 'hour').valueOf() / 1000,
         // 小与当前时间+2天后的开播记录
         // lte: moment().add(2, 'day').valueOf() / 1000,
       },
