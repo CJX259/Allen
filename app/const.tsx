@@ -248,5 +248,5 @@ export const IMConfig = {
   playerDomain: 'playerDomain',
 };
 
-// 相似用户，最多拿3个
-export const MAX_SIMILAR = 3;
+// 相似用户，最多拿10个
+export const MAX_SIMILAR = 10;
