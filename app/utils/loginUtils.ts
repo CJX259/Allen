@@ -83,9 +83,10 @@ export function validatePhone(phone: string) {
  */
 export async function handleLogout(session: Session) {
   // 已登录则注销session
+  const handleSession = await destroySession(session);
   return new Response('登出成功', {
     headers: {
-      'Set-Cookie': await destroySession(session),
+      'Set-Cookie': handleSession,
     },
   });
 }
@@ -117,9 +118,10 @@ export async function handleCodeSend(session: Session, phone: string) {
     // 调用api发送短信，先注释掉，短信有次数
     sendVerCode([phone as string], [random]);
     // return '发送成功';
+    const handleSession = await commitSession(session);
     return new Response('发送成功', {
       headers: {
-        'Set-Cookie': await commitSession(session),
+        'Set-Cookie': handleSession,
       },
     });
   } catch (error: any) {
@@ -152,9 +154,10 @@ export async function verifyPsw(session: Session, phone: string, password: strin
   }
   session.set(LoginKey, user as SessionUserData);
   // Login succeeded, send them to the home page.
+  const handleSession = await commitSession(session);
   return redirect('/home', {
     headers: {
-      'Set-Cookie': await commitSession(session),
+      'Set-Cookie': handleSession,
     },
   });
 };
@@ -200,9 +203,11 @@ export async function verifyCode(session: Session, phone: string, code: string) 
     // 如果已有账号，则设置cookie
     session.set(LoginKey, user as SessionUserData);
   }
+  const handleSession = await commitSession(session);
+
   return redirect(to, {
     headers: {
-      'Set-Cookie': await commitSession(session),
+      'Set-Cookie': handleSession,
     },
   });
 };

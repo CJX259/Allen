@@ -59,9 +59,10 @@ export const action: ActionFunction = async ({ request, params }) => {
       id: newUser.id,
       role: newUser.role,
     } as SessionUserData);
+    const handleSession = await commitSession(session);
     return redirect('/home', {
       headers: {
-        'Set-Cookie': await commitSession(session),
+        'Set-Cookie': handleSession,
       },
     });
   } catch (error: any) {
