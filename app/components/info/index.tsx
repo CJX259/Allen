@@ -162,7 +162,14 @@ export default function InfoIndex() {
       label: {
         all: '手机号',
       },
-      rules: [RULE_REQUIRED],
+      rules: [
+        RULE_REQUIRED,
+        {
+          min: 13,
+          max: 13,
+          message: '手机号长度应为13'
+        },
+      ],
       initialValue: (data) => data?.phone,
       render: (data) => (isVisitor ? <span>{data?.phone}</span> : <Input />),
     },
@@ -195,6 +202,11 @@ export default function InfoIndex() {
       rules: [
         RULE_REQUIRED,
         {
+          min: 18,
+          max: 18,
+          message: '身份证长度不匹配',
+        },
+        {
           validator: async (rule, value) => {
             return validateRepeat('idCard', value, '身份证号已存在');
           },
@@ -214,6 +226,10 @@ export default function InfoIndex() {
       render: (data) => (isVisitor ? <span>{data?.mail}</span> : <Input placeholder='请填写邮箱地址' />),
       rules: [
         RULE_REQUIRED,
+        {
+          max: 30,
+          message: '邮箱长度不能超过30',
+        },
         {
           type: 'email',
           message: '邮箱格式不正确',
@@ -255,6 +271,10 @@ export default function InfoIndex() {
       style: isVisitor ? { display: 'none' } : {},
       rules: [
         RULE_REQUIRED,
+        {
+          max: 30,
+          message: '地址长度不能超过30',
+        },
         {
           validator: async (rule, value) => {
             if (!value) {

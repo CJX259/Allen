@@ -104,6 +104,11 @@ export default function RegisterCmp() {
       rules: [
         RULE_REQUIRED,
         {
+          min: 18,
+          max: 18,
+          message: '身份证长度不匹配',
+        },
+        {
           validator: async (rule, value) => {
             return validateRepeat('idCard', value, '身份证号已存在');
           },
@@ -121,6 +126,10 @@ export default function RegisterCmp() {
       rules: [
         RULE_REQUIRED,
         {
+          max: 30,
+          message: '邮箱长度不能超过30',
+        },
+        {
           type: 'email',
           message: '邮箱格式不正确',
         },
@@ -134,15 +143,19 @@ export default function RegisterCmp() {
       },
       rules: [
         RULE_REQUIRED,
-        // {
-        //   validator: async (rule, value) => {
-        //     if (!value) {
-        //       return Promise.resolve();
-        //     }
-        //     const addressReg = /([^省]+省|.+自治区|[^市]+市)([^自治州]+自治州|[^市]+市|[^盟]+盟|[^地区]+地区|.+区划)([^市]+市|[^县]+县|[^旗]+旗|.+区)/;
-        //     return addressReg.test(value) ? Promise.resolve() : Promise.reject(new Error('地址格式有误'));
-        //   },
-        // },
+        {
+          max: 30,
+          message: '地址长度不能超过30',
+        },
+        {
+          validator: async (rule, value) => {
+            if (!value) {
+              return Promise.resolve();
+            }
+            const addressReg = /([^省]+省|.+自治区|[^市]+市)([^自治州]+自治州|[^市]+市|[^盟]+盟|[^地区]+地区|.+区划)([^市]+市|[^县]+县|[^旗]+旗|.+区)/;
+            return addressReg.test(value) ? Promise.resolve() : Promise.reject(new Error('地址格式有误'));
+          },
+        },
       ],
       render: () => <Input.TextArea placeholder='请填写地址（精确到街道）'/>,
     },
@@ -151,6 +164,13 @@ export default function RegisterCmp() {
       label: {
         all: '登录密码',
       },
+      rules: [
+        {
+          min: 6,
+          max: 16,
+          message: '长度范围在6-16之间',
+        },
+      ],
       render: () => <Input.Password placeholder='(选填，不填仅能用验证码登录)'/>,
     },
     {
@@ -173,6 +193,12 @@ export default function RegisterCmp() {
       label: {
         all: '简介',
       },
+      rules: [
+        {
+          max: 190,
+          message: '长度不能超过190',
+        },
+      ],
       render: () => <Input.TextArea placeholder='介绍一下自己，可以让别人更快了解你'/>,
     },
   ];
