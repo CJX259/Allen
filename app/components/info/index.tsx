@@ -165,9 +165,9 @@ export default function InfoIndex() {
       rules: [
         RULE_REQUIRED,
         {
-          min: 13,
-          max: 13,
-          message: '手机号长度应为13'
+          min: 11,
+          max: 11,
+          message: '手机号长度应为11'
         },
       ],
       initialValue: (data) => data?.phone,
@@ -293,6 +293,12 @@ export default function InfoIndex() {
       label: {
         all: '简介',
       },
+      rules: [
+        {
+          max: 190,
+          message: '长度不能超过190',
+        },
+      ],
       initialValue: (data) => data?.introduce ? data.introduce : '',
       render: (data) => (isVisitor ? <span>{data?.introduce}</span> : <Input.TextArea placeholder='介绍一下自己，可以让别人更快了解你' />),
     },
